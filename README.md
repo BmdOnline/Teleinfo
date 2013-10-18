@@ -31,6 +31,8 @@ Version 3
 * Résolution de problèmes de mémoire : chaque rafraîchissement augmentait significativement la mémoire
 du navigateur.
 
+Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v3)](http://penhard.anthony.free.fr/?p=283)
+
 Version 2
 ---------
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://penhard.anthony.free.fr/?p=207)
