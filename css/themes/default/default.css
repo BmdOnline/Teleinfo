@@ -1,0 +1,259 @@
+body {
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000;
+	background: #FFF;
+	margin: 0 0 0 0;
+}
+input,select {
+	font-size: 12px;
+}
+		
+a:hover{border-bottom:1px solid #ec954e}
+
+#menu {
+	position: absolute;
+	border: 1px solid black; 
+}
+
+table.menuContainer {
+  background: #FFF url(../images/menubackground.png) repeat-y left top;
+}
+
+table.menuContainer th {
+	width: 180px;
+	font-weight: bold;
+	font-size: 11px;
+	color: #FFF;
+}
+
+img {
+	border: 0px;
+}
+
+td.menu {
+  width: 180px;
+  vertical-align: top;
+  color: #FFF;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+}
+		
+.menuItem {
+	width: 160px;
+	height:24px;
+	background-image:url(../images/menuBg.png);
+	display:block;
+	line-height:25px;
+	text-align:right;
+	font-size:12px;
+	color: blue;
+	font-weight: normal;
+	border:1px solid #fff;
+	padding-right: 5px;
+	margin: auto 0;
+	float: right;
+	cursor: pointer;
+}
+
+.menuItemOver{
+	border-bottom:1px solid #ec954e;
+}
+
+.subMenuItem {
+	width: 160px;
+	background-image:url(../images/subMenuBg.png);
+	color: #000;
+	text-align: left;
+	font-size:11px;
+	font-weight: normal;
+	border:1px solid #fff;
+	padding-left: 5px;
+	margin: auto 0 ;
+	float: right;
+}
+
+.subMenuItem a {
+	text-decoration: none;
+}
+
+div.notification {
+	height: 18px; 
+	top: 2px;
+	left: 180px;
+	display: none;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 2px;
+	margin-right: 10px; 
+	position: absolute;
+	text-align: left;
+}
+
+.menuTitle {
+	width: 180px;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 2px;
+	color: #666666;
+	position: absolute;
+}
+
+.menuTitle a {
+	text-decoration: none;
+	color: #000;
+}
+
+.panel {
+	vertical-align: top;
+}
+
+.panel div {
+	font-size: 12px;
+	padding: 10px;
+}
+
+#background {
+	padding: 10px;
+	position: absolute;
+}
+
+input {
+	font-size:10px;
+}
+
+tr.editWidget {
+  height: 15px;
+  background-color: black;
+}
+
+div.widgetDiv {
+	display: block;
+	position: absolute;
+	z-index: 5;
+}
+div.liste_select {
+  position: absolute;
+	z-index: 10;
+}
+
+div.dimmerDiv {
+	display: block;
+	width: 36px; 
+	height: 96px; 
+	overflow: hidden; 
+	border: 1px solid black; 
+	float: left; 
+	margin-right: 10px; 
+	background-color: darkgray; 
+	position: absolute;
+	text-align: center;
+	z-index: 5;
+}
+
+
+div.thermostatDiv {
+	display: block;
+	width: 96px; 
+	height: 68px; 
+	overflow: hidden; 
+	border: 1px solid black; 
+	float: left; 
+	margin-right: 10px; 
+	background-color: darkgray; 
+	position: absolute;
+	text-align: center;
+	z-index: 5;
+}
+
+table.thermostatDiv {
+	width: 100%;
+}
+
+table.thermostatDiv td {
+	font-weight: bold;
+	font-size: 9px;
+	background-color: #ddd;
+	color: #000;
+}
+
+
+div.camDiv {
+	display: block;
+	width: 32px; 
+	height: 32px; 
+	overflow: hidden; 
+	border: 1px solid black; 
+	float: left; 
+	margin-right: 10px; 
+	background-color: darkgray; 
+	position: absolute;
+	text-align: center;
+}
+
+div.camViewDiv {
+	width: 320px; 
+	height: 255px; 
+	overflow: hidden; 
+	border: 1px solid black; 
+	float: left; 
+	margin-right: 10px; 
+	background-color: #EEEEEE; 
+	position: absolute;
+	text-align: center;
+	z-index: 10;
+}
+
+div.textDiv {
+	display: block;
+	position: absolute;
+	z-index: 5;
+}
+
+table.textDiv td {
+	padding: 2 5 2 5;
+}
+
+div.editDiv {
+	display: block;
+	overflow: hidden; 
+	border: 1px solid black;
+	padding: 5px;
+	float: left; 
+	margin-right: 10px; 
+	background-color: darkgray; 
+	position: absolute;
+	text-align: left;
+}
+
+div.ruleHdr {
+	display: block;
+	overflow: hidden; 
+	border: 2px solid black;
+	padding: 5px;
+	text-align: left;
+}
+
+div.ruleDetail {
+	display: block;
+	overflow: hidden; 
+	border: 1px solid black;
+	padding: 5px;
+	text-align: left;
+}
+
+#changeImage {
+	background-color: #EEEEEE;
+	top:300px;
+	position: absolute;
+	display: none;
+  border-style: solid;
+  border-color: #999999;
+  border-width: 1px;
+}
+
+#changeImage td {
+  font-size: 12px;
+}
+
