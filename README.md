@@ -1,6 +1,21 @@
 Graphique Conso Electrique Téléinfo EDF avec Highcharts (v4)
 ============================================================
 
+Puissance Instantanée
+---------------------
+
+![Puissance Instantanée](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part1_small.png)
+
+Consommation Actuelle
+---------------------
+
+![Dernières 24h](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part2_small.png)
+
+Données Historiques
+-------------------
+
+![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part2_small.png)
+
 Version 4
 ---------
 * Ajout de la gauge de consommation instantanée.
