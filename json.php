@@ -34,11 +34,11 @@ $prixHC = 0;
 $abo_annuel = 12*(5.36+1.92/2)*1.055; // Abonnement + CTA, TVA 5.5%
 
 /***************************************/
-/*    Graph consomation instantanée    */
+/*    Graph consommation instantanée    */
 /***************************************/
 function instantly () {
   global $table;
-  
+
   $date = isset($_GET['date'])?$_GET['date']:null;
 
   $heurecourante = date('H') ;              // Heure courante.
@@ -46,16 +46,16 @@ function instantly () {
 
   // Meilleure date entre celle donnée en paramètre et celle calculée
   $date = ($date)?min($date, $timestampheure):$timestampheure;
-  
+
   $periodesecondes = 24*3600 ;                            // 24h.
   $timestampfin = $date;
   $timestampdebut2 = $date - $periodesecondes ;           // Recule de 24h.
   $timestampdebut = $timestampdebut2 - $periodesecondes ; // Recule de 24h.
 
-  $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, time(date) as rec_time, ptec, papp, iinst1 
-    FROM `$table` 
+  $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, time(date) as rec_time, ptec, papp, iinst1
+    FROM `$table`
     WHERE date=(select max(date) FROM `$table`)";
-  
+
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
   $nbdata=0;
@@ -65,13 +65,13 @@ function instantly () {
     $date_deb = $row["timestamp"];
     $val = floatval(str_replace(",", ".", $row["papp"]));
   };
-  
+
   $seuils = array (
     'min' => 0,
     'max' => 10000,
   );
 
-  
+
   return array(
   'title' => "Graph du $datetext",
   'subtitle' => "",
@@ -83,11 +83,11 @@ function instantly () {
 }
 
 /****************************************************************************************/
-/*    Graph consomation w des 24 dernières heures + en parrallèle consomation d'Hier    */
+/*    Graph consommation w des 24 dernières heures + en parrallèle consommation d'Hier    */
 /****************************************************************************************/
 function daily () {
   global $table;
-  
+
   $courbe_titre[0]="Heures de Base";
   $courbe_min[0]=5000;
   $courbe_max[0]=0;
@@ -103,24 +103,24 @@ function daily () {
   $courbe_max[3]=0;
 
   $date = isset($_GET['date'])?$_GET['date']:null;
-  
+
   $heurecourante = date('H') ;              // Heure courante.
   $timestampheure = mktime($heurecourante+1,0,0,date("m"),date("d"),date("Y"));  // Timestamp courant à heure fixe (mn et s à 0).
 
   // Meilleure date entre celle donnée en paramètre et celle calculée
   $date = ($date)?min($date, $timestampheure):$timestampheure;
-  
+
   $periodesecondes = 24*3600 ;                            // 24h.
   $timestampfin = $date;
   $timestampdebut2 = $date - $periodesecondes ;           // Recule de 24h.
   $timestampdebut = $timestampdebut2 - $periodesecondes ; // Recule de 24h.
 
-  $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, time(date) as rec_time, ptec, papp, iinst1 
-    FROM `$table` 
-    WHERE unix_timestamp(date) >= $timestampdebut 
-    AND unix_timestamp(date) < $timestampfin 
+  $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, time(date) as rec_time, ptec, papp, iinst1
+    FROM `$table`
+    WHERE unix_timestamp(date) >= $timestampdebut
+    AND unix_timestamp(date) < $timestampfin
     ORDER BY unix_timestamp(date)";
-  
+
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
   $nbdata=0;
@@ -220,7 +220,7 @@ function daily () {
     'min' => $plotlines_min,
     'max' => $plotlines_max,
   );
-  
+
   return array(
     'title' => "Graph du $datetext",
     'subtitle' => "",
@@ -253,7 +253,7 @@ function history() {
   $duree = isset($_GET['duree'])?$_GET['duree']:8;
   $periode = isset($_GET['periode'])?$_GET['periode']:"jours";
   $date = isset($_GET['date'])?$_GET['date']:null;
-  
+
   switch ($periode) {
     case "jours":
       // Calcul de la fin de période courante
@@ -291,7 +291,7 @@ function history() {
       $timestampfin = $date;                                           // Fin de la période
       $timestampdebut2 = strtotime(date("Y-m-d", $timestampfin) . " -".$duree." week");    // Début de période active
       $timestampdebut = strtotime(date("Y-m-d", $timestampdebut2) . " -".$duree." week"); // Début de période précédente
-      
+
       $xlabel = $duree . " semaines";
       $dateformatsql = "sem %v";
       $abonnement = $abo_annuel / 52;
@@ -300,7 +300,7 @@ function history() {
       // Calcul de la fin de période courante
       $timestampheure = mktime(0,0,0,date("m"),date("d"),date("Y")); // Timestamp courant, 0h
       //$timestampheure = mktime(0,0,0,date("m")+1,1,date("Y"));     // Mois suivant, 0h
-      
+
       // Meilleure date entre celle donnée en paramètre et celle calculée
       $date = ($date)?min($date, $timestampheure):$timestampheure;
       $date = mktime(0,0,0,date("m")+1,1,date("Y"));                 // Mois suivant, 0h
@@ -317,7 +317,7 @@ function history() {
     case "ans":
       // Calcul de la fin de période courante
       $timestampheure = mktime(0,0,0,date("m"),date("d"),date("Y"));         // Timestamp courant, 0h
-      
+
       // Meilleure date entre celle donnée en paramètre et celle calculée
       $date = ($date)?min($date, $timestampheure):$timestampheure;
       $date = mktime(0,0,0,1,1,date("Y", $date)+1);                          // Année suivante, 0h
@@ -326,7 +326,7 @@ function history() {
       $timestampfin = $date;                                                 // Fin de la période
       $timestampdebut2 = mktime(0,0,0,1,1,date("Y",$timestampfin)-$duree);   // Début de période active
       $timestampdebut = mktime(0,0,0,1,1,date("Y",$timestampdebut2)-$duree); // Début de période précédente
-      
+
       $xlabel = $duree . " an";
       $dateformatsql = "%b";
       $abonnement = $abo_annuel / 12;
@@ -344,14 +344,14 @@ function history() {
   $query="SET lc_time_names = 'fr_FR'" ;  // Pour afficher date en français dans MySql.
   mysql_query($query) ;
   $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, DATE_FORMAT(date(date), '$dateformatsql') AS 'periode' ,
-    ROUND( ((MAX(`base`) - MIN(`base`)) / 1000) ,1 ), 
-    ROUND( ((MAX(`hchp`) - MIN(`hchp`)) / 1000) ,1 ), 
-    ROUND( ((MAX(`hchc`) - MIN(`hchc`)) / 1000) ,1 )  
-    FROM `$table` 
+    ROUND( ((MAX(`base`) - MIN(`base`)) / 1000) ,1 ),
+    ROUND( ((MAX(`hchp`) - MIN(`hchp`)) / 1000) ,1 ),
+    ROUND( ((MAX(`hchc`) - MIN(`hchc`)) / 1000) ,1 )
+    FROM `$table`
     WHERE unix_timestamp(date) >= '$timestampdebut'
     AND unix_timestamp(date) < '$timestampfin'
     GROUP BY periode
-    ORDER BY rec_date" ; 
+    ORDER BY rec_date" ;
   //die ($query);
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
   $nbenreg = mysql_num_rows($result);
@@ -383,12 +383,12 @@ function history() {
       $no++ ;
     }
   }
-  
+
   if (count($kwhprec)<count($kwhbase)) {
     // pad avec une valeur négative, pour ajouter en début de tableau
     $kwhprec = array_pad ($kwhprec, -count($kwhbase), null);
   }
-  
+
   $date_digits_dernier_releve=explode("-", $date[count($date) -1]) ;
   $date_dernier_releve =  Date('d/m/Y', gmmktime(0,0,0, $date_digits_dernier_releve[1] ,$date_digits_dernier_releve[2], $date_digits_dernier_releve[0])) ;
 
@@ -427,9 +427,9 @@ function history() {
     'HP' => $prixHP,
     'HC' => $prixHC,
   );
-  
+
   return array(
-    'title' => "Consomation sur $xlabel",
+    'title' => "Consommation sur $xlabel",
     'subtitle' => "Coût sur la période ".round($mnt_total,2)." Euro<br />( Abonnement : ".round($mnt_abonnement,2)." + BASE : ".round($mnt_kwhbase,2)." + HP : ".round($mnt_kwhhp,2)." + HC : ".round($mnt_kwhhc,2)." )",
     'duree' => $duree,
     'periode' => $periode,
