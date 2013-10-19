@@ -1,23 +1,24 @@
-Graphique Conso Electrique Téléinfo EDF avec Highcharts (v4)
-============================================================
+#Graphique Conso Electrique Téléinfo EDF
+##avec Highcharts (v4)
 
-Puissance Instantanée
----------------------
+###Aperçu
+* Puissance Instantanée
 
-![Puissance Instantanée](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part1_small.png)
+[![Puissance Instantanée](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part1_small.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part1.png)
 
-Consommation Actuelle
----------------------
+* Consommation Actuelle
 
-![Dernières 24h](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part2_small.png)
+[![Dernières 24h](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part2_small.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part2.png)
 
-Données Historiques
--------------------
+* Données Historiques
 
-![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part3_small.png)
+[![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part3_small.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part3.png)
 
-Version 4
----------
+* Vue Complète
+
+[Cliquer pour visualiser](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_all.png)
+
+###Version 4
 * Ajout de la gauge de consommation instantanée.
 * Ajout des boutons de navigation dans l'histogramme :
     - Choix du type de vue : jour / Semaine / Mois / Année.
@@ -26,8 +27,7 @@ Version 4
 
 * Remplacement de JQuery et Highcharts par les versions plus récentes.
 
-Version 3
----------
+###Version 3
 * Prise en charge du régime EDF de base :
     - Les graphiques affichent les données BASE ou HP/HC selon l'abonnement EDF.
 * Envoi de données de manière asynchrone, via GetJSON :
@@ -48,22 +48,18 @@ du navigateur.
 
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v3)](http://penhard.anthony.free.fr/?p=283)
 
-Version 2
----------
+###Version 2
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://penhard.anthony.free.fr/?p=207)
 
-Version 1
----------
+###Version 1
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.anthony.free.fr/?p=111)
 
-Format de date MySQL
---------------------
+###Format de date MySQL
 Selon l'utilitaire collectant les données téléinformation, la base peut utiliser format de date différent.
 Cette version du programme utilise un type timestamp.
 L'adaptation des requêtes SQL est plutôt simple pour utiliser un type datetime.
 
-Reste à faire
--------------
+###Reste à faire
 * Prévoir un rafraîchissement automatique, avec temporisation.
 * Proposer de visualiser une période précédente ou une moyenne en surimpression de l'historique.
 * Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
