@@ -14,7 +14,7 @@ Consommation Actuelle
 Données Historiques
 -------------------
 
-![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part2_small.png)
+![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_part3_small.png)
 
 Version 4
 ---------
