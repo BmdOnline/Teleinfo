@@ -93,3 +93,44 @@ select[class="select_chart2"]
 
 /*.ui-selectmenu-menu ul */
 .overflow { height: 200px; }
+
+#Menu {
+  width:860px;
+  margin-left:20px;
+  text-align: center;
+  font-size:2em;
+  font-weight:bold;
+  border:none;
+  color:#FFFFFF;
+  text-shadow:0px -1px 0px #000000;
+  background:#CECECE;
+  background:-moz-linear-gradient(top,#CECECE,#15161a);
+  background:-webkit-gradient(linear,left top,left bottom,from(#CECECE),to(#15161a));
+  -webkit-border-radius:5px;
+     -moz-border-radius:5px;
+          border-radius:5px;
+  -webkit-box-shadow:0px 0px 1px #000;
+     -moz-box-shadow:0px 0px 1px #000;
+          box-shadow:0px 0px 1px #000;
+}
+
+#daily, #history {
+  padding: 5px;
+  margin-top:10px;
+  font-size:1em;
+  border: 1px solid #000000;
+  color:#cecece;
+  text-shadow:0px -1px 0px #FFFFFF;
+  background:#CECECE;
+  background:-moz-linear-gradient(top,#CECECE,#15161a);
+  background:-webkit-gradient(linear,left top,left bottom,from(#CECECE),to(#15161a));
+  -webkit-border-radius:5px;
+     -moz-border-radius:5px;
+          border-radius:5px;
+  -webkit-box-shadow:0px 0px 1px #000;
+     -moz-box-shadow:0px 0px 1px #000;
+          box-shadow:0px 0px 1px #000;
+}
+#daily > div , #history > div {
+  position : relative
+}

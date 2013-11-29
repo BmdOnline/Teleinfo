@@ -1,5 +1,5 @@
 #Graphique Conso Electrique Téléinfo EDF
-##avec Highcharts (v4)
+##avec Highcharts (v4.1)
 
 ###Aperçu
 * Puissance Instantanée
@@ -17,6 +17,12 @@
 * Vue Complète
 
 [Cliquer pour visualiser](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_all.png)
+
+###Version 4.1 (dev)
+* Gestion des requêtes mysql dans un fichier dédié "config.php". (energy01)
+* Début de gestion des abonnements autres que "base" ou "HC/HP". (energy01)
+* Ajout d'une bibliothèque d'applications utilisées pour collecter les éléments téléinformation. (BmdOnline)
+* Modification du nom du fichier principal "teleinfo.php" au lieu de "teleinfov4.php". (BmdOnline)
 
 ###Version 4
 * Ajout de la gauge de consommation instantanée.
@@ -60,9 +66,9 @@ Cette version du programme utilise un type timestamp.
 L'adaptation des requêtes SQL est plutôt simple pour utiliser un type datetime.
 
 ###Reste à faire
+* Prévoir une version "mobile", pour les smartphones et tablettes.
 * Prévoir un rafraîchissement automatique, avec temporisation.
 * Proposer de visualiser une période précédente ou une moyenne en surimpression de l'historique.
 * Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
     - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
 * Fiabiliser les passages aux heures hiver/été.
-* Réutiliser le fichier config.php (régression de la v4).

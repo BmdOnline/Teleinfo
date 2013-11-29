@@ -1,43 +1,20 @@
 <?php
 setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
+error_reporting(0);
 
 // Adapté du code de Domos.
 // cf . http://vesta.homelinux.net/wiki/teleinfo_papp_jpgraph.html
 
-// Base de donnée Téléinfo:
-/*
-Format de la table:
-timestamp   rec_date   rec_time   adco     optarif isousc   hchp     hchc     ptec   inst1   inst2   inst3   imax1   imax2   imax3   pmax   papp   hhphc   motdetat   ppot   adir1   adir2   adir3
-1234998004   2009-02-19   00:00:04   700609361116   HC..   20   11008467   10490214   HP   1   0   1   18   23   22   8780   400   E   000000     00   0   0   0
-1234998065   2009-02-19   00:01:05   700609361116   HC..   20   11008473   10490214   HP   1   0   1   18   23   22   8780   400   E   000000     00   0   0   0
-1234998124   2009-02-19   00:02:04   700609361116   HC..   20   11008479   10490214   HP   1   0   1   18   23   22   8780   390   E   000000     00   0   0   0
-1234998185   2009-02-19   00:03:05   700609361116   HC..   20   11008484   10490214   HP   1   0   0   18   23   22   8780   330   E   000000     00   0   0   0
-1234998244   2009-02-19   00:04:04   700609361116   HC..   20   11008489   10490214   HP   1   0   0   18   23   22   8780   330   E   000000     00   0   0   0
-1234998304   2009-02-19   00:05:04   700609361116   HC..   20   11008493   10490214   HP   1   0   0   18   23   22   8780   330   E   000000     00   0   0   0
-1234998365   2009-02-19   00:06:05   700609361116   HC..   20   11008498   10490214   HP   1   0   0   18   23   22   8780   320   E   000000     00   0   0   0
-*/
-
-// Connexion MySql et requête.
-$serveur="localhost";
-$login="teleinfo";
-$base="teleinfo";
-$table="teleinfo";
-$pass="teleinfo";
-
-// prix du kWh :
-// prix TTC au 1/01/2012 :
-$prixBASE = (0.0812+0.009+0.009)*1.196; // kWh + CSPE + TCFE, TVA 19.6%
-$prixHP = 0;
-$prixHC = 0;
-// Abpnnement pour disjoncteur 30 A
-$abo_annuel = 12*(5.36+1.92/2)*1.055; // Abonnement + CTA, TVA 5.5%
+// Config : Connexion MySql et requête. et prix du kWh
+include_once("config.php");
 
 /***************************************/
 /*    Graph consommation instantanée    */
 /***************************************/
 function instantly () {
   global $table;
+  global $tarif_type;
 
   $date = isset($_GET['date'])?$_GET['date']:null;
 
@@ -52,9 +29,7 @@ function instantly () {
   $timestampdebut2 = $date - $periodesecondes ;           // Recule de 24h.
   $timestampdebut = $timestampdebut2 - $periodesecondes ; // Recule de 24h.
 
-  $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, time(date) as rec_time, ptec, papp, iinst1
-    FROM `$table`
-    WHERE date=(select max(date) FROM `$table`)";
+  $query = queryinstantly();
 
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
@@ -79,14 +54,16 @@ function instantly () {
   'W_name' => "Watts",
   'W_data'=> $val,
   'seuils' => $seuils,  // non utilisé pour l'instant
+  'tarif_type' => $tarif_type
   );
 }
 
 /****************************************************************************************/
-/*    Graph consommation w des 24 dernières heures + en parrallèle consommation d'Hier    */
+/*    Graph consomation w des 24 dernières heures + en parrallèle consomation d'Hier    */
 /****************************************************************************************/
 function daily () {
   global $table;
+  global $tarif_type;
 
   $courbe_titre[0]="Heures de Base";
   $courbe_min[0]=5000;
@@ -115,11 +92,8 @@ function daily () {
   $timestampdebut2 = $date - $periodesecondes ;           // Recule de 24h.
   $timestampdebut = $timestampdebut2 - $periodesecondes ; // Recule de 24h.
 
-  $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, time(date) as rec_time, ptec, papp, iinst1
-    FROM `$table`
-    WHERE unix_timestamp(date) >= $timestampdebut
-    AND unix_timestamp(date) < $timestampfin
-    ORDER BY unix_timestamp(date)";
+
+  $query = querydaily($timestampdebut, $timestampfin);
 
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
@@ -183,6 +157,67 @@ function daily () {
       if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
       if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
     }
+    elseif ( $row["ptec"] == "HPJB" )      // Test si heures pleines jours bleus.
+    {
+      $val = floatval(str_replace(",", ".", $row["papp"]));
+      $array_BASE[] = array($ts, null);
+      $array_HP[] = array($ts, $val);
+      $array_HC[] = array($ts, null);
+      $navigator[] = array($ts, $val);
+      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
+      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
+    }
+    elseif ( $row["ptec"] == "HCJB" )      // Test si heures creuses jours bleus.
+    {
+      $val = floatval(str_replace(",", ".", $row["papp"]));
+      $array_BASE[] = array($ts, null);
+      $array_HP[] = array($ts, null);
+      $array_HC[] = array($ts, $val);
+      $navigator[] = array($ts, $val);
+      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
+      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
+    }
+    elseif ( $row["ptec"] == "HPJW" )      // Test si heures pleines jours blancs.
+    {
+      $val = floatval(str_replace(",", ".", $row["papp"]));
+      $array_BASE[] = array($ts, null);
+      $array_HP[] = array($ts, $val);
+      $array_HC[] = array($ts, null);
+      $navigator[] = array($ts, $val);
+      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
+      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
+    }
+    elseif ( $row["ptec"] == "HCJW" )      // Test si heures creuses jours blancs.
+    {
+      $val = floatval(str_replace(",", ".", $row["papp"]));
+      $array_BASE[] = array($ts, null);
+      $array_HP[] = array($ts, null);
+      $array_HC[] = array($ts, $val);
+      $navigator[] = array($ts, $val);
+      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
+      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
+    }
+    elseif ( $row["ptec"] == "HPJR" )      // Test si heures pleines jours rouges.
+    {
+      $val = floatval(str_replace(",", ".", $row["papp"]));
+      $array_BASE[] = array($ts, null);
+      $array_HP[] = array($ts, $val);
+      $array_HC[] = array($ts, null);
+      $navigator[] = array($ts, $val);
+      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
+      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
+    }
+    elseif ( $row["ptec"] == "HCJR" )      // Test si heures creuses jours rouges.
+    {
+      $val = floatval(str_replace(",", ".", $row["papp"]));
+      $array_BASE[] = array($ts, null);
+      $array_HP[] = array($ts, null);
+      $array_HC[] = array($ts, $val);
+      $navigator[] = array($ts, $val);
+      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
+      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
+    }
+
     $val = floatval(str_replace(",", ".", $row["iinst1"])) ;
     $array_I[] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
     if ($courbe_max[3]<$val) {$courbe_max[3] = $val; $courbe_maxdate[3] = $ts;};
@@ -237,6 +272,7 @@ function daily () {
     'JPrec_data' => $array_JPrec,
     'navigator' => $navigator,
     'seuils' => $seuils,
+    'tarif_type' => $tarif_type
     );
 }
 
@@ -249,6 +285,7 @@ function history() {
   global $prixBASE;
   global $prixHP;
   global $prixHC;
+  global $tarif_type;
 
   $duree = isset($_GET['duree'])?$_GET['duree']:8;
   $periode = isset($_GET['periode'])?$_GET['periode']:"jours";
@@ -312,6 +349,7 @@ function history() {
 
       $xlabel = $duree . " mois";
       $dateformatsql = "%b";
+      if ($duree > 6) $dateformatsql = "%b %Y";
       $abonnement = $abo_annuel / 12;
       break;
     case "ans":
@@ -328,7 +366,8 @@ function history() {
       $timestampdebut = mktime(0,0,0,1,1,date("Y",$timestampdebut2)-$duree); // Début de période précédente
 
       $xlabel = $duree . " an";
-      $dateformatsql = "%b";
+      //$xlabel = "l'année ".(date("Y",$timestampdebut2)-$duree)." et ".(date("Y",$timestampfin)-$duree);
+      $dateformatsql = "%b %Y";
       $abonnement = $abo_annuel / 12;
       break;
     default:
@@ -336,27 +375,16 @@ function history() {
       break;
   }
 
-  /*print_r(date("r", $timestampdebut));
-  print_r(date("r", $timestampdebut2));
-  print_r(date("r", $timestampfin));
-  die();/**/
-
   $query="SET lc_time_names = 'fr_FR'" ;  // Pour afficher date en français dans MySql.
-  mysql_query($query) ;
-  $query="SELECT unix_timestamp(date) as timestamp, date(date) as rec_date, DATE_FORMAT(date(date), '$dateformatsql') AS 'periode' ,
-    ROUND( ((MAX(`base`) - MIN(`base`)) / 1000) ,1 ),
-    ROUND( ((MAX(`hchp`) - MIN(`hchp`)) / 1000) ,1 ),
-    ROUND( ((MAX(`hchc`) - MIN(`hchc`)) / 1000) ,1 )
-    FROM `$table`
-    WHERE unix_timestamp(date) >= '$timestampdebut'
-    AND unix_timestamp(date) < '$timestampfin'
-    GROUP BY periode
-    ORDER BY rec_date" ;
-  //die ($query);
+  mysql_query($query);
+
+  $query = queryhistory($timestampdebut, $dateformatsql, $timestampfin);
+
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
   $nbenreg = mysql_num_rows($result);
   $nbenreg--;
   $kwhprec = array();
+  $kwhprec_detail = array();
   $no = 0 ;
   $date_deb=0; // date du 1er enregistrement
   $date_fin=time();
@@ -365,10 +393,11 @@ function history() {
   {
     $ts = intval($row["timestamp"]);
     if ($ts < $timestampdebut2) {
-      $val = floatval(str_replace(",", ".", $row[3]))
-        + floatval(str_replace(",", ".", $row[4]))
-        + floatval(str_replace(",", ".", $row[5]));
+      $val = floatval(str_replace(",", ".", $row[base]))
+        + floatval(str_replace(",", ".", $row[hp]))
+        + floatval(str_replace(",", ".", $row[hc]));
       $kwhprec[] = array($row["periode"], $val); // php recommande cette syntaxe plutôt que array_push
+      $kwhprec_detail[] = array($row[base], $row[hp], $row[hc]);
 //      $kwhprec[] = $val; // php recommande cette syntaxe plutôt que array_push
     }
     else {
@@ -377,9 +406,9 @@ function history() {
       }
       $date[$no] = $row["rec_date"];
       $timestp[$no] = $row["periode"];
-      $kwhbase[$no]=floatval(str_replace(",", ".", $row[3]));
-      $kwhhp[$no]=floatval(str_replace(",", ".", $row[4]));
-      $kwhhc[$no]=floatval(str_replace(",", ".", $row[5]));
+      $kwhbase[$no]=floatval(str_replace(",", ".", $row[base]));
+      $kwhhp[$no]=floatval(str_replace(",", ".", $row[hp]));
+      $kwhhc[$no]=floatval(str_replace(",", ".", $row[hc]));
       $no++ ;
     }
   }
@@ -387,6 +416,7 @@ function history() {
   if (count($kwhprec)<count($kwhbase)) {
     // pad avec une valeur négative, pour ajouter en début de tableau
     $kwhprec = array_pad ($kwhprec, -count($kwhbase), null);
+    $kwhprec_detail = array_pad ($kwhprec_detail, -count($kwhbase), null);
   }
 
   $date_digits_dernier_releve=explode("-", $date[count($date) -1]) ;
@@ -406,20 +436,47 @@ function history() {
   $ddmois=$ddmois-1; // nécessaire pour Date.UTC() en javascript qui a le mois de 0 à 11 !!!
 
   $mnt_kwhbase = 0;
+  $total_kwhbase = 0;
   $mnt_kwhhp = 0;
+  $total_kwhhp = 0;
   $mnt_kwhhc = 0;
+  $total_kwhhc = 0;
   $mnt_abonnement = 0;
   $i = 0;
   while ($i < count($kwhhp))
   {
     $mnt_kwhbase += $kwhbase[$i] * $prixBASE;
+    $total_kwhbase += $kwhbase[$i];
     $mnt_kwhhp += $kwhhp[$i] * $prixHP;
+    $total_kwhhp += $kwhhp[$i];
     $mnt_kwhhc += $kwhhc[$i] * $prixHC;
+    $total_kwhhc += $kwhhc[$i];
     $mnt_abonnement += $abonnement;
     $i++ ;
   }
 
   $mnt_total = $mnt_abonnement + $mnt_kwhbase + $mnt_kwhhp + $mnt_kwhhc;
+
+  $mnt_kwhbase_Prec = 0;
+  $total_kwhbase_Prec = 0;
+  $mnt_kwhhp_Prec = 0;
+  $total_kwhhp_Prec = 0;
+  $mnt_kwhhc_Prec = 0;
+  $total_kwhhc_Prec = 0;
+  $mnt_abonnement_Prec = 0;
+  $i = 0;
+  while ($i < count($kwhprec_detail))
+  {
+    $mnt_kwhbase_Prec += $kwhprec_detail[$i][0] * $prixBASE;
+    $mnt_kwhhp_Prec += $kwhprec_detail[$i][1] * $prixHP;
+    $total_kwhhp_Prec += $kwhprec_detail[$i][1];
+    $mnt_kwhhc_Prec += $kwhprec_detail[$i][2] * $prixHC;
+    $total_kwhhc_Prec += $kwhprec_detail[$i][2];
+    $mnt_abonnement_Prec += $abonnement;
+    $i++ ;
+  }
+
+  $mnt_total_Prec = $mnt_abonnement_Prec + $mnt_kwhbase_Prec + $mnt_kwhhp_Prec + $mnt_kwhhc_Prec;
 
   $prix = array (
     'abonnement' => $abonnement,
@@ -428,9 +485,19 @@ function history() {
     'HC' => $prixHC,
   );
 
+  if ($tarif_type == "HCHP") {
+    $subtitle = "Coût sur la période ".round($mnt_total,2)." Euro<br />( Abonnement : ".round($mnt_abonnement,2)." + HP : ".round($mnt_kwhhp,2)." + HC : ".round($mnt_kwhhc,2)." )";
+    $subtitle = $subtitle."<br /> Total KWhHP : $total_kwhhp Total KWhHC : $total_kwhhc Cumul : " . ($total_kwhhp + $total_kwhhc);
+    $subtitle = $subtitle."<br />Coût sur la période précédente ".round($mnt_total_Prec,2)." Euro<br />( Abonnement : ".round($mnt_abonnement_Prec,2)." + HP : ".round($mnt_kwhhp_Prec,2)." + HC : ".round($mnt_kwhhc_Prec,2)." )";
+    $subtitle = $subtitle."<br /> Total KWhHP : $total_kwhhp_Prec Total KWhHC : $total_kwhhc_Prec Cumul : " . ($total_kwhhp_Prec + $total_kwhhc_Prec);
+  } else {
+    $subtitle = "Coût sur la période ".round($mnt_total,2)." Euro<br />( Abonnement : ".round($mnt_abonnement,2)." + BASE : ".round($mnt_kwhbase,2)." )";
+    $subtitle = $subtitle."<br />Coût sur la période précédente ".round($mnt_total_Prec,2)." Euro<br />( Abonnement : ".round($mnt_abonnement_Prec,2)." + BASE : ".round($mnt_kwhbase_Prec,2)." )";
+  }
+
   return array(
-    'title' => "Consommation sur $xlabel",
-    'subtitle' => "Coût sur la période ".round($mnt_total,2)." Euro<br />( Abonnement : ".round($mnt_abonnement,2)." + BASE : ".round($mnt_kwhbase,2)." + HP : ".round($mnt_kwhhp,2)." + HC : ".round($mnt_kwhhc,2)." )",
+    'title' => "Consomation sur $xlabel",
+    'subtitle' => $subtitle,
     'duree' => $duree,
     'periode' => $periode,
     'debut' => $timestampfin*1000,
@@ -442,8 +509,10 @@ function history() {
     'HC_data' => $kwhhc,
     'PREC_name' => 'Période Précédente',
     'PREC_data' => $kwhprec,
+    'PREC_data_detail' => $kwhprec_detail,
     'categories' => $timestp,
     'prix' => $prix,
+    'tarif_type' => $tarif_type
     );
 }
 

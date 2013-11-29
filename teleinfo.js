@@ -5,6 +5,7 @@ var totalBASE = 0;
 var totalHP = 0;
 var totalHC = 0;
 var totalprix = 0;
+var _animation = true;
 
 var chart_elec0;
 var chart_elec1;
@@ -98,7 +99,7 @@ function init_chart0(data) {
     yAxis: {
       min: 0,
       max: 10000,
-      
+
       minorTickInterval: 'auto',
       minorTickWidth: 1,
       minorTickLength: 10,
@@ -133,7 +134,7 @@ function init_chart0(data) {
         from: 3000,
         to: 10000,
         color: '#DF5353' // red
-      }]        
+      }]
     },
 
     tooltip: {
@@ -145,7 +146,7 @@ function init_chart0(data) {
           return tooltip;
         }
     },
-        
+
     series: [{
       name : data.W_name,
       data : [data.W_data],
@@ -160,7 +161,7 @@ function init_chart1(data) {
   return {
     chart: {
       renderTo: 'chart1',
-      animation: false,
+      animation: _animation,
       events: {
         load: function(chart) {
           this.setTitle(null, {
@@ -266,7 +267,8 @@ function init_chart1(data) {
         threshold : null,
         tooltip : {
             yDecimals : 0
-        }
+        },
+        showInLegend: ((data.tarif_type == "BASE")?true:false)
     }, {
         name : data.HP_name,
         data : data.HP_data,
@@ -275,7 +277,8 @@ function init_chart1(data) {
         threshold : null,
         tooltip : {
             yDecimals : 0
-        }
+        },
+        showInLegend: ((data.tarif_type == "HCHP")?true:false)
     }, {
         name : data.HC_name,
         data : data.HC_data,
@@ -284,7 +287,8 @@ function init_chart1(data) {
         threshold : null,
         tooltip : {
             yDecimals : 0
-        }
+        },
+        showInLegend: ((data.tarif_type == "HCHP")?true:false)
     },
     /*{
         name : data.I_name,
@@ -339,7 +343,7 @@ function init_chart2(data) {
   return {
     chart: {
       renderTo: 'chart2',
-      animation: false,
+      animation: _animation,
       events: {
         load: function(chart) {
           this.setTitle(null, {
@@ -382,19 +386,39 @@ function init_chart2(data) {
     tooltip: {
       formatter: function() {
         if (this.series.name == 'Période Précédente') {
-          tooltip = '<b>'+ this.series.name +'</b><br />';
-          tooltip += '<b>'+ this.key + '</b><br />';
-          tooltip += 'Total: '+ Highcharts.numberFormat(this.y, 2) +' kWh<br />';
+          //console.log(this);
+          totalBASE=data.prix.BASE * data.PREC_data_detail[this.point.x][0];
+          totalHP=data.prix.HP * data.PREC_data_detail[this.point.x][1];
+          totalHC=data.prix.HC * data.PREC_data_detail[this.point.x][2];
+          totalprix=Highcharts.numberFormat(( totalBASE + totalHP + totalHC + data.prix.abonnement ),2);
+
+          tooltip = '<b>'+ this.key +' </b><br /><b>'+ this.series.name +' '+ Highcharts.numberFormat(this.y, 2) +' kWh</b><br />';
+          //tooltip += 'Total: '+ Highcharts.numberFormat(this.y, 2) +' kWh<br />';
+          if (data.tarif_type == "BASE") {
+            //tooltip += 'BASE : '+ data.PREC_data_detail[this.point.x][0] + ' kWh <br />';
+            tooltip += 'BASE : '+ Highcharts.numberFormat(totalBASE,2) + ' Euro<br />';
+          } else if (data.tarif_type == "HCHP") {
+            tooltip += 'HP : '+ Highcharts.numberFormat(totalHP,2) + ' Euro (' + data.PREC_data_detail[this.point.x][1] + ' kWh) /'
+            tooltip += 'HC : ' + Highcharts.numberFormat(totalHC,2) + ' Euro (' + data.PREC_data_detail[this.point.x][1] + ' kWh) <br />';
+          }
+          tooltip += 'Abonnement sur la période : '+ Highcharts.numberFormat(data.prix.abonnement,2) +' Euro<br />';
+          tooltip += '<b>Total: '+ totalprix +' Euro<b>';
         }
         else {
           totalBASE=data.prix.BASE*((this.series.name == 'Heures de Base')? this.y :this.point.stackTotal-this.y);
           totalHP=data.prix.HP*((this.series.name == 'Heures Pleines')? this.y :this.point.stackTotal-this.y);
           totalHC=data.prix.HC*((this.series.name == 'Heures Creuses')? this.y :this.point.stackTotal-this.y);
           totalprix=Highcharts.numberFormat(( totalBASE + totalHP + totalHC + data.prix.abonnement ),2);
-          tooltip = '<b> '+ this.x +' </b><br /><b>'+ this.series.name +' '+ Highcharts.numberFormat(this.y, 2) +' kWh</b><br />';
-          tooltip += 'BASE : '+ Highcharts.numberFormat(totalBASE,2) + ' Euro / HP : '+ Highcharts.numberFormat(totalHP,2) + ' Euro / HC : ' + Highcharts.numberFormat(totalHC,2) + ' Euro<br />';
+
+          tooltip = '<b>'+ this.x +' </b><br /><b>'+ this.series.name +' '+ Highcharts.numberFormat(this.y, 2) +' kWh</b><br />';
+          //tooltip += 'BASE : '+ Highcharts.numberFormat(totalBASE,2) + ' Euro / HP : '+ Highcharts.numberFormat(totalHP,2) + ' Euro / HC : ' + Highcharts.numberFormat(totalHC,2) + ' Euro<br />';
+          if (data.tarif_type == "BASE") {
+            tooltip += 'BASE : '+ Highcharts.numberFormat(totalBASE,2) + ' Euro <br />';
+          } else if (data.tarif_type == "HCHP") {
+            tooltip += 'HP : '+ Highcharts.numberFormat(totalHP,2) + ' Euro / HC : ' + Highcharts.numberFormat(totalHC,2) + ' Euro<br />';
+          }
           tooltip += 'Abonnement sur la période : '+ Highcharts.numberFormat(data.prix.abonnement,2) +' Euro<br />';
-          tooltip += '<b> Total: '+ totalprix +' Euro</b>';
+          tooltip += '<b>Total: '+ totalprix +' Euro</b>';
         }
         return tooltip;
       }
@@ -432,7 +456,8 @@ function init_chart2(data) {
           font: 'normal 13px Verdana, sans-serif'
         }
       },
-      type: 'column'
+      type: 'column',
+      showInLegend: ((data.tarif_type == "BASE")?true:false)
     }, {
       name : data.HP_name,
       data : data.HP_data,
@@ -448,7 +473,8 @@ function init_chart2(data) {
           font: 'normal 13px Verdana, sans-serif'
         }
       },
-      type: 'column'
+      type: 'column',
+      showInLegend: ((data.tarif_type == "HCHP")?true:false)
     }, {
       name : data.HC_name,
       data : data.HC_data,
@@ -558,7 +584,7 @@ function init_chart2_navigation(duree, periode) {
   $(".select_chart2#periode").val(periode);
   $('.select_chart2#periode').selectmenu('refresh', true);
   //$(".select_chart2#periode").refresh;
-  
+
   // Libelles des boutons
   $(".button_chart2#chart2_date_prec").html("&laquo;&nbsp;- " + txtdecalage);
   $(".button_chart2#chart2_date_now").html("Aujourd'hui");
@@ -674,7 +700,7 @@ function process_chart2_button(object) {
           // décalage d'un mois
           newdate.setMonth(newdate.getMonth()+1*coefdate);
           break;
-        case ("an"):
+        case ("ans"):
           // décalage d'un mois
           newdate.setMonth(newdate.getMonth()+1*coefdate);
           break;
@@ -690,7 +716,7 @@ function process_chart2_button(object) {
 
   refresh_chart2(duree, periode, newdate);
 };
- 
+
 function process_chart2_select(e, object){
   periode = $(".select_chart2#periode").val();
   duree = $(".select_chart2#duree").val();
@@ -710,7 +736,7 @@ function process_chart2_select(e, object){
 
   refresh_chart2(duree, periode, newdate);
 }
-    
+
 $(document).ready(function() {
   // Initialisation jQueryUI button & selectmenu
   $('.button_chart0').button();
