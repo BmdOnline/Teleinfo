@@ -15,6 +15,7 @@ include_once("config.php");
 function instantly () {
   global $db_table;
   global $tarif_type;
+  global $refresh_auto, $refresh_delay;
 
   $date = isset($_GET['date'])?$_GET['date']:null;
 
@@ -48,13 +49,15 @@ function instantly () {
 
 
   return array(
-  'title' => "Graph du $datetext",
-  'subtitle' => "",
-  'debut' => $date_deb*1000, // $date_deb_UTC,
-  'W_name' => "Watts",
-  'W_data'=> $val,
-  'seuils' => $seuils,  // non utilisé pour l'instant
-  'tarif_type' => $tarif_type
+    'title' => "Graph du $datetext",
+    'subtitle' => "",
+    'debut' => $date_deb*1000, // $date_deb_UTC,
+    'W_name' => "Watts",
+    'W_data'=> $val,
+    'seuils' => $seuils,  // non utilisé pour l'instant
+    'tarif_type' => $tarif_type,
+    'refresh_auto' => $refresh_auto,
+    'refresh_delay' => $refresh_delay
   );
 }
 

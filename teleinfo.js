@@ -11,6 +11,9 @@ var chart_elec0;
 var chart_elec1;
 var chart_elec2;
 
+var timerID;
+var chart_elec0_delay = 60; // secondes
+
 jQuery(function($) {
   Highcharts.setOptions({
     lang: {
@@ -457,6 +460,7 @@ function init_chart2(data) {
         }
       },
       type: 'column',
+      visible: ((data.tarif_type == "BASE")?true:false),
       showInLegend: ((data.tarif_type == "BASE")?true:false)
     }, {
       name : data.HP_name,
@@ -474,6 +478,7 @@ function init_chart2(data) {
         }
       },
       type: 'column',
+      visible: ((data.tarif_type == "HCHP")?true:false),
       showInLegend: ((data.tarif_type == "HCHP")?true:false)
     }, {
       name : data.HC_name,
@@ -489,7 +494,10 @@ function init_chart2(data) {
         style: {
           font: 'normal 13px Verdana, sans-serif'
         }
-      }
+      },
+      type: 'column',
+      visible: ((data.tarif_type == "HCHP")?true:false),
+      showInLegend: ((data.tarif_type == "HCHP")?true:false)
     }, {
       name : data.PREC_name,
       data : data.PREC_data,
@@ -511,6 +519,12 @@ function init_chart2(data) {
       }*/
     }
     ],
+    legend: {
+      enabled: true,
+      borderColor: 'black',
+      borderWidth: 1,
+      shadow: true
+    },
     navigation: {
       menuItemStyle: {
         fontSize: '10px'
@@ -737,6 +751,17 @@ function process_chart2_select(e, object){
   refresh_chart2(duree, periode, newdate);
 }
 
+function enable_timer() {
+    //console.log("enable timer");
+    timerID = setInterval(refresh_chart0, chart_elec0_delay * 1000);
+}
+
+function disable_timer() {
+    //console.log("disable timer");
+    clearInterval(timerID);
+}
+
+
 $(document).ready(function() {
   // Initialisation jQueryUI button & selectmenu
   $('.button_chart0').button();
@@ -792,6 +817,12 @@ $(document).ready(function() {
   // Crée le graphique 0 (instantly)
   $.getJSON('json.php?query=instantly', function(data) {
     chart_elec0 = new Highcharts.Chart(init_chart0(data));
+
+    // Active le rafraichissement automatique
+    chart_elec0_delay = data.refresh_delay;
+    if (data.refresh_auto) {
+      enable_timer();
+    };
   });
 
   // Crée le graphique 1 (daily)

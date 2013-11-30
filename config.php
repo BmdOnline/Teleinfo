@@ -29,6 +29,9 @@ $db_select_max_mesures["inst1"]="MAX(papp) AS maxpapp, MAX(inst1) AS maxiinst1";
 /*********************/
 $nbPhasesCompteur = 1; // 1 pour monophasé ou 3 pour triphasé
 
+$refresh_auto = true; // active le rafraichissement automatique
+$refresh_delay = 120; // relancé toutes les 120 secondes
+
 // Quelques informations sur Teleinfo et les formules EDF :
 //   http://www.yadnet.com/index.php?page=protocole-teleinfo
 $tarif_type = "BASE"; // vaut soit "BASE", soit "HCHP", soit "EJP.", soit "BBRX" (TEMPO)
