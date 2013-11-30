@@ -1,6 +1,6 @@
 /* Style pour avoir le sablier durant les rafraichissements */
-html.busy, html.busy * {  
-  cursor: wait !important;  
+html.busy, html.busy * {
+  cursor: wait !important;
 }
 
 /*button[class="button_chart1"],
@@ -35,7 +35,7 @@ button[class="button_chart2"]:hover,*/
   background:-webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));
 }
 
-/* Styles associés aux liste selectmenu : select_chart2 */
+/* Styles associÃ©s aux liste selectmenu : select_chart2 */
 select[class="select_chart2"]
 {
   width:200px;

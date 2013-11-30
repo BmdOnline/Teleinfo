@@ -9,11 +9,11 @@ error_reporting(0);
 // Config : Connexion MySql et requête. et prix du kWh
 include_once("config.php");
 
-/***************************************/
+/****************************************/
 /*    Graph consommation instantanée    */
-/***************************************/
+/****************************************/
 function instantly () {
-  global $table;
+  global $db_table;
   global $tarif_type;
 
   $date = isset($_GET['date'])?$_GET['date']:null;
@@ -29,7 +29,7 @@ function instantly () {
   $timestampdebut2 = $date - $periodesecondes ;           // Recule de 24h.
   $timestampdebut = $timestampdebut2 - $periodesecondes ; // Recule de 24h.
 
-  $query = queryinstantly();
+  $query = queryInstantly();
 
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
@@ -62,7 +62,7 @@ function instantly () {
 /*    Graph consomation w des 24 dernières heures + en parrallèle consomation d'Hier    */
 /****************************************************************************************/
 function daily () {
-  global $table;
+  global $db_table;
   global $tarif_type;
 
   $courbe_titre[0]="Heures de Base";
@@ -93,7 +93,7 @@ function daily () {
   $timestampdebut = $timestampdebut2 - $periodesecondes ; // Recule de 24h.
 
 
-  $query = querydaily($timestampdebut, $timestampfin);
+  $query = queryDaily($timestampdebut, $timestampfin);
 
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
@@ -280,12 +280,14 @@ function daily () {
 /*    Graph cout sur période [8jours|8semaines|8mois|1an]    */
 /*************************************************************/
 function history() {
-  global $table;
+  global $db_table;
   global $abo_annuel;
   global $prixBASE;
   global $prixHP;
   global $prixHC;
   global $tarif_type;
+
+  $tab_prix = getTarifs($tarif_type);
 
   $duree = isset($_GET['duree'])?$_GET['duree']:8;
   $periode = isset($_GET['periode'])?$_GET['periode']:"jours";
@@ -378,7 +380,7 @@ function history() {
   $query="SET lc_time_names = 'fr_FR'" ;  // Pour afficher date en français dans MySql.
   mysql_query($query);
 
-  $query = queryhistory($timestampdebut, $dateformatsql, $timestampfin);
+  $query = queryHistory($timestampdebut, $dateformatsql, $timestampfin);
 
   $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
   $nbenreg = mysql_num_rows($result);
@@ -519,8 +521,8 @@ function history() {
 $query = isset($_GET['query'])?$_GET['query']:"daily";
 
 if (isset($query)) {
-  mysql_connect($serveur, $login, $pass) or die("Erreur de connexion au serveur MySql");
-  mysql_select_db($base) or die("Erreur de connexion a la base de donnees $base");
+  mysql_connect($db_serveur, $db_login, $db_pass) or die("Erreur de connexion au serveur MySql");
+  mysql_select_db($db_base) or die("Erreur de connexion a la base de donnees $base");
   mysql_query("SET NAMES 'utf8'");
 
   switch ($query) {

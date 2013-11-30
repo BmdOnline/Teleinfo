@@ -19,11 +19,12 @@
 [Cliquer pour visualiser](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_all.png)
 
 ###Version 4.1 (dev)
+* Modification du nom du fichier principal "teleinfo.php" au lieu de "teleinfov4.php".
 * Gestion des requêtes mysql dans un fichier dédié "config.php". (energy01)
-* Prise en charge partielle de différents formats de base de données (date ou timestamp notamment). (energy01)
-* Début de gestion des abonnements autres que "base" ou "HC/HP". (energy01)
+* Prise en charge partielle de différents formats de base de données (date ou timestamp notamment). (energy01 & BmdOnline)
+* Début de gestion des abonnements autres que "base" ou "HC/HP". (energy01 & BmdOnline)
+* Début de gestion d'un historique des tarifs EDF. (energy01)
 * Ajout d'une bibliothèque d'applications utilisées pour collecter les éléments téléinformation. (BmdOnline)
-* Modification du nom du fichier principal "teleinfo.php" au lieu de "teleinfov4.php". (BmdOnline)
 
 ###Version 4
 * Ajout de la gauge de consommation instantanée.
