@@ -775,7 +775,7 @@ $(document).ready(function() {
   });
 
   // Overflow : permet de limiter la hauteur des listes déroulantes (via css)
-  $('.select_chart2').selectmenu("menuWidget").addClass("overflow");
+  $('.select_chart2').selectmenu("menuWidget").addClass("ui-selectmenu-overflow");
 
   // Evènements boutons (click) et selectmenu (change)
   $('.button_chart0').click(

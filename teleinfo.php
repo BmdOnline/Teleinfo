@@ -11,7 +11,9 @@ date_default_timezone_set("Europe/Paris");
 
     <link rel="shortcut icon" href="./favicon.ico">
 
-    <!--
+    <!-- ce qui suit n'est plus nécessaire,
+         mais l'information est intéressante à conserver !
+
       jquery-ui :
       recompilé avec selectmenu, à l'aide de :
           node.js (nvm / npm) & grunt
@@ -23,13 +25,15 @@ date_default_timezone_set("Europe/Paris");
               grunt build
     -->
 
-    <link rel="stylesheet" href="./css/smoothness/jquery-ui-1.10.1pre.selectmenu.min.css">
+    <!-- CSS minified with http://cssminifier.com/minify -->
+    <link rel="stylesheet" href="./css/jquery-ui-1.11.0pre.min.css">
 
-    <script type="text/javascript" src="./js/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="./js/jquery-ui-1.10.1pre.selectmenu.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
+    <!-- JS minified with http://closure-compiler.appspot.com/home -->
+    <script type="text/javascript" src="./js/jquery-ui-1.11.0pre.min.js"></script>
+
 
     <!-- Attention à l'ordre des déclarations -->
-    <script type="text/javascript" src="./js/highcharts.js"></script>
     <script type="text/javascript" src="./js/highstock.js"></script>
     <script type="text/javascript" src="./js/highcharts-more.js"></script>
 
@@ -78,7 +82,7 @@ date_default_timezone_set("Europe/Paris");
               <option value="mois">Mois(s)</option>
               <option value="ans">An(s)</option>
           </select>
-    
+
           <br />
           <button class="button_chart2" id="chart2_date_prec" value="1prec">&laquo;</button>
           <button class="button_chart2" id="chart2_date_now" value="now">Aujourd'hui</button>

@@ -335,7 +335,7 @@ function history() {
       $timestampdebut = strtotime(date("Y-m-d", $timestampdebut2) . " -".$duree." week"); // Début de période précédente
 
       $xlabel = $duree . " semaines";
-      $dateformatsql = "sem %v";
+      $dateformatsql = "sem %v (%Y)";
       $abonnement = $abo_annuel / 52;
       break;
     case "mois":
@@ -353,7 +353,7 @@ function history() {
       $timestampdebut = mktime(0,0,0,date("m",$timestampdebut2)-$duree,1,date("Y",$timestampdebut2)); // Début de période précédente
 
       $xlabel = $duree . " mois";
-      $dateformatsql = "%b";
+      $dateformatsql = "%b (%Y)";
       if ($duree > 6) $dateformatsql = "%b %Y";
       $abonnement = $abo_annuel / 12;
       break;

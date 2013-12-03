@@ -19,13 +19,21 @@
 [Cliquer pour visualiser](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_all.png)
 
 ###Version 4.1 (dev)
-* Modification du nom du fichier principal "teleinfo.php" au lieu de "teleinfov4.php".
-* Gestion des requêtes mysql dans un fichier dédié "config.php". (energy01)
-* Prise en charge de différents formats de base de données (date ou timestamp notamment). (energy01 & BmdOnline)
-* Rafraîchissement automatique de la gauge (option dans config.php). (energy01 & BmdOnline)
-* Début de gestion des abonnements autres que "base" ou "HC/HP". (energy01 & BmdOnline)
-* Début de gestion d'un historique des tarifs EDF. (energy01)
-* Ajout d'une bibliothèque d'applications utilisées pour collecter les éléments téléinformation. (BmdOnline)
+* Graphiques
+    - change : Rafraîchissement automatique de la gauge (option dans config.php). (energy01 & BmdOnline)
+    - bugfix : N'affique que l'abonnement actuel dans les légendes des graphiques. (energy01)
+    - bugfix : N'affiche plus les 0 de consommation de type "BASE" en cas d'abonnement HP/HC. (BmdOnline)
+    - bugfix : Correction du bug cumulant les années sur le graphique historique. (BmdOnline)
+
+* Moteur
+    - change : Modification du nom du fichier principal "teleinfo.php" au lieu de "teleinfov4.php".
+    - change : Gestion des requêtes mysql dans un fichier dédié "config.php". (energy01)
+    - change : Prise en charge de différents formats de base de données (date ou timestamp notamment). (energy01 & BmdOnline)
+    - change : Début de gestion des abonnements autres que "base" ou "HC/HP". (energy01 & BmdOnline)
+    - change : Début de gestion d'un historique des tarifs EDF. (energy01)
+    - change : Ajout d'une bibliothèque d'applications utilisées pour collecter les éléments téléinformation. (BmdOnline)
+
+* Misa à jour de JQuery (1.11.0pre) et Highcharts (3.0.7 & 1.3.7).
 
 ###Version 4
 * Ajout de la gauge de consommation instantanée.
