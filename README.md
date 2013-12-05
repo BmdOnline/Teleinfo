@@ -19,13 +19,24 @@
 [Cliquer pour visualiser](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_all.png)
 
 ###Version 4.1 (dev)
+* Interface
+    - change : Gestion des appareils mobiles (Smartphones & Tablettes) (BmdOnline)
+    - change : Mise en place de templates d'affichage. (BmdOnline)
+        * Version avec onglets : chaque graphique est dans un onglet différent.
+        * Version linéraire : tout apparait sur la même page.
+    - change : Epuration du CSS spécifique dans "teleinfo.css". (BmdOnline)
+    - change : Proposition de 3 thèmes CSS. (BmdOnline)
+        * Version classique, en utilisant le thème "smoothness".
+        * Version claire, en utilisant le thème "ui-lightness".
+        * Version sombre, en utilisant le thème "ui-darkness".
+
 * Graphiques
     - change : Rafraîchissement automatique de la gauge (option dans config.php). (energy01 & BmdOnline)
     - bugfix : N'affique que l'abonnement actuel dans les légendes des graphiques. (energy01)
     - bugfix : N'affiche plus les 0 de consommation de type "BASE" en cas d'abonnement HP/HC. (BmdOnline)
     - bugfix : Correction du bug cumulant les années sur le graphique historique. (BmdOnline)
 
-* Moteur
+* Moteur / PHP
     - change : Modification du nom du fichier principal "teleinfo.php" au lieu de "teleinfov4.php".
     - change : Gestion des requêtes mysql dans un fichier dédié "config.php". (energy01)
     - change : Prise en charge de différents formats de base de données (date ou timestamp notamment). (energy01 & BmdOnline)
@@ -33,7 +44,14 @@
     - change : Début de gestion d'un historique des tarifs EDF. (energy01)
     - change : Ajout d'une bibliothèque d'applications utilisées pour collecter les éléments téléinformation. (BmdOnline)
 
-* Misa à jour de JQuery (1.11.0pre) et Highcharts (3.0.7 & 1.3.7).
+* Moteur / JavaScript
+    - change : Validation JSLint de "teleinfo.js". (BmdOnline)
+
+* Misa à jour des librairies (BmdOnline)
+    - Highcharts 3.0.7 & Highstock 1.3.7
+    - JQuery 2.1.0-pre (incompatible IE 6/7/8) & JQuery 1.10.2 (à activer manuellement en cas d'anciens navigateurs)
+    - JQueryUI 1.11.0pre
+    - JQueryMobile 1.4.0-rc1
 
 ###Version 4
 * Ajout de la gauge de consommation instantanée.
@@ -71,6 +89,42 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://pen
 ###Version 1
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.anthony.free.fr/?p=111)
 
+###Templates
+Actuellement, 2 templates sont proposés pour chacun des affichages (desktop & mobile).
+Pour en changer, il faut remplacer le contenu du répertoire "tpl"...
+* Pour la vesion desktop, depuis :
+    - tpl/desktop - lineaire
+    - tpl/desktop - onglets
+* Pour la vesion mobile, depuis :
+    - tpl/mobile - lineaire
+    - tpl/mobile - onglets
+* Dans tous les cas, en ajoutant les fichiers communs depuis :
+    - tpl/commun
+
+Important :
+A chaque changement de template, ne pas oublier de vider le contenu du répertoire "cache".
+
+Remarque :
+Pour le bon fonctionnement du programme, il faut choisir un template desktop ET un template mobile.
+Par défaut, le programme est réglé sur les templates avec onglets.
+
+###Thèmes
+Actuellement, 3 thèmes sont proposés (classique, clair & sombre).
+Pour en changer, il faut modifier le fichier "tpl/inc.lib.html", en spécifiant respectivement :
+```php
+<link rel="stylesheet" href="./css/smoothness/jquery-ui-1.11.0pre.min.css#">
+```
+ou
+```php
+<link rel="stylesheet" href="./css/ui-lightness/jquery-ui-1.11.0pre.min.css#">
+```
+ou
+```php
+<link rel="stylesheet" href="./css/ui-darkness/jquery-ui-1.11.0pre.min.css#">
+```
+Remarque :
+Par défaut, le programme est réglé sur le thème sombre.
+
 ###Format de date MySQL
 Selon l'utilitaire collectant les données téléinformation, la base peut utiliser un format de date différent.
 Cette version du programme prévoit l'utilisation des 2 structure les plus fréquentes.
@@ -88,7 +142,7 @@ $db_iinst = "iinst1"; // vaut soit "iinst1" soit "inst1"
 ```
 
 ###Reste à faire
-- [] Prévoir une version "mobile", pour les smartphones et tablettes.
+- [x] Prévoir une version "mobile", pour les smartphones et tablettes.
 - [] Proposer de visualiser une période précédente ou une moyenne en surimpression de l'historique.
 - [] Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
     - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
