@@ -3,11 +3,52 @@ html.busy, html.busy * {
     cursor: wait !important;
 }
 
+/* Graphiques */
+#chart0 {
+    /*float: left; */
+    width: 300px;
+    height: 300px;
+}
+
+#chart1 {
+    width: 100%; /*800px;*/
+    height: 500px;
+}
+
+#chart2 {
+    width: 100%; /*800px;*/
+    height: 400px;
+}
+
+#chart2_legende {
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+}
+
+@media ( min-width: 900px ) {
+    /* for devices with high resolution */
+    #chart1 {
+        width: 800px;
+    }
+    #chart2 {
+        width: 800px;
+    }
+}
+
+.chart {
+    margin: 0 auto;
+    margin-bottom: 20px !important;
+}
+
+
+/* JQuery UI */
 .ui-button {
     text-align: center !important;
     width:125px !important;
     height:30px !important;
     margin-left:20px;
+    margin-bottom:20px;
     font-size:1em;
     font-weight:bold;
     border:none;
@@ -43,6 +84,7 @@ select[class="select_chart2"] {
     width:125px !important;
     height:30px !important;
     margin-left:20px;
+    margin-bottom:10px;
     font-size:1em;
     font-weight:bold;
     border:none;
@@ -87,6 +129,11 @@ select[class="select_chart2"] {
 
 .ui-selectmenu-overflow {
     height: 200px;
+}
+
+/* Habillage de la page */
+.button_group {
+    text-align: center;
 }
 
 #Menu {

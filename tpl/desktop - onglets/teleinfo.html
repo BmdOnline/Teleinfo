@@ -6,34 +6,26 @@
 
     <body>
         <div id="tabs">
-            <ul>
-                  <li><a href="#tab0" id="nav_page0" data-icon="check">Instantan&eacute;</a></li>
-                  <li><a href="#tab1" id="nav_page1" data-icon="clock">Aper&ccedil;u 24h</a></li>
-                  <li><a href="#tab2" id="nav_page2" data-icon="calendar">Historiques</a></li>
-            </ul>
+{include="header"}
 
-            <div id="tab0"> <!-- <div style="float: left;"> <!-- Chart0 -->
-                <div style="text-align: center;">
+            <div id="page0"> <!-- Chart0 -->
+                <div class="button_group">
                     <button class="button_chart0" id="chart0_refresh" value="now">Rafra&icirc;chir</button>
                 </div>
-                <br />
-                <div id="chart0" style="width: 300px; height: 300px; margin: 0 auto"></div>
-                <br /><br />
+                <div class="chart" id="chart0"></div>
             </div>
 
-            <div id="tab1"> <!-- <div style="float: right;"> <!-- Chart1 -->
-                <div style="text-align: center;">
+            <div id="page1"> <!-- Chart1 -->
+                <div class="button_group">
                     <button class="button_chart1" id="chart1_date_prec" value="1prec">&laquo;&nbsp;- 24h</button>
                     <button class="button_chart1" id="chart1_date_now" value="now">Aujourd'hui</button>
                     <button class="button_chart1" id="chart1_date_suiv" value="1suiv">+ 24h&nbsp;&raquo;</button>
                 </div>
-                <br />
-                <div id="chart1" style="width: 800px; height: 500px; margin: 0 auto"></div>
-                <br /><br />
+                <div class="chart" id="chart1"></div>
             </div>
 
-            <div id=tab2> <!-- <div style="float: none;"> <!-- Chart2 -->
-                <div style="text-align: center;">
+            <div id="page2"> <!-- Chart2 -->
+                <div class="button_group">
                     <select class="select_chart2" id="duree">
                         <option value="1">1</option>
                         <option value="8">8</option>
@@ -45,17 +37,14 @@
                         <option value="mois">Mois(s)</option>
                         <option value="ans">An(s)</option>
                     </select>
-
-                    <br />
+                </div>
+                <div class="button_group">
                     <button class="button_chart2" id="chart2_date_prec" value="1prec">&laquo;</button>
                     <button class="button_chart2" id="chart2_date_now" value="now">Aujourd'hui</button>
                     <button class="button_chart2" id="chart2_date_suiv" value="1suiv">&raquo;</button>
                 </div>
-                <br />
-                <div id="chart2legende" style="text-align: center;" >Coût sur la période ...</div>
-                <br />
-                <div id="chart2" style="width: 800px; height: 400px; margin: 0 auto"></div>
-                <br /><br />
+                <div id="chart2_legende">Coût sur la période ...</div>
+                <div class="chart" id="chart2"></div>
             </div>
         </div> <!-- /tabs -->
     </body>

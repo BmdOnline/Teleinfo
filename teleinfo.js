@@ -57,7 +57,7 @@ function init_chart0_navigation() {
     "use strict";
 
     // Libelles des boutons
-    $(".button_chart0#chart0_refresh").html("Rafra&icirc;chir");
+    $("#chart0_refresh").html("Rafra&icirc;chir");
 }
 
 function init_chart0(data) {
@@ -77,8 +77,8 @@ function init_chart0(data) {
                     this.setTitle(null, {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
                     });
-                    if ($('#chart0legende').length) {
-                        $("#chart0legende").html(data.subtitle);
+                    if ($('#chart0_legende').length) {
+                        $("#chart0_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
                     init_chart0_navigation();
@@ -194,9 +194,9 @@ function init_chart1_navigation() {
     "use strict";
 
     // Libelles des boutons
-    $(".button_chart1#chart1_date_prec").html("&laquo;&nbsp;- 24h");
-    $(".button_chart1#chart1_date_now").html("Aujourd'hui");
-    $(".button_chart1#chart1_date_suiv").html("+ 24h&nbsp;&raquo;");
+    $("#chart1_date_prec").html("&laquo;&nbsp;- 24h");
+    $("#chart1_date_now").html("Aujourd'hui");
+    $("#chart1_date_suiv").html("+ 24h&nbsp;&raquo;");
 }
 
 function init_chart1(data) {
@@ -211,8 +211,8 @@ function init_chart1(data) {
                     this.setTitle(null, {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
                     });
-                    if ($('#chart1legende').length) {
-                        $("#chart1legende").html(data.subtitle);
+                    if ($('#chart1_legende').length) {
+                        $("#chart1_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
                     init_chart1_navigation(data.duree, data.periode);
@@ -271,13 +271,13 @@ function init_chart1(data) {
             }
         },
         yAxis: [{
-            labels: {
-                formatter: function () {
-                    return this.value + ' w';
-                }
-            },
             title: {
                 text: 'Watt'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value; // + ' w';
+                }
             },
             lineWidth: 2,
             showLastLabel: true,
@@ -440,9 +440,9 @@ function init_chart2_navigation(duree, periode) {
     //$(".select_chart2#periode").refresh;
 
     // Libelles des boutons
-    $(".button_chart2#chart2_date_prec").html("&laquo;&nbsp;- " + txtdecalage);
-    $(".button_chart2#chart2_date_now").html("Aujourd'hui");
-    $(".button_chart2#chart2_date_suiv").html("+ " + txtdecalage + "&nbsp;&raquo;");
+    $("#chart2_date_prec").html("&laquo;&nbsp;- " + txtdecalage);
+    $("#chart2_date_now").html("Aujourd'hui");
+    $("#chart2_date_suiv").html("+ " + txtdecalage + "&nbsp;&raquo;");
 }
 
 function init_chart2(data) {
@@ -458,8 +458,8 @@ function init_chart2(data) {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
                         //text: data.subtitle
                     });
-                    if ($('#chart2legende').length) {
-                        $("#chart2legende").html(data.subtitle);
+                    if ($('#chart2_legende').length) {
+                        $("#chart2_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
                     init_chart2_navigation(data.duree, data.periode);
@@ -487,13 +487,13 @@ function init_chart2(data) {
             title: {
                 text: 'kWh'
             },
-            min: 0,
-            minorGridLineWidth: 0,
             labels: {
                 formatter: function () {
-                    return this.value + ' kWh';
+                    return this.value; // + ' kWh';
                 }
-            }
+            },
+            min: 0,
+            minorGridLineWidth: 0
         },
         tooltip: {
             formatter: function () {
@@ -795,6 +795,30 @@ function process_chart2_select(object) {
     refresh_chart2(duree, periode, newdate);
 }
 
+function refresh_charts(pageName) {
+    switch (pageName) {
+    case 'page0':
+        // Crée le graphique 0 (instantly)
+        refresh_chart0();
+        break;
+    case 'page1':
+        // Crée le graphique 1 (daily)
+        refresh_chart1();
+        break;
+    case 'page2':
+        // Crée le graphique 2 (history)
+        refresh_chart2();
+        break;
+    default:
+        // Crée le graphique 0 (instantly)
+        refresh_chart0();
+        // Crée le graphique 1 (daily)
+        refresh_chart1();
+        // Crée le graphique 2 (history)
+        refresh_chart2();
+    }
+}
+
 function init_events() {
     "use strict";
 
@@ -845,29 +869,7 @@ if ($.mobile) {
         var pageName;
         if (typeof (ui.toPage) === 'object') {
             pageName = ui.toPage.attr("id");
-
-            //console.log('Page name : ' + pageName);
-            switch (pageName) {
-            case 'page0':
-                // Crée le graphique 0 (instantly)
-                refresh_chart0();
-                break;
-            case 'page1':
-                // Crée le graphique 1 (daily)
-                refresh_chart1();
-                break;
-            case 'page2':
-                // Crée le graphique 2 (history)
-                refresh_chart2();
-                break;
-            default:
-                // Crée le graphique 0 (instantly)
-                refresh_chart0();
-                // Crée le graphique 1 (daily)
-                refresh_chart1();
-                // Crée le graphique 2 (history)
-                refresh_chart2();
-            }
+            refresh_charts(pageName);
         }
     });
 
@@ -880,9 +882,6 @@ if ($.mobile) {
         $('.button_chart1').button();
         $('.button_chart2').button();
 
-        // Enable tab navigation
-        $('#tabs').tabs();
-
         // Initialisation jQueryUI selectmenu
         $('.select_chart2').selectmenu({
             dropdown: false
@@ -891,6 +890,30 @@ if ($.mobile) {
         $('.select_chart2').selectmenu("menuWidget").addClass("ui-selectmenu-overflow");
 
         init_events();
+
+        // Enable tab navigation
+        if ($('#tabs')) {
+            $('#tabs')
+                .tabs({
+                    create: function( event, ui ) {
+                        var pageName;
+                        if (typeof (ui.panel) === 'object') {
+                            pageName = ui.panel.attr("id");
+                            refresh_charts(pageName);
+                        }
+                    },
+                    activate: function( event, ui ) {
+                        var pageName;
+                        if (typeof (ui.newPanel) === 'object') {
+                            pageName = ui.newPanel.attr("id");
+                            refresh_charts(pageName);
+                        }
+                    }
+                })
+        } else {
+            // Rafraîchit tous les graphiques à la fois
+            refresh_charts();
+        }
 
         // Sablier durant les requêtes AJAX (style CSS à définir)
         $(document)
@@ -915,12 +938,5 @@ if ($.mobile) {
                 //$('.button_chart2').removeClass("ui-state-disabled");
                 //$('.select_chart2').addClass("ui-state-disabled");
             });
-
-        // Crée le graphique 0 (instantly)
-        refresh_chart0();
-        // Crée le graphique 1 (daily)
-        refresh_chart1();
-        // Crée le graphique 2 (history)
-        refresh_chart2();
     });
 }

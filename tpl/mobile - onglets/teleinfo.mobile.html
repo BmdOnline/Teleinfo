@@ -9,10 +9,10 @@
 {include="header.mobile"}
 
             <div class="ui-content"> <!-- Chart0 -->
-                <div style="text-align: center;" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
                     <button class="button_chart0" id="chart0_refresh" value="now">Rafra&icirc;chir</button>
                 </div>
-                <div id="chart0" style="width: 300px; height: 300px; margin: 0 auto"></div>
+                <div class="chart" id="chart0"></div>
             </div>
 
 {include="footer.mobile"}
@@ -23,12 +23,12 @@
 {include="header.mobile"}
 
             <div class="ui-content"> <!-- Chart1 -->
-                <div style="text-align: center;" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
                     <button class="button_chart1" id="chart1_date_prec" value="1prec">&laquo;&nbsp;- 24h</button>
                     <button class="button_chart1" id="chart1_date_now" value="now">Aujourd'hui</button>
                     <button class="button_chart1" id="chart1_date_suiv" value="1suiv">+ 24h&nbsp;&raquo;</button>
                 </div>
-                <div id="chart1" style="width: 800px; height: 500px; margin: 0 auto"></div>
+                <div class="chart" id="chart1"></div>
             </div>
 
 {include="footer.mobile"}
@@ -38,7 +38,7 @@
 {include="header.mobile"}
 
             <div class="ui-content"> <!-- Chart2 -->
-                <div style="text-align: center;" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
                     <select class="select_chart2" id="duree">
                         <option value="1">1</option>
                         <option value="8">8</option>
@@ -51,14 +51,13 @@
                         <option value="ans">An(s)</option>
                     </select>
                 </div>
-
-                <div style="text-align: center;" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
                     <button class="button_chart2" id="chart2_date_prec" value="1prec">&laquo;</button>
                     <button class="button_chart2" id="chart2_date_now" value="now">Aujourd'hui</button>
                     <button class="button_chart2" id="chart2_date_suiv" value="1suiv">&raquo;</button>
                 </div>
-                <div id="chart2legende" style="text-align: center;" >Coût sur la période ...</div>
-                <div id="chart2" style="width: 800px; height: 400px; margin: 0 auto"></div>
+                <div id="chart2_legende">Coût sur la période ...</div>
+                <div class="chart" id="chart2"></div>
             </div>
 
 {include="footer.mobile"}
