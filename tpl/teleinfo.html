@@ -5,15 +5,17 @@
     </head>
 
     <body>
-        <div class="container">
-            <div> <!-- Chart0 -->
+        <div id="tabs">
+{include="header"}
+
+            <div id="page0"> <!-- Chart0 -->
                 <div class="button_group">
                     <button class="button_chart0" id="chart0_refresh" value="now">Rafra&icirc;chir</button>
                 </div>
                 <div class="chart" id="chart0"></div>
             </div>
 
-            <div> <!-- Chart1 -->
+            <div id="page1"> <!-- Chart1 -->
                 <div class="button_group">
                     <button class="button_chart1" id="chart1_date_prec" value="1prec">&laquo;&nbsp;- 24h</button>
                     <button class="button_chart1" id="chart1_date_now" value="now">Aujourd'hui</button>
@@ -22,7 +24,7 @@
                 <div class="chart" id="chart1"></div>
             </div>
 
-            <div> <!-- Chart2 -->
+            <div id="page2"> <!-- Chart2 -->
                 <div class="button_group">
                     <select class="select_chart2" id="duree">
                         <option value="1">1</option>
@@ -44,6 +46,6 @@
                 <div id="chart2_legende">Coût sur la période ...</div>
                 <div class="chart" id="chart2"></div>
             </div>
-        </div> <!-- /container -->
+        </div> <!-- /tabs -->
     </body>
 </html>
