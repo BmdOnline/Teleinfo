@@ -892,7 +892,7 @@ if ($.mobile) {
         init_events();
 
         // Enable tab navigation
-        if ($('#tabs')) {
+        if ($('#tabs').length > 0) {
             $('#tabs')
                 .tabs({
                     create: function( event, ui ) {
