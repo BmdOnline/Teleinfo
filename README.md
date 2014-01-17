@@ -18,6 +18,21 @@
 
 [Cliquer pour visualiser](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_all.png)
 
+###Version 4.2 (dev)
+* Graphiques
+    - bugfix : N'affiche plus les 0 des données vides dans le graphique historique. (BmdOnline)
+    - bugfix : N'affiche plus les décimales (non arrondies) des consommations dans le graphique quotidien. (BmdOnline)
+    - bugfix : N'affiche plus la légende d'une période vide dans le graphique historique. (BmdOnline)
+    - bugfix : Correction d'un bug dans l'affichage des semaines dans le graphique historique. (BmdOnline)
+        * La semaine du "30/12/2014" apparaissait "Sem 1 (2013)" au lieu de "Sem 1 (2014)". (BmdOnline)
+    - change : Refonte de l'infobulle du graphique historique. (BmdOnline)
+
+* Moteur / PHP
+    - change : Gestion des requêtes mysql dans un fichier dédié "queries.php". (BmdOnline)
+    - change : Refonte complète de la gestion des abonnements. (energy01 & BmdOnline)
+        * Les abonnements autres que "base" ou "HC/HP" sont maintenant gérés : EJP et Tempo (Bleu Blanc Rouge).
+        * L'abonnement est détecté automatiquement, il n'est plus nécessaire de le spécifier dans le programme.
+
 ###Version 4.1 (dev)
 * Interface
     - change : Gestion des appareils mobiles (Smartphones & Tablettes) (BmdOnline)

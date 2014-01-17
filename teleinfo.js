@@ -4,10 +4,11 @@
 
 var start = {}; // = new Date();
 
-var totalBASE = 0;
+var detailPrix = [];
+/*var totalBASE = 0;
 var totalHP = 0;
-var totalHC = 0;
-var totalprix = 0;
+var totalHC = 0;*/
+var totalPrix = 0;
 var animation = true;
 
 var chart_elec0;
@@ -310,9 +311,10 @@ function init_chart1(data) {
             type : 'areaspline',
             threshold : null,
             tooltip : {
-                yDecimals : 0
+                yDecimals : 0,
+                valueDecimals: 0
             },
-            showInLegend: ((data.tarif_type === "BASE") ? true : false)
+            showInLegend: ((data.optarif === "BASE") ? true : false)
         }, {
             name : data.HP_name,
             data : data.HP_data,
@@ -320,9 +322,10 @@ function init_chart1(data) {
             type : 'areaspline',
             threshold : null,
             tooltip : {
-                yDecimals : 0
+                yDecimals : 0,
+                valueDecimals: 0
             },
-            showInLegend: ((data.tarif_type === "HCHP") ? true : false)
+            showInLegend: ((data.optarif !== "BASE") ? true : false)
         }, {
             name : data.HC_name,
             data : data.HC_data,
@@ -330,9 +333,10 @@ function init_chart1(data) {
             type : 'areaspline',
             threshold : null,
             tooltip : {
-                yDecimals : 0
+                yDecimals : 0,
+                valueDecimals: 0
             },
-            showInLegend: ((data.tarif_type === "HCHP") ? true : false)
+            showInLegend: ((data.optarif !== "BASE") ? true : false)
         }, {
             /*name : data.I_name,
             data: data.I_data,
@@ -346,7 +350,8 @@ function init_chart1(data) {
             width : 1,
             shape: 'squarepin',
             tooltip : {
-                yDecimals : 0
+                yDecimals : 0,
+                valueDecimals: 0
             }
         }],
         legend: {
@@ -448,6 +453,63 @@ function init_chart2_navigation(duree, periode) {
 function init_chart2(data) {
     "use strict";
 
+    // Préparation des séries de données
+    var graphSeries = [];
+
+    // Période courante
+    $.each(data.series, function (serie_name, serie_title) {
+        graphSeries.push({
+            name : serie_title,
+            data : data[serie_name + "_data"], //data.BASE_data,
+            stack : 'histo',
+            events: {
+                click: function (e) {
+                    //console.log (e.point.series.name);
+                    //console.log (e.point.category);
+                    //console.log (e.point.x);
+                    //console.log (Highcharts.dateFormat('%A, %b %e, %Y', data.debut));
+                    //console.log (data.debut);
+                    var newdate = new Date();
+                    newdate.setTime(data.debut);
+                    newdate.setDate(newdate.getDate() + e.point.x);
+                    console.log(newdate);
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                y: 13,
+                formatter: function () {
+                    if (this.y !== 0) {
+                        return this.y;
+                    }
+                    return "";
+                },
+                style: {
+                    font: 'normal 13px Verdana, sans-serif'
+                }
+            },
+            type: 'column',
+            visible: true,
+            showInLegend: true
+        });
+    });
+
+    // Période précédente
+    graphSeries.push({
+        name : data.PREC_name,
+        data : data.PREC_data,
+        /*stack : 'prec',*/
+        type: 'spline'
+        /*type: 'scatter',
+        width : 1,
+        color : 'red',
+        threshold : null,
+        tooltip : {
+            yDecimals : 0
+        }*/
+    });
+
     return {
         chart: {
             renderTo: 'chart2',
@@ -481,6 +543,15 @@ function init_chart2(data) {
             text: 'Construit en...'
         },
         xAxis: [{
+            labels: {
+                formatter: function () {
+                    //if (this.axis.categories[this.values] !== null) {
+                    if (this.axis.categories.indexOf(this.value) !== -1) {
+                        return this.value;
+                    }
+                    return "";
+                }
+            },
             categories: data.categories
         }],
         yAxis: {
@@ -498,39 +569,55 @@ function init_chart2(data) {
         tooltip: {
             formatter: function () {
                 var tooltip;
-                if (this.series.name === 'Période Précédente') {
-                    //console.log(this);
-                    totalBASE = data.prix.BASE * data.PREC_data_detail[this.point.x][0];
-                    totalHP = data.prix.HP * data.PREC_data_detail[this.point.x][1];
-                    totalHC = data.prix.HC * data.PREC_data_detail[this.point.x][2];
-                    totalprix = Highcharts.numberFormat((totalBASE + totalHP + totalHC + data.prix.abonnement), 2);
+                var thisSerieName = this.series.name;
+                var thisPtX = this.point.x;
+                var thisPtY = this.point.y;
 
-                    tooltip = '<b>' + this.key + ' </b><br /><b>' + this.series.name + ' ' + Highcharts.numberFormat(this.y, 2) + ' kWh</b><br />';
-                    //tooltip += 'Total: ' + Highcharts.numberFormat(this.y, 2) + ' kWh<br />';
-                    if (data.tarif_type === "BASE") {
-                        //tooltip += 'BASE : ' + data.PREC_data_detail[this.point.x][0] + ' kWh <br />';
-                        tooltip += 'BASE : ' + Highcharts.numberFormat(totalBASE, 2) + ' Euro<br />';
-                    } else if (data.tarif_type === "HCHP") {
-                        tooltip += 'HP : ' + Highcharts.numberFormat(totalHP, 2) + ' Euro (' + data.PREC_data_detail[this.point.x][1] + ' kWh) /';
-                        tooltip += 'HC : ' + Highcharts.numberFormat(totalHC, 2) + ' Euro (' + data.PREC_data_detail[this.point.x][1] + ' kWh) <br />';
-                    }
+                if (this.series.name === data.PREC_name) { // 'Période Précédente') {
+                    // Date & Consommation
+                    tooltip = '<b>' + this.key + ' </b><br /><b>' + this.series.name + ' : ' + Highcharts.numberFormat(this.y, 2) + ' kWh</b><br />';
+
+                    // Coût détaillé
+                    totalPrix = 0;
+                    $.each(data.series, function (serie_name, serie_title) {
+                        // Ici, on est hors de porté du "this" de la fonction formatter.
+                        // On utilise donc les variables nécessaire (thisPtX...)
+                        detailPrix[serie_name] = data.prix[serie_name] * data.PREC_data_detail[serie_name][thisPtX];
+                        if ((Object.keys(data.series).length > 1) && (detailPrix[serie_name] !== 0)) {
+                            tooltip += serie_name + ' : ' + Highcharts.numberFormat(detailPrix[serie_name], 2) + ' Euro (' + data.PREC_data_detail[serie_name][thisPtX] + ' kWh)<br />';
+                        }
+
+                        totalPrix += detailPrix[serie_name];
+                    });
+
+                    // Coût total
+                    totalPrix = Highcharts.numberFormat((totalPrix + data.prix.abonnement), 2);
                     tooltip += 'Abonnement sur la période : ' + Highcharts.numberFormat(data.prix.abonnement, 2) + ' Euro<br />';
-                    tooltip += '<b>Total: ' + totalprix + ' Euro<b>';
+                    tooltip += '<b>Total: ' + totalPrix + ' Euro<b>';
                 } else {
-                    totalBASE = data.prix.BASE * ((this.series.name === 'Heures de Base') ? this.y : this.point.stackTotal - this.y);
-                    totalHP = data.prix.HP * ((this.series.name === 'Heures Pleines') ? this.y : this.point.stackTotal - this.y);
-                    totalHC = data.prix.HC * ((this.series.name === 'Heures Creuses') ? this.y : this.point.stackTotal - this.y);
-                    totalprix = Highcharts.numberFormat((totalBASE + totalHP + totalHC + data.prix.abonnement), 2);
+                    // Date & Consommation
+                    tooltip = '<b>' + this.key + ' </b><br /><b> Tarification ' + data.optarif + ' : ' + Highcharts.numberFormat(this.point.stackTotal, 2) + ' kWh</b><br />';
 
-                    tooltip = '<b>' + this.x + ' </b><br /><b>' + this.series.name + ' ' + Highcharts.numberFormat(this.y, 2) + ' kWh</b><br />';
-                    //tooltip += 'BASE : ' + Highcharts.numberFormat(totalBASE, 2) + ' Euro / HP : ' + Highcharts.numberFormat(totalHP,2) + ' Euro / HC : ' + Highcharts.numberFormat(totalHC,2) + ' Euro<br />';
-                    if (data.tarif_type === "BASE") {
-                        tooltip += 'BASE : ' + Highcharts.numberFormat(totalBASE, 2) + ' Euro <br />';
-                    } else if (data.tarif_type === "HCHP") {
-                        tooltip += 'HP : ' + Highcharts.numberFormat(totalHP, 2) + ' Euro / HC : ' + Highcharts.numberFormat(totalHC, 2) + ' Euro<br />';
-                    }
+                    // Coût détaillé
+                    totalPrix = 0;
+                    $.each(data.series, function (serie_name, serie_title) {
+                        // Ici, on est hors de porté du "this" de la fonction formatter.
+                        // On utilise donc les variables nécessaire (thisPtX...)
+                        detailPrix[serie_name] = data.prix[serie_name] * data[serie_name + "_data"][thisPtX];
+                        if ((Object.keys(data.series).length > 1) && (detailPrix[serie_name] !== 0)) {
+                            if (serie_title === thisSerieName) {
+                                tooltip += "* ";
+                            }
+                            tooltip += serie_name + ' : ' + Highcharts.numberFormat(detailPrix[serie_name], 2) + ' Euro (' + data[serie_name + "_data"][thisPtX] + ' kWh)<br />';
+                        }
+
+                        totalPrix += detailPrix[serie_name];
+                    });
+
+                    // Coût total
+                    totalPrix = Highcharts.numberFormat((totalPrix + data.prix.abonnement), 2);
                     tooltip += 'Abonnement sur la période : ' + Highcharts.numberFormat(data.prix.abonnement, 2) + ' Euro<br />';
-                    tooltip += '<b>Total: ' + totalprix + ' Euro</b>';
+                    tooltip += '<b>Total: ' + totalPrix + ' Euro<b>';
                 }
                 return tooltip;
             }
@@ -540,93 +627,7 @@ function init_chart2(data) {
                 stacking: 'normal'
             }
         },
-        series: [{
-            name : data.BASE_name,
-            data : data.BASE_data,
-            stack : 'hphc',
-            events: {
-                click: function (e) {
-                    //console.log (e.point.series.name);
-                    //console.log (e.point.category);
-                    //console.log (e.point.x);
-                    //console.log (Highcharts.dateFormat('%A, %b %e, %Y', data.debut));
-                    //console.log (data.debut);
-                    var newdate = new Date();
-                    newdate.setTime(data.debut);
-                    newdate.setDate(newdate.getDate() + e.point.x);
-                    console.log(newdate);
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                color: '#FFFFFF',
-                y: 13,
-                formatter: function () {
-                    return this.y;
-                },
-                style: {
-                    font: 'normal 13px Verdana, sans-serif'
-                }
-            },
-            type: 'column',
-            visible: ((data.tarif_type === "BASE") ? true : false),
-            showInLegend: ((data.tarif_type === "BASE") ? true : false)
-        }, {
-            name : data.HP_name,
-            data : data.HP_data,
-            stack : 'hphc',
-            dataLabels: {
-                enabled: true,
-                color: '#FFFFFF',
-                y: 13,
-                formatter: function () {
-                    return this.y;
-                },
-                style: {
-                    font: 'normal 13px Verdana, sans-serif'
-                }
-            },
-            type: 'column',
-            visible: ((data.tarif_type === "HCHP") ? true : false),
-            showInLegend: ((data.tarif_type === "HCHP") ? true : false)
-        }, {
-            name : data.HC_name,
-            data : data.HC_data,
-            stack : 'hphc',
-            dataLabels: {
-                enabled: true,
-                color: '#FFFFFF',
-                y: 13,
-                formatter: function () {
-                    return this.y;
-                },
-                style: {
-                    font: 'normal 13px Verdana, sans-serif'
-                }
-            },
-            type: 'column',
-            visible: ((data.tarif_type === "HCHP") ? true : false),
-            showInLegend: ((data.tarif_type === "HCHP") ? true : false)
-        }, {
-            name : data.PREC_name,
-            data : data.PREC_data,
-            /*stack : 'prec',*/
-            type: 'spline'
-            /*type: 'scatter',
-            width : 1,
-            color : 'red',
-            marker: {
-                symbol: 'triangle-down',
-                radius: 8,
-                fillColor: null,
-                lineWidth: 1,
-                lineColor: null // inherit from series
-            },*/
-            /*threshold : null,
-            tooltip : {
-                yDecimals : 0
-            }*/
-        }],
+        series: graphSeries,
         legend: {
             enabled: true,
             borderColor: 'black',
@@ -796,6 +797,8 @@ function process_chart2_select(object) {
 }
 
 function refresh_charts(pageName) {
+    "use strict";
+
     switch (pageName) {
     case 'page0':
         // Crée le graphique 0 (instantly)
@@ -895,21 +898,21 @@ if ($.mobile) {
         if ($('#tabs').length > 0) {
             $('#tabs')
                 .tabs({
-                    create: function( event, ui ) {
+                    create: function(event, ui) {
                         var pageName;
                         if (typeof (ui.panel) === 'object') {
                             pageName = ui.panel.attr("id");
                             refresh_charts(pageName);
                         }
                     },
-                    activate: function( event, ui ) {
+                    activate: function(event, ui) {
                         var pageName;
                         if (typeof (ui.newPanel) === 'object') {
                             pageName = ui.newPanel.attr("id");
                             refresh_charts(pageName);
                         }
                     }
-                })
+                });
         } else {
             // Rafraîchit tous les graphiques à la fois
             refresh_charts();
