@@ -1,5 +1,5 @@
 #Graphique Conso Electrique Téléinfo EDF
-##avec Highcharts (v4.1)
+##avec Highcharts (v4.2)
 
 ###Aperçu
 * Puissance Instantanée
