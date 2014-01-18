@@ -22,10 +22,14 @@
 * Graphiques
     - bugfix : N'affiche plus les 0 des données vides dans le graphique historique. (BmdOnline)
     - bugfix : N'affiche plus les décimales (non arrondies) des consommations dans le graphique quotidien. (BmdOnline)
-    - bugfix : N'affiche plus la légende d'une période vide dans le graphique historique. (BmdOnline)
     - bugfix : Correction d'un bug dans l'affichage des semaines dans le graphique historique. (BmdOnline)
         * La semaine du "30/12/2014" apparaissait "Sem 1 (2013)" au lieu de "Sem 1 (2014)". (BmdOnline)
+    - change : Revue de l'affichage de la légende du graphique historique. (BmdOnline)
+        * N'affiche plus les périodes ne correspondant pas à l'abonnement souscrit.
+        * N'affiche plus les périodes de l'abonnement souscrit mais n'ayant pas de donnée.
     - change : Refonte de l'infobulle du graphique historique. (BmdOnline)
+    - change : La couleur des séries est configurable dans le fichier "config.php". (BmdOnline)
+        * Chaque période tarifaire a la même couleur dans tous les graphiques.
 
 * Moteur / PHP
     - change : Gestion des requêtes mysql dans un fichier dédié "queries.php". (BmdOnline)

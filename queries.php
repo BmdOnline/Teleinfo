@@ -8,15 +8,16 @@
 //   on gère alors l'option courante.
 function queryOpTarif() {
     global $db_teleinfo;
-    global $db_table;
+    global $db_connect;
 
     $db_date = $db_teleinfo['date'];
     $db_optarif = $db_teleinfo['optarif'];
 
     $query = "SELECT $db_optarif as optarif
-        FROM `$db_table`
-        WHERE $db_date=(select max($db_date) FROM `$db_table`)";
+        FROM `%table%`
+        WHERE $db_date=(select max($db_date) FROM `%table%`)";
 
+    $query = str_replace ("%table%", $db_connect['table'], $query);
     return $query;
 }
 
@@ -38,7 +39,7 @@ function getOpTarif() {
 
 function queryInstantly () {
     global $db_teleinfo, $db_select_date, $db_select_mesures;
-    global $db_table;
+    global $db_connect;
 
     $db_date = $db_teleinfo['date'];
     $db_optarif = $db_teleinfo['optarif'];
@@ -46,31 +47,33 @@ function queryInstantly () {
     $db_demain = $db_teleinfo['demain'];
 
     $query = "SELECT $db_select_date[$db_date], $db_optarif as optarif, $db_select_mesures[$db_iinst], $db_demain as demain
-        FROM `$db_table`
-        WHERE $db_date=(select max($db_date) FROM `$db_table`)";
+        FROM `%table%`
+        WHERE $db_date=(select max($db_date) FROM `%table%`)";
 
+    $query = str_replace ("%table%", $db_connect['table'], $query);
     return $query;
 }
 
 function queryDaily ($timestampdebut, $timestampfin) {
     global $db_teleinfo, $db_timestamp, $db_select_date, $db_select_mesures;
-    global $db_table;
+    global $db_connect;
 
     $db_date = $db_teleinfo['date'];
     $db_optarif = $db_teleinfo['optarif'];
     $db_iinst = $db_teleinfo['iinst'];
 
     $query = "SELECT $db_select_date[$db_date], $db_optarif as optarif, $db_select_mesures[$db_iinst]
-        FROM `$db_table`
+        FROM `%table%`
         WHERE $db_timestamp[$db_date] BETWEEN $timestampdebut and $timestampfin
         ORDER BY $db_date";
 
+    $query = str_replace ("%table%", $db_connect['table'], $query);
     return $query;
 }
 
 function queryHistory ($timestampdebut, $dateformatsql, $timestampfin) {
     global $db_teleinfo, $db_timestamp, $db_rec_date, $db_select_date;
-    global $db_table;
+    global $db_connect;
 
     $db_date = $db_teleinfo['date'];
     $db_optarif = $db_teleinfo['optarif'];
@@ -124,27 +127,29 @@ function queryHistory ($timestampdebut, $dateformatsql, $timestampfin) {
 
     $query = "SELECT $db_select_date[$db_date], DATE_FORMAT($db_rec_date[$db_date], '$dateformatsql') AS 'periode', $db_optarif as optarif,
         $select_hist
-        FROM `$db_table`
+        FROM `%table%`
         WHERE $db_timestamp[$db_date] BETWEEN $timestampdebut and $timestampfin
         GROUP BY periode
         ORDER BY rec_date";
 
+    $query = str_replace ("%table%", $db_connect['table'], $query);
     return $query;
 }
 
 /* Actuellement, ne sert pas */
 function queryMaxPeriod ($timestampdebut, $timestampfin) {
     global $db_teleinfo, $db_timestamp, $db_select_max_mesures;
-    global $db_table;
+    global $db_connect;
 
     $db_date = $db_teleinfo['date'];
     $db_iinst = $db_teleinfo['iinst'];
 
     $query = "SELECT $db_select_max_mesures[$db_iinst]
-        FROM `$db_table`
+        FROM `%table%`
         WHERE $db_timestamp[$db_date] BETWEEN $timestampdebut and $timestampfin
         ORDER BY $db_date";
 
+    $query = str_replace ("%table%", $db_connect['table'], $query);
     return $query;
 }
 

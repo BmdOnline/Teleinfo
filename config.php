@@ -3,11 +3,11 @@
 /***********************/
 /*    Données MySQL    */
 /***********************/
-$db_serveur="localhost";
-$db_base="teleinfo";
-$db_table="teleinfo";
-$db_login="teleinfo";
-$db_pass="teleinfo";
+$db_connect["serveur"] = "localhost";
+$db_connect["base"]    = "teleinfo";
+$db_connect["table"]   = "tbTeleinfo";
+$db_connect["login"]   = "teleinfo";
+$db_connect["pass"]    = "teleinfo";
 
 // Nom des champs de la table Teleinfo
 //   Adapter ici le nom des champs en cas de structures de données légèrement différentes
@@ -57,6 +57,23 @@ $liste_ptec = array(
         "HN" => "Heures Normales",
         "HPM" => "Heures de Pointe Mobile"
     )
+);
+
+$chart_colors = array (
+    "MIN" => "green",
+    "MAX" => "red",
+    "PREC" => "#DB843D",
+    "BASE" => "#2f7ed8",
+    "HP" => "#c42525",
+    "HC" => "#2f7ed8",
+    "HPJB" => "#2f7ed8",
+    "HPJW" => "#8bbc21",
+    "HPJR" => "#910000",
+    "HCJB" => "#77a1e5",
+    "HCJW" => "#a6c96a",
+    "HCJR" => "#c42525",
+    "HN" => "#2f7ed8",
+    "HPM" => "#c42525",
 );
 
 /*********************/

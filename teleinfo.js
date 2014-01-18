@@ -460,7 +460,8 @@ function init_chart2(data) {
     $.each(data.series, function (serie_name, serie_title) {
         graphSeries.push({
             name : serie_title,
-            data : data[serie_name + "_data"], //data.BASE_data,
+            data : data[serie_name + "_data"],
+            color : data[serie_name + "_color"],
             stack : 'histo',
             events: {
                 click: function (e) {
@@ -490,8 +491,8 @@ function init_chart2(data) {
                 }
             },
             type: 'column',
-            visible: true,
-            showInLegend: true
+            visible: (data[serie_name + "_data"].reduce(function(a, b) { return a + b; }, 0) !== 0),
+            showInLegend: (data[serie_name + "_data"].reduce(function(a, b) { return a + b; }, 0) !== 0)
         });
     });
 
@@ -499,6 +500,7 @@ function init_chart2(data) {
     graphSeries.push({
         name : data.PREC_name,
         data : data.PREC_data,
+        color : data.PREC_color,
         /*stack : 'prec',*/
         type: 'spline'
         /*type: 'scatter',
@@ -586,7 +588,6 @@ function init_chart2(data) {
                         if ((Object.keys(data.series).length > 1) && (detailPrix[serie_name] !== 0)) {
                             tooltip += serie_name + ' : ' + Highcharts.numberFormat(detailPrix[serie_name], 2) + ' Euro (' + data.PREC_data_detail[serie_name][thisPtX] + ' kWh)<br />';
                         }
-
                         totalPrix += detailPrix[serie_name];
                     });
 
@@ -610,7 +611,6 @@ function init_chart2(data) {
                             }
                             tooltip += serie_name + ' : ' + Highcharts.numberFormat(detailPrix[serie_name], 2) + ' Euro (' + data[serie_name + "_data"][thisPtX] + ' kWh)<br />';
                         }
-
                         totalPrix += detailPrix[serie_name];
                     });
 

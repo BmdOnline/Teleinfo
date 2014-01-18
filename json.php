@@ -14,7 +14,6 @@ include_once("queries.php");
 /*    Graph consommation instantanée    */
 /****************************************/
 function instantly () {
-  global $db_table;
   global $refresh_auto, $refresh_delay;
 
   $date = isset($_GET['date'])?$_GET['date']:null;
@@ -72,7 +71,6 @@ function instantly () {
 /*    Graph consomation w des 24 dernières heures + en parrallèle consomation d'Hier    */
 /****************************************************************************************/
 function daily () {
-  global $db_table;
 
   $courbe_titre[0]="Heures de Base";
   $courbe_min[0]=5000;
@@ -292,8 +290,8 @@ function daily () {
 /*    Graph cout sur période [8jours|8semaines|8mois|1an]    */
 /*************************************************************/
 function history() {
-  global $db_table;
   global $liste_ptec;
+  global $chart_colors;
 
   $optarif = getOpTarif();
   $tab_prix = getTarifs($optarif);
@@ -574,6 +572,7 @@ function history() {
     'series' => $liste_ptec[$optarif],
     'prix' => $prix,
     'categories' => $timestp,
+    'PREC_color' => $chart_colors["PREC"],
     'PREC_name' => 'Période Précédente',
     'PREC_data' => $kwhprec,
     'PREC_data_detail' => $kwhp
@@ -581,36 +580,42 @@ function history() {
 
   // Ajoute les séries
   foreach($liste_ptec[$optarif] as $ptec => $caption) {
+    $history[$ptec."_color"] = $chart_colors[$ptec];
     $history[$ptec."_data"] = $kwh[$ptec];
-
   }
 
   return $history;
 }
 
-$query = isset($_GET['query'])?$_GET['query']:"daily";
+function main() {
+    global $db_connect;
 
-if (isset($query)) {
-  mysql_connect($db_serveur, $db_login, $db_pass) or die("Erreur de connexion au serveur MySql");
-  mysql_select_db($db_base) or die("Erreur de connexion a la base de donnees $base");
-  mysql_query("SET NAMES 'utf8'");
+    $query = isset($_GET['query'])?$_GET['query']:"daily";
 
-  switch ($query) {
-  case "instantly":
-    $data=instantly();
-    break;
-  case "daily":
-    $data=daily();
-    break;
-  case "history":
-    $data=history();
-    break;
-  default:
-    break;
-  };
-  echo json_encode($data);
+    if (isset($query)) {
+        mysql_connect($db_connect['serveur'], $db_connect['login'], $db_connect['pass']) or die("Erreur de connexion au serveur MySql");
+        mysql_select_db($db_connect['base']) or die("Erreur de connexion a la base de donnees $base");
+        mysql_query("SET NAMES 'utf8'");
 
-  mysql_close() ;
+        switch ($query) {
+        case "instantly":
+            $data=instantly();
+            break;
+        case "daily":
+            $data=daily();
+            break;
+        case "history":
+            $data=history();
+            break;
+        default:
+            break;
+      };
+      mysql_close() ;
+
+      echo json_encode($data);
+    }
 }
+
+main();
 
 ?>
