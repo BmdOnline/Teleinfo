@@ -19,14 +19,18 @@
 [Cliquer pour visualiser](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/teleinfov4_all.png)
 
 ###Version 4.2 (dev)
+* Interface
+    - Affiche la prochaine période tarifaire des abonnements Tempo. (BmdOnline)
+
 * Graphiques
     - bugfix : N'affiche plus les 0 des données vides dans le graphique historique. (BmdOnline)
     - bugfix : N'affiche plus les décimales (non arrondies) des consommations dans le graphique quotidien. (BmdOnline)
     - bugfix : Correction d'un bug dans l'affichage des semaines dans le graphique historique. (BmdOnline)
         * La semaine du "30/12/2014" apparaissait "Sem 1 (2013)" au lieu de "Sem 1 (2014)". (BmdOnline)
-    - change : Revue de l'affichage de la légende du graphique historique. (BmdOnline)
+    - change : Affiche toutes les périodes tarifaires, et pas seulement "Base" ou "HP/HC". (BmdOnline)
+    - change : Revue de l'affichage de la légende des graphiques quotidien et historique. (BmdOnline)
         * N'affiche plus les périodes ne correspondant pas à l'abonnement souscrit.
-        * N'affiche plus les périodes de l'abonnement souscrit mais n'ayant pas de donnée.
+        * N'affiche plus les périodes de l'abonnement souscrit mais n'ayant pas de donnée (graphique historique).
     - change : Refonte de l'infobulle du graphique historique. (BmdOnline)
     - change : La couleur des séries est configurable dans le fichier "config.php". (BmdOnline)
         * Chaque période tarifaire a la même couleur dans tous les graphiques.
@@ -36,6 +40,7 @@
     - change : Refonte complète de la gestion des abonnements. (energy01 & BmdOnline)
         * Les abonnements autres que "base" ou "HC/HP" sont maintenant gérés : EJP et Tempo (Bleu Blanc Rouge).
         * L'abonnement est détecté automatiquement, il n'est plus nécessaire de le spécifier dans le programme.
+    - change : JSON fournit la prochaine période tarifaire pour traitement éventuel.( BmdOnline)
 
 ###Version 4.1 (dev)
 * Interface

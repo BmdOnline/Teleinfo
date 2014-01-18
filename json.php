@@ -51,9 +51,19 @@ function instantly () {
     'max' => 10000,
   );
 
+  // Subtitle pour la période courante
+  switch ($optarif) {
+    case "BBR":
+      $subtitle = "Prochaine période : <b>".$demain."</b>";
+      break;
+    default :
+      $subtitle = "";
+      break;
+  }
+
   $instantly = array(
     'title' => "Consommation du $datetext",
-    'subtitle' => "",
+    'subtitle' => $subtitle,
     'debut' => $date_deb*1000, // $date_deb_UTC,
     'W_name' => "Watts",
     'W_data'=> $val,
@@ -223,7 +233,7 @@ function daily () {
   );
 
   // Ajoute les séries
-  foreach(array_keys($chart_colors) as $ptec) {
+  foreach(array_keys($array) as $ptec) {
     $daily[$ptec."_name"] = $courbe_titre[$ptec]." [".$courbe_min[$ptec]." ~ ".$courbe_max[$ptec]."]";
     $daily[$ptec."_color"] = $chart_colors[$ptec];
     $daily[$ptec."_data"] = $array[$ptec];

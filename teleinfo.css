@@ -20,7 +20,22 @@ html.busy, html.busy * {
     height: 400px;
 }
 
+#chart0_legende {
+    display: none;
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+}
+
+#chart1_legende {
+    display: none;
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+}
+
 #chart2_legende {
+    display: none;
     text-align: center;
     font-size: 0.8em;
     margin-bottom: 10px;

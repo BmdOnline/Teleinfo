@@ -79,6 +79,7 @@ function init_chart0(data) {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
                     });
                     if ($('#chart0_legende').length) {
+                        if (data.subtitle.length > 0) $('#chart0_legende').show();
                         $("#chart0_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
@@ -212,13 +213,14 @@ function init_chart1(data) {
             name : data[serie_name + "_name"],
             data : data[serie_name + "_data"],
             color : data[serie_name + "_color"],
-            id: 'BASE',
+            id: serie_name,
             type : 'areaspline',
             threshold : null,
             tooltip : {
                 yDecimals : 0,
                 valueDecimals: 0
             },
+            yAxis: 0,
             visible: (data[serie_name + "_data"].reduce(function(a, b) { return a + b[1]; }, 0) !== 0),
             showInLegend: (data[serie_name + "_data"].reduce(function(a, b) { return a + b[1]; }, 0) !== 0)
         });
@@ -230,7 +232,8 @@ function init_chart1(data) {
         data: data.I_data,
         type: 'spline',
         width : 1,
-        shape: 'squarepin'
+        shape: 'squarepin',
+        yAxis: 1,
     });*/
 
     // Période précédente
@@ -259,6 +262,7 @@ function init_chart1(data) {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
                     });
                     if ($('#chart1_legende').length) {
+                        if (data.subtitle.length > 0) $('#chart1_legende').show();
                         $("#chart1_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
@@ -317,7 +321,7 @@ function init_chart1(data) {
                 month: '%H:%M'
             }
         },
-        yAxis: [{
+        yAxis: [{ // Primary yAxis
             title: {
                 text: 'Watt'
             },
@@ -356,6 +360,23 @@ function init_chart1(data) {
                     text : 'maximum ' + data.seuils.max + 'w'
                 }
             }]
+        /*}, { // Secondary yAxis
+            opposite: true,
+            gridLineWidth: 0,
+            title: {
+                text: 'A',
+                style: {
+                    color: '#4572A7'
+                }
+            },
+            labels: {
+                formatter: function () {
+                    return this.value; // + ' A';
+                },
+                style: {
+                    color: '#4572A7'
+                }
+            }*/
         }],
 
         series : graphSeries,
@@ -530,6 +551,7 @@ function init_chart2(data) {
                         //text: data.subtitle
                     });
                     if ($('#chart2_legende').length) {
+                        if (data.subtitle.length > 0) $('#chart2_legende').show();
                         $("#chart2_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
