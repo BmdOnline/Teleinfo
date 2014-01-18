@@ -59,10 +59,10 @@ function queryDaily ($timestampdebut, $timestampfin) {
     global $db_connect;
 
     $db_date = $db_teleinfo['date'];
-    $db_optarif = $db_teleinfo['optarif'];
+    $db_ptec = $db_teleinfo['ptec'];
     $db_iinst = $db_teleinfo['iinst'];
 
-    $query = "SELECT $db_select_date[$db_date], $db_optarif as optarif, $db_select_mesures[$db_iinst]
+    $query = "SELECT $db_select_date[$db_date], $db_ptec as ptec, $db_select_mesures[$db_iinst]
         FROM `%table%`
         WHERE $db_timestamp[$db_date] BETWEEN $timestampdebut and $timestampfin
         ORDER BY $db_date";

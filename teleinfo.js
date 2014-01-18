@@ -203,6 +203,52 @@ function init_chart1_navigation() {
 function init_chart1(data) {
     "use strict";
 
+    // Préparation des séries de données
+    var graphSeries = [];
+
+    // Période courante
+    $.each(data.series, function (serie_name, serie_title) {
+        graphSeries.push({
+            name : data[serie_name + "_name"],
+            data : data[serie_name + "_data"],
+            color : data[serie_name + "_color"],
+            id: 'BASE',
+            type : 'areaspline',
+            threshold : null,
+            tooltip : {
+                yDecimals : 0,
+                valueDecimals: 0
+            },
+            visible: (data[serie_name + "_data"].reduce(function(a, b) { return a + b[1]; }, 0) !== 0),
+            showInLegend: (data[serie_name + "_data"].reduce(function(a, b) { return a + b[1]; }, 0) !== 0)
+        });
+    });
+
+    // Intensité
+    /*graphSeries.push({
+        name : data.I_name,
+        data: data.I_data,
+        type: 'spline',
+        width : 1,
+        shape: 'squarepin'
+    });*/
+
+    // Période précédente
+    graphSeries.push({
+        name : data.PREC_name,
+        data : data.PREC_data,
+        color : data.PREC_color,
+        type: 'spline',
+        width : 1,
+        shape: 'squarepin',
+        tooltip : {
+            yDecimals : 0,
+            valueDecimals: 0
+        },
+        visible: (data.PREC_data.reduce(function(a, b) { return a + b[1]; }, 0) !== 0),
+        showInLegend: (data.PREC_data.reduce(function(a, b) { return a + b[1]; }, 0) !== 0)
+    });
+
     return {
         chart: {
             renderTo: 'chart1',
@@ -287,73 +333,32 @@ function init_chart1(data) {
             minorGridLineWidth: 0,
             plotLines : [{ // lignes min et max
                 value : data.seuils.min,
-                color : 'green',
+                color : data.MIN_color,
                 dashStyle : 'shortdash',
                 width : 2,
                 label : {
+                    align : 'right',
+                    style : {
+                        color : data.MIN_color,
+                    },
                     text : 'minimum ' + data.seuils.min + 'w'
                 }
             }, {
                 value : data.seuils.max,
-                color : 'red',
+                color : data.MAX_color,
                 dashStyle : 'shortdash',
                 width : 2,
                 label : {
+                    align : 'right',
+                    style : {
+                        color : data.MAX_color
+                    },
                     text : 'maximum ' + data.seuils.max + 'w'
                 }
             }]
         }],
 
-        series : [{
-            name : data.BASE_name,
-            data : data.BASE_data,
-            id: 'BASE',
-            type : 'areaspline',
-            threshold : null,
-            tooltip : {
-                yDecimals : 0,
-                valueDecimals: 0
-            },
-            showInLegend: ((data.optarif === "BASE") ? true : false)
-        }, {
-            name : data.HP_name,
-            data : data.HP_data,
-            id: 'HP',
-            type : 'areaspline',
-            threshold : null,
-            tooltip : {
-                yDecimals : 0,
-                valueDecimals: 0
-            },
-            showInLegend: ((data.optarif !== "BASE") ? true : false)
-        }, {
-            name : data.HC_name,
-            data : data.HC_data,
-            id: 'HC',
-            type : 'areaspline',
-            threshold : null,
-            tooltip : {
-                yDecimals : 0,
-                valueDecimals: 0
-            },
-            showInLegend: ((data.optarif !== "BASE") ? true : false)
-        }, {
-            /*name : data.I_name,
-            data: data.I_data,
-            type: 'spline',
-            width : 1,
-            shape: 'squarepin'
-        }, {*/
-            name : data.JPrec_name,
-            data: data.JPrec_data,
-            type: 'spline',
-            width : 1,
-            shape: 'squarepin',
-            tooltip : {
-                yDecimals : 0,
-                valueDecimals: 0
-            }
-        }],
+        series : graphSeries,
         legend: {
             enabled: true,
             borderColor: 'black',
@@ -502,7 +507,7 @@ function init_chart2(data) {
         data : data.PREC_data,
         color : data.PREC_color,
         /*stack : 'prec',*/
-        type: 'spline'
+        type: 'spline',
         /*type: 'scatter',
         width : 1,
         color : 'red',
@@ -510,6 +515,8 @@ function init_chart2(data) {
         tooltip : {
             yDecimals : 0
         }*/
+        visible: (data.PREC_data.reduce(function(a, b) { return a + b; }, 0) !== 0),
+        showInLegend: (data.PREC_data.reduce(function(a, b) { return a + b; }, 0) !== 0)
     });
 
     return {

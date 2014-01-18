@@ -12,10 +12,11 @@ $db_connect["pass"]    = "teleinfo";
 // Nom des champs de la table Teleinfo
 //   Adapter ici le nom des champs en cas de structures de données légèrement différentes
 //     Champs habituellement différents d'une environnement à l'autre
-$db_teleinfo ["date"]    = "date"; // vaut soit "date" soit "timestamp"
-$db_teleinfo ["iinst"]   = "iinst1"; // vaut soit "iinst1" soit "inst1"
+$db_teleinfo ["date"]    = "date";    // vaut soit "date" soit "timestamp"
+$db_teleinfo ["iinst"]   = "iinst1";  // vaut soit "iinst1" soit "inst1"
 //     Champs ayant peu de chances d'avoir une autre appellation
-$db_teleinfo ["optarif"] = "optarif"; // afin de récupérer l'option souscrite
+$db_teleinfo ["optarif"] = "optarif"; // option tarifaire souscrite
+$db_teleinfo ["ptec"]    = "ptec";    // période tarifaire en cours
 $db_teleinfo ["demain"]   = "demain"; // afin de récupérer la prévision du lendemain (formule Tempo)
 
 // Ne pas modifier ces quelques lignes
@@ -29,11 +30,28 @@ $db_select_date = array (
     "date" => "UNIX_TIMESTAMP(date) as timestamp, DATE(date) as rec_date, TIME(date) as rec_time",
     "timestamp" => "timestamp, rec_date, rec_time");
 $db_select_mesures = array (
-    "iinst1" => "ptec, papp, iinst1",
-    "inst1" => "ptec, papp, inst1 as iinst1");
+    "iinst1" => "papp, iinst1",
+    "inst1" => "papp, inst1 as iinst1");
 $db_select_max_mesures = array (
     "iinst1" => "MAX(papp) AS maxpapp, MAX(iinst1) AS maxiinst1",
     "inst1" => "MAX(papp) AS maxpapp, MAX(inst1) AS maxiinst1");
+
+// Nom des champs de la table, associé à chaque PTEC renvoyé par le signal téléinfo
+// Sert pour le graphique daily, qui utilise le champ PTEC pour ses traitements
+// A contrario, le graphique historique utilise les champs associés
+$db_ptec_equiv = array (
+    "TH.." => "BASE",
+    "HP.." => "HP",
+    "HC.." => "HC",
+    "HPJB" => "HPJB",
+    "HPJW" => "HPJW",
+    "HPJR" => "HPJR",
+    "HCJB" => "HCJB",
+    "HCJW" => "HCJW",
+    "HCJR" => "HCJR",
+    "HN.." => "NH",
+    "PM.." => "HPM"
+);
 
 // Liste des champs de la table, pour chaque option tarifaire
 $liste_ptec = array(
@@ -73,7 +91,7 @@ $chart_colors = array (
     "HCJW" => "#a6c96a",
     "HCJR" => "#c42525",
     "HN" => "#2f7ed8",
-    "HPM" => "#c42525",
+    "HPM" => "#c42525"
 );
 
 /*********************/

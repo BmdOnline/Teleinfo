@@ -71,20 +71,10 @@ function instantly () {
 /*    Graph consomation w des 24 dernières heures + en parrallèle consomation d'Hier    */
 /****************************************************************************************/
 function daily () {
+  global $liste_ptec; global $db_ptec_equiv;
+  global $chart_colors;
 
-  $courbe_titre[0]="Heures de Base";
-  $courbe_min[0]=5000;
-  $courbe_max[0]=0;
-  $courbe_titre[1]="Heures Pleines";
-  $courbe_min[1]=5000;
-  $courbe_max[1]=0;
-  $courbe_titre[2]="Heures Creuses";
-  $courbe_min[2]=5000;
-  $courbe_max[2]=0;
-
-  $courbe_titre[3]="Intensité";
-  $courbe_min[3]=45;
-  $courbe_max[3]=0;
+  $optarif = getOpTarif();
 
   $date = isset($_GET['date'])?$_GET['date']:null;
 
@@ -110,137 +100,93 @@ function daily () {
   $date_deb=0; // date du 1er enregistrement
   $date_fin=time();
 
-  $array_BASE = array();
-  $array_HP = array();
-  $array_HC = array();
-  $array_I = array();
-  $array_JPrec = array();
+  // Initialisation des courbes qui seront affichées
+  foreach($liste_ptec[$optarif] as $ptec => $caption){
+    $courbe_titre[$ptec]=$caption;
+    $courbe_min[$ptec]=5000;
+    $courbe_max[$ptec]=0;
+    $courbe_mindate[$ptec]=null;
+    $courbe_maxdate[$ptec]=null;
+    $array[$ptec]=array();
+  }
+  // Ajout des courbes intensité et PREC
+  $courbe_titre["I"]="Intensité";
+  $courbe_min["I"]=5000;
+  $courbe_max["I"]=0;
+  $courbe_mindate["I"]=null;
+  $courbe_maxdate["I"]=null;
+  $array["I"] = array();
+  $courbe_titre["PREC"]="Période précédente";
+  $courbe_min["PREC"]=5000;
+  $courbe_max["PREC"]=0;
+  $courbe_mindate["PTEC"]=null;
+  $courbe_maxdate["PTEC"]=null;
+  $array["PREC"] = array();
+
   $navigator = array();
 
   $row = mysql_fetch_array($result);
   $ts = intval($row["timestamp"]);
 
+  // Période précédente
   while (($ts < $timestampdebut2) && ($nbenreg>0) ){
     $ts = ( $ts + 24*3600 ) * 1000;
     $val = floatval(str_replace(",", ".", $row["papp"]));
-    $array_JPrec[] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
+    $array["PREC"][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
+    if ($courbe_max["PREC"] < $val) {$courbe_max["PREC"] = $val; $courbe_maxdate["PREC"] = $ts;};
+    if ($courbe_min["PREC"] > $val) {$courbe_min["PREC"] = $val; $courbe_mindate["PREC"] = $ts;};
     $row = mysql_fetch_array($result);
     $ts = intval($row["timestamp"]);
     $nbenreg--;
   }
 
+  // Période courante
   while ($nbenreg > 0 ){
     if ($date_deb==0) {
       $date_deb = $row["timestamp"];
     }
     $ts = intval($row["timestamp"]) * 1000;
-    if ( $row["ptec"] == "TH.." )      // Test si heures de base.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
-      $array_HP[] = array($ts, null);
-      $array_HC[] = array($ts, null);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[0]<$val) {$courbe_max[0] = $val; $courbe_maxdate[0] = $ts;};
-      if ($courbe_min[0]>$val) {$courbe_min[0] = $val; $courbe_mindate[0] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HP" )      // Test si heures pleines.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null); // php recommande cette syntaxe plutôt que array_push
-      $array_HP[] = array($ts, $val);
-      $array_HC[] = array($ts, null);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[1]<$val) {$courbe_max[1] = $val; $courbe_maxdate[1] = $ts;};
-      if ($courbe_min[1]>$val) {$courbe_min[1] = $val; $courbe_mindate[1] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HC" )      // Test si heures creuses.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null); // php recommande cette syntaxe plutôt que array_push
-      $array_HP[] = array($ts, null);
-      $array_HC[] = array($ts, $val);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
-      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HPJB" )      // Test si heures pleines jours bleus.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null);
-      $array_HP[] = array($ts, $val);
-      $array_HC[] = array($ts, null);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
-      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HCJB" )      // Test si heures creuses jours bleus.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null);
-      $array_HP[] = array($ts, null);
-      $array_HC[] = array($ts, $val);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
-      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HPJW" )      // Test si heures pleines jours blancs.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null);
-      $array_HP[] = array($ts, $val);
-      $array_HC[] = array($ts, null);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
-      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HCJW" )      // Test si heures creuses jours blancs.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null);
-      $array_HP[] = array($ts, null);
-      $array_HC[] = array($ts, $val);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
-      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HPJR" )      // Test si heures pleines jours rouges.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null);
-      $array_HP[] = array($ts, $val);
-      $array_HC[] = array($ts, null);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
-      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
-    }
-    elseif ( $row["ptec"] == "HCJR" )      // Test si heures creuses jours rouges.
-    {
-      $val = floatval(str_replace(",", ".", $row["papp"]));
-      $array_BASE[] = array($ts, null);
-      $array_HP[] = array($ts, null);
-      $array_HC[] = array($ts, $val);
-      $navigator[] = array($ts, $val);
-      if ($courbe_max[2]<$val) {$courbe_max[2] = $val; $courbe_maxdate[2] = $ts;};
-      if ($courbe_min[2]>$val) {$courbe_min[2] = $val; $courbe_mindate[2] = $ts;};
-    }
 
+    $val = floatval(str_replace(",", ".", $row["papp"]));
+
+    $curptec = $db_ptec_equiv[$row["ptec"]];
+    // Affecte la consommation selon la période tarifaire
+    foreach($liste_ptec[$optarif] as $ptec => $caption){
+      if ($curptec == $ptec) {
+        $array[$ptec][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
+      } else {
+        $array[$ptec][] = array($ts, null);
+      }
+    }
+    // Ajuste les seuils min/max le cas échéant
+    if ($courbe_max[$curptec] < $val) {$courbe_max[$curptec] = $val; $courbe_maxdate[$curptec] = $ts;};
+    if ($courbe_min[$curptec] > $val) {$courbe_min[$curptec] = $val; $courbe_mindate[$curptec] = $ts;};
+
+    // Highstock permet un navigateur chronologique
+    $navigator[] = array($ts, $val);
+
+    // Intensité
     $val = floatval(str_replace(",", ".", $row["iinst1"])) ;
-    $array_I[] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
-    if ($courbe_max[3]<$val) {$courbe_max[3] = $val; $courbe_maxdate[3] = $ts;};
-    if ($courbe_min[3]>$val) {$courbe_min[3] = $val; $courbe_mindate[3] = $ts;};
+    $array["I"][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
+    if ($courbe_max["I"] < $val) {$courbe_max["I"] = $val; $courbe_maxdate["I"] = $ts;};
+    if ($courbe_min["I"] > $val) {$courbe_min["I"] = $val; $courbe_mindate["I"] = $ts;};
+
     // récupérer prochaine occurence de la table
     $row = mysql_fetch_array($result);
     $nbenreg--;
     $nbdata++;
   }
-  $optarif = $row["optarif"];
   mysql_free_result($result);
 
   $date_fin = $ts/1000;
 
-  $plotlines_max = max($courbe_max[0], $courbe_max[1], $courbe_max[2]);
-  $plotlines_min = min($courbe_min[0], $courbe_min[1], $courbe_min[2]);
+  $plotlines_max = max(array_diff_key($courbe_max, array("I"=>null, "PREC"=>null)));
+  //$plotlines_min = min($courbe_min[0], $courbe_min[1], $courbe_min[2]);
+  $plotlines_min = min(array_diff_key($courbe_min, array("I"=>null, "PREC"=>null)));
+
+  /*var_dump($courbe_max);
+  var_dump(array_diff_key($courbe_max, array("I"=>null, "PREC"=>null)));
+  die;*/
 
   $ddannee = date("Y",$date_deb);
   $ddmois = date("m",$date_deb);
@@ -268,20 +214,20 @@ function daily () {
     'title' => "Graph du $datetext",
     'subtitle' => "",
     'debut' => $timestampfin*1000, // $date_deb_UTC,
-    'BASE_name' => $courbe_titre[0]." / min ".$courbe_min[0]." max ".$courbe_max[0],
-    'BASE_data'=> $array_BASE,
-    'HP_name' => $courbe_titre[1]." / min ".$courbe_min[1]." max ".$courbe_max[1],
-    'HP_data' => $array_HP,
-    'HC_name' => $courbe_titre[2]." / min ".$courbe_min[2]." max ".$courbe_max[2],
-    'HC_data' => $array_HC,
-    'I_name' => $courbe_titre[3]." / min ".$courbe_min[3]." max ".$courbe_max[3],
-    'I_data' => $array_I,
-    'JPrec_name' => 'Période précédente', //'Hier',
-    'JPrec_data' => $array_JPrec,
+    'series' => $liste_ptec[$optarif],
+    'MAX_color' => $chart_colors["MAX"],
+    'MIN_color' => $chart_colors["MIN"],
     'navigator' => $navigator,
     'seuils' => $seuils,
     'optarif' => $optarif
   );
+
+  // Ajoute les séries
+  foreach(array_keys($chart_colors) as $ptec) {
+    $daily[$ptec."_name"] = $courbe_titre[$ptec]." [".$courbe_min[$ptec]." ~ ".$courbe_max[$ptec]."]";
+    $daily[$ptec."_color"] = $chart_colors[$ptec];
+    $daily[$ptec."_data"] = $array[$ptec];
+  }
 
   return $daily;
 }
