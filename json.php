@@ -358,7 +358,7 @@ function history() {
   // On initialise à vide
   // Cas si la période précédente est "nulle", on n'aura pas d'initialisation du tableau
   foreach($liste_ptec[$optarif] as $ptec => $caption){
-    $kwhp[$ptec] = [];
+    $kwhp[$ptec] = array();
   }
 
   // Calcul des consommations

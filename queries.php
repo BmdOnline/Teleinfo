@@ -1,11 +1,11 @@
 <?php
 
 
-// Retourne l'option souscrite pour la période choisie
-// En cas de modification d'abonnement EDF durant la période,
+// Retourne l'option souscrite pour la pÃ©riode choisie
+// En cas de modification d'abonnement EDF durant la pÃ©riode,
 //   on peut avoir plusieurs options.
-// Pour l'instant, ce n'est pas géré par le programme :
-//   on gère alors l'option courante.
+// Pour l'instant, ce n'est pas gÃ©rÃ© par le programme :
+//   on gÃ¨re alors l'option courante.
 function queryOpTarif() {
     global $db_teleinfo;
     global $db_connect;
@@ -23,7 +23,7 @@ function queryOpTarif() {
 
 function getOpTarif() {
     $query = queryOpTarif();
-    $result = mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
+    $result = mysql_query($query) or die ("<b>Erreur</b> dans la requÃ¨te <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
     $nbenreg = mysql_num_rows($result);
     if ($nbenreg > 0) {
         $row = mysql_fetch_array($result);
@@ -81,8 +81,8 @@ function queryHistory ($timestampdebut, $dateformatsql, $timestampfin) {
 
     $optarif = getOpTarif();
 
-    // Selon l'option tarifaire choisie, on requête des champs différents
-    // Attention à la casse : les noms retournés doivent être en majuscules
+    // Selon l'option tarifaire choisie, on requÃªte des champs diffÃ©rents
+    // Attention Ã  la casse : les noms retournÃ©s doivent Ãªtre en majuscules
     switch ($optarif) {
         case "BASE" :
             $select_hist =
@@ -95,7 +95,7 @@ function queryHistory ($timestampdebut, $dateformatsql, $timestampfin) {
                  ROUND(((MAX(`hchc`) - MIN(`hchc`)) / 1000), 1) AS HC";
             break;
 
-        //case "BBRX" : // A priori, la trame téléinfo renvoie BBR.
+        //case "BBRX" : // A priori, la trame tÃ©lÃ©info renvoie BBR.
         case "BBR" :
             $select_hist =
                 "ROUND(((MAX(`bbrhpjb`) - MIN(`bbrhpjb`)) / 1000), 1) AS HPJB,

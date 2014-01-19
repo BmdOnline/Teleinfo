@@ -169,12 +169,12 @@ function getTarifs($optarif) {
                 "date" => "23/07/2012",
                 "AboAnnuel" => 12*(8.84+1.92/2)*1.055, // Abonnement + CTA, TVA 5.5%
                 "periode" => array(
-                    "HPJB" => 0.0725,
-                    "HCJB" => 0.0869,
-                    "HPJW" => 0.1036,
-                    "HCJW" => 0.1234,
-                    "HPJR" => 0.1933,
-                    "HCJR" => 0.5081
+                    "HPJB" => 0.0869,
+                    "HCJB" => 0.0725,
+                    "HPJW" => 0.1234,
+                    "HCJW" => 0.1036,
+                    "HPJR" => 0.5081,
+                    "HCJR" => 0.1933
                 )
             );
             break;
