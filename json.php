@@ -11,13 +11,14 @@ include_once("config.php");
 include_once("queries.php");
 
 function getOpTarif() {
+     global $teleinfo;
     $query = queryOpTarif();
 
     $result = mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
     $nbenreg = mysql_num_rows($result);
     if ($nbenreg > 0) {
         $row = mysql_fetch_array($result);
-        $optarif = $row["OPTARIF"];
+        $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
     }
     else
       $optarif = null;
