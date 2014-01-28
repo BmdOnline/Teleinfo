@@ -3,95 +3,129 @@
 /***********************/
 /*    Données MySQL    */
 /***********************/
-$db_connect["serveur"] = "localhost";
-$db_connect["base"]    = "teleinfo";
-$db_connect["table"]   = "tbTeleinfo";
-$db_connect["login"]   = "teleinfo";
-$db_connect["pass"]    = "teleinfo";
+$db_connect = array (
+    "serveur" => "localhost",
+    "base"    => "teleinfo",
+    "table"   => "tbTeleinfo",
+    "login"   => "teleinfo",
+    "pass"    => "teleinfo"
+);
 
-// Nom des champs de la table Teleinfo
-//   Adapter ici le nom des champs en cas de structures de données légèrement différentes
-//     Champs habituellement différents d'une environnement à l'autre
-$db_teleinfo ["date"]    = "date";    // vaut soit "date" soit "timestamp"
-$db_teleinfo ["iinst"]   = "iinst1";  // vaut soit "iinst1" soit "inst1"
-//     Champs ayant peu de chances d'avoir une autre appellation
-$db_teleinfo ["optarif"] = "optarif"; // option tarifaire souscrite
-$db_teleinfo ["ptec"]    = "ptec";    // période tarifaire en cours
-$db_teleinfo ["demain"]   = "demain"; // afin de récupérer la prévision du lendemain (formule Tempo)
+/************************/
+/*    Table TéléInfo    */
+/************************/
 
-// Ne pas modifier ces quelques lignes
-$db_timestamp = array(
-    "date" => "UNIX_TIMESTAMP(date)",
-    "timestamp" => "timestamp");
-$db_rec_date = array (
-    "date" => "DATE(date)",
-    "timestamp" => "rec_date");
-$db_select_date = array (
-    "date" => "UNIX_TIMESTAMP(date) as timestamp, DATE(date) as rec_date, TIME(date) as rec_time",
-    "timestamp" => "timestamp, rec_date, rec_time");
-$db_select_mesures = array (
-    "iinst1" => "papp, iinst1",
-    "inst1" => "papp, inst1 as iinst1");
-$db_select_max_mesures = array (
-    "iinst1" => "MAX(papp) AS maxpapp, MAX(iinst1) AS maxiinst1",
-    "inst1" => "MAX(papp) AS maxpapp, MAX(inst1) AS maxiinst1");
+// Ces données permettent au programme de fonctionner avec différentes structures de données
+$config_table = array (
+    // Quelques informations sur la configuration
+    "type_date" => "date", // "date" ou "timestamp" selon le type de stockage de la date
+    // Nom des champs de la table.
+    //   Clé    = nom interne au programme : NE PAS MODIFIER
+    //   Valeur = nom du champ dans la table téléinfo
+    // Adapter les valeurs du tableau si le nom du champ est différent
+    "table" => array (
+        "DATE"     => "DATE",    // => vaut soit "date", soit "timestamp"
+        "OPTARIF"  => "OPTARIF", // option tarifaire souscrite
+        "ISOUSC"   => "ISOUSC",  // intensité souscrite
+        "BASE"     => "BASE",    // BASE
+        "HP"       => "HCHP",    // HCHP
+        "HC"       => "HCHC",    // HCHC
+        "HPJB"     => "BBRHPJB", // BBRHPJB
+        "HPJW"     => "BBRHPJW", // BBRHPJW
+        "HPJR"     => "BBRHPJR", // BBRHPJR
+        "HCJB"     => "BBRHCJB", // BBRHCJB
+        "HCJW"     => "BBRHCJW", // BBRHCJW
+        "HCJR"     => "BBRHCJR", // BBRHCJR
+        "HN"       => "EJPHN",   // EJPN
+        "HPM"      => "EJPHPM",  // EJPHPM
+        "PTEC"     => "PTEC",    // période tarifaire en cours
+        "DEMAIN"   => "DEMAIN",  // prévision du lendemain (formule Tempo)
+        "IINST1"   => "IINST1",  // => vaut soit "iinst1" soit "inst1"
+        "PAPP"     => "PAPP"     // puissance apparente
+    )
+);
 
-// Nom des champs de la table, associé à chaque PTEC renvoyé par le signal téléinfo
-// Sert pour le graphique daily, qui utilise le champ PTEC pour ses traitements
-// A contrario, le graphique historique utilise les champs associés
-$db_ptec_equiv = array (
-    "TH.." => "BASE",
-    "HP.." => "HP",
+/**************************/
+/*    Données TéléInfo    */
+/**************************/
+
+// Liste des valeurs possibles pour le champ "OPTARIF"
+//   Clé    = valeur OPTARIF reçue par le signal Teleinfo
+//   Valeur = nom interne au programme : NE PAS MODIFIER
+// Adapter les clés du tableau si le contenu du champ est différent
+$teleinfo["OPTARIF"] = array(
+    "BASE" => "BASE",
     "HC.." => "HC",
+    "BBR"  => "BBR",
+    "EJP." => "EPJ"
+);
+
+// Liste des valeurs possibles pour le champ "PTEC"
+//   Clé    = valeur PTEC reçue par le signal Teleinfo
+//   Valeur = nom interne au programme : NE PAS MODIFIER
+// Adapter les clés du tableau si le contenu du champ est différent
+$teleinfo["PTEC"] = array(
+    "TH.." => "BASE",
+    "HP"   => "HP",
+    "HC"   => "HC",
     "HPJB" => "HPJB",
     "HPJW" => "HPJW",
     "HPJR" => "HPJR",
     "HCJB" => "HCJB",
     "HCJW" => "HCJW",
     "HCJR" => "HCJR",
-    "HN.." => "NH",
+    "HN.." => "HN",
     "PM.." => "HPM"
 );
 
-// Liste des champs de la table, pour chaque option tarifaire
-$liste_ptec = array(
-    "BASE" => array (
-        "BASE" => "Heures de Base"
+// Liste des periodes, pour chaque option tarifaire
+$teleinfo["PERIODES"] = array(
+    "BASE" => array ("BASE"),
+    "HC"   => array ("HP", "HC"),
+    "BBR"  => array ("HPJB", "HPJW", "HPJR", "HCJB", "HCJW", "HCJR"),
+    "EJP"  => array ("HN", "HPM")
+);
+
+// Description des offres et des périodes EDF
+$teleinfo["LIBELLES"] = array(
+    "OPTARIF" => array (
+        "BASE" => "EDF Bleu option Base",
+        "HC"   => "EDF Bleu options Base + Heures Creuses",
+        "BBR"  => "EDF Bleu Blanc Rouge (Tempo)",
+        "EPJ"  => "EDF EJP (Effacement des Jours de Pointe)"
     ),
-    "HC.." => array (
-        "HP" => "Heures Pleines",
-        "HC" => "Heures Creuse"
-    ),
-    //"BBRX" => array ( // A priori, la trame téléinfo renvoie BBR.
-    "BBR" => array (
+    "PTEC" => array (
+        "BASE" => "Heures de Base",
+        "HP"   => "Heures Pleines",
+        "HC"   => "Heures Creuse",
         "HPJB" => "Heures Pleines Jours Bleus",
         "HPJW" => "Heures Pleines Jours Blancs",
         "HPJR" => "Heures Pleines Jours Rouges",
         "HCJB" => "Heures Creuses Jours Bleus",
         "HCJW" => "Heures Creuses Jours Blancs",
-        "HCJR" => "Heures Creuses Jours Rouges"
-    ),
-    "EJP." => array (
-        "HN" => "Heures Normales",
-        "HPM" => "Heures de Pointe Mobile"
+        "HCJR" => "Heures Creuses Jours Rouges",
+        "HN"   => "Heures Normales",
+        "HPM"  => "Heures de Pointe Mobile"
     )
 );
 
-$chart_colors = array (
-    "MIN" => "green",
-    "MAX" => "red",
-    "PREC" => "#DB843D",
+// couleurs de chacune des séries des graphiques
+$teleinfo["COULEURS"] = array(
+    "MIN"  => "green",   // Seuil de consommation minimale sur la période
+    "MAX"  => "red",     // Seuil de consommation maximale sur la période
+    "PREC" => "#DB843D", // Période précédente
     "BASE" => "#2f7ed8",
-    "HP" => "#c42525",
-    "HC" => "#2f7ed8",
+    "HP"   => "#c42525",
+    "HC"   => "#2f7ed8",
     "HPJB" => "#2f7ed8",
     "HPJW" => "#8bbc21",
     "HPJR" => "#910000",
     "HCJB" => "#77a1e5",
     "HCJW" => "#a6c96a",
     "HCJR" => "#c42525",
-    "HN" => "#2f7ed8",
-    "HPM" => "#c42525"
+    "HN"   => "#2f7ed8",
+    "HPM"  => "#c42525",
+    "I"    => "blue"     // Intensité
 );
 
 /*********************/
@@ -103,6 +137,7 @@ $refresh_auto = true; // active le rafraichissement automatique
 $refresh_delay = 120; // relancé toutes les 120 secondes
 
 // Quelques informations sur Teleinfo et les formules EDF :
+//   http://norm.edf.fr/pdf/HN44S812emeeditionMars2007.pdf
 //   http://www.yadnet.com/index.php?page=protocole-teleinfo
 
 // Revoie les tarifs, avec hitorique
@@ -120,16 +155,30 @@ function getTarifs($optarif) {
             );
             $tab_prix[mktime(0,0,0,07,23,2012)] = array(
                 "date" => "23/07/2012",
-                "AboAnnuel" => 12*(7.34+1.92/2)*1.055, // Abonnement + CTA, TVA 5.5%
+                "AboAnnuel" => 12*(5.47+1.96/2)*1.055, // Abonnement + CTA, TVA 5.5%
                 "periode" => array(
-                    "BASE" => (0.1249+0.009+0.009)*1.196 // kWh + CSPE + TCFE, TVA 19.6%
+                    "BASE" => (0.0828+0.0105+0.009)*1.196 // kWh + CSPE + TCFE, TVA 19.6%
                 )
             );
-            $tab_prix[mktime(0,0,0,08,01,2013)] = array(
-                "date" => "01/08/2013",
-                "AboAnnuel" => 125.13*1.055, // Abonnement + CTA, TVA 5.5%
+            $tab_prix[mktime(0,0,0,01,01,2013)] = array( // Augmentation CSPE + TCFE
+                "date" => "01/01/2013",
+                "AboAnnuel" => 12*(5.47+1.96/2)*1.055, // Abonnement + CTA, TVA 5.5%
                 "periode" => array(
-                    "BASE" => 0.1329 // kWh + CSPE + TCFE, TVA 19.6%
+                    "BASE" => (0.0828+0.0135+0.00905)*1.196 // kWh + CSPE + TCFE, TVA 19.6%
+                )
+            );
+            $tab_prix[mktime(0,0,0,05,01,2013)] = array( // Augmentation CTA
+                "date" => "01/05/2013",
+                "AboAnnuel" => 12*(5.47+2.43/2)*1.055, // Abonnement + CTA, TVA 5.5%
+                "periode" => array(
+                    "BASE" => (0.0828+0.0135+0.00905)*1.196 // kWh + CSPE + TCFE, TVA 19.6%
+                )
+            );
+            $tab_prix[mktime(0,0,0,08,28,2013)] = array( // Augmentation Abonnement + CTA + kWh
+                "date" => "28/08/2013",
+                "AboAnnuel" => 12*(5.56+2.51/2)*1.055, // Abonnement + CTA, TVA 5.5%
+                "periode" => array(
+                    "BASE" => (0.0883+0.0135+0.00905)*1.196 // kWh + CSPE + TCFE, TVA 19.6%
                 )
             );
             break;
@@ -178,7 +227,6 @@ function getTarifs($optarif) {
                 )
             );
             break;
-
 
         // Tarif EJP (a définir)
         case "EJP." :

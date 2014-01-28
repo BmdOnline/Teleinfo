@@ -36,11 +36,14 @@
         * Chaque période tarifaire a la même couleur dans tous les graphiques.
 
 * Moteur / PHP
-    - change : Gestion des requêtes mysql dans un fichier dédié "queries.php". (BmdOnline)
+    - bugfix : Affichage des historiques même si la période (courante ou précédente) est vide. (BmdOnline)
+    - change : Gestion des requêtes MySQL dans un fichier dédié "queries.php". (BmdOnline)
+    - change : Refonte complète de la gestion des requêtes MySQL. (BmdOnline)
+        * Le paramétrage est améliorée pour prendre en charge le maximum de configurations possible.
     - change : Refonte complète de la gestion des abonnements. (energy01 & BmdOnline)
         * Les abonnements autres que "base" ou "HC/HP" sont maintenant gérés : EJP et Tempo (Bleu Blanc Rouge).
         * L'abonnement est détecté automatiquement, il n'est plus nécessaire de le spécifier dans le programme.
-    - change : JSON fournit la prochaine période tarifaire pour traitement éventuel.( BmdOnline)
+    - change : JSON fournit la prochaine période tarifaire pour traitement éventuel. (BmdOnline)
 
 ###Version 4.1 (dev)
 * Interface
@@ -173,3 +176,5 @@ $db_iinst = "iinst1"; // vaut soit "iinst1" soit "inst1"
 - [] Fiabiliser les passages aux heures hiver/été.
 - [x] Prévoir un rafraîchissement automatique, avec temporisation.
 - [x] Réutiliser le fichier config.php (régression de la v4).
+- [] Gérer dynamique le maximum de la gauge d'intensité.
+- [] Meilleure gestion des tarifs.
