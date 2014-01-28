@@ -155,17 +155,35 @@ Par défaut, le programme est réglé sur le thème sombre.
 ###Format de date MySQL
 Selon l'utilitaire collectant les données téléinformation, la base peut utiliser un format de date différent.
 Cette version du programme prévoit l'utilisation des 2 structure les plus fréquentes.
-Le paramétrage est à faire dans le fichier config.php
+Le paramétrage est à faire dans le fichier config.php.
+Attention à la casse (majuscule / minuscule) !
 ```php
-$db_date = "date"; // vaut soit "date" soit "timestamp"
+$config_table = array (
+    // Quelques informations sur la configuration
+    "type_date" => "date", // "date" ou "timestamp" selon le type de stockage de la date
+    // Nom des champs de la table.
+    //   Clé    = nom interne au programme : NE PAS MODIFIER
+    //   Valeur = nom du champ dans la table téléinfo
+    // Adapter les valeurs du tableau si le nom du champ est différent
+    "table" => array (
+        "DATE"     => "DATE",    // => vaut soit "DATE", soit "TIMESTAMP"
+        //...//
 ```
 
 ###Nom des champs Teleinfo
 Selon l'utilitaire collectant les données téléinformation, la base peut utiliser des noms différents.
 Cette version du programme prévoit l'utilisation des 2 appellations les plus fréquentes.
-Le paramétrage est à faire dans le fichier config.php :
+Le paramétrage est à faire dans le fichier config.php.
+Attention à la casse (majuscule / minuscule) !
 ```php
-$db_iinst = "iinst1"; // vaut soit "iinst1" soit "inst1"
+    // Nom des champs de la table.
+    //   Clé    = nom interne au programme : NE PAS MODIFIER
+    //   Valeur = nom du champ dans la table téléinfo
+    // Adapter les valeurs du tableau si le nom du champ est différent
+    "table" => array (
+        "DATE"     => "DATE",    // => vaut soit "DATE", soit "TIMESTAMP"
+        //...//
+        "IINST1"   => "IINST1",  // => vaut soit "IINST1" soit "INST1"
 ```
 
 ###Reste à faire
