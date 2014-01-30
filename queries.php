@@ -18,10 +18,8 @@ $variantes_sql = array (
 //   on peut avoir plusieurs options.
 // Pour l'instant, ce n'est pas géré par le programme :
 //   on gère alors l'option courante.
-function queryOpTarif() {
-    global $db_connect;
-    global $config_table;
-    global $variantes_sql;
+function queryOPTARIF() {
+    global $db_connect, $config_table, $variantes_sql;
 
     $mesures = array ("OPTARIF", "ISOUSC");
 
@@ -47,10 +45,68 @@ function queryOpTarif() {
     return $query;
 }
 
+// Retourne l'intensité et la puissance maximales pour la période donnée
+function queryMaxPeriod ($timestampdebut, $timestampfin) {
+    global $db_connect, $config_table, $variantes_sql;
+
+    $mesures = array ("PAPP", "IINST1");
+
+    $tDate = strtoupper($config_table["type_date"]);
+    $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["TIMESTAMP"][$tDate]);
+    $date = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["DATE"][$tDate]);
+
+    // Select
+    $query = "SELECT ";
+    // Mesures
+    foreach($mesures as $field){
+        $query .= str_replace(
+            array("%field%", "%mesure%"),
+            array($config_table["table"][$field], $field),
+            "MAX(`%field%`) as %mesure%, ");
+    }
+    // Suppression de la dernière virgule
+    $query = substr($query, 0, -2) . " ";
+    // From
+    $query .= "FROM " . $db_connect['table'] . " ";
+    // Where
+    $query .= str_replace(
+        array("%date%", "%debut%", "%fin%"),
+        array($timestamp, $timestampdebut, $timestampfin),
+        "WHERE %date% BETWEEN %debut% and %fin%") . " ";
+    // Order By
+    $query .= "ORDER BY " . $config_table["table"]["DATE"];
+
+    // SELECT MAX(`PAPP`) as PAPP, MAX(`IINST1`) as IINST1,
+    // FROM tbTeleTempo
+    // WHERE UNIX_TIMESTAMP(DATE) BETWEEN xxxx and yyyy
+    // ORDER BY DATE
+    return $query;
+}
+
+function queryMaxDate () {
+    global $db_connect, $config_table, $variantes_sql;
+
+    $mesures = array ("PAPP", "IINST1");
+
+    $tDate = strtoupper($config_table["type_date"]);
+    $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["TIMESTAMP"][$tDate]);
+
+    // Select
+    $query = "SELECT ";
+    // Max
+    $query .= str_replace(
+        "%date%", $timestamp,
+        "MAX(%date%) AS DATE ");
+    // From
+    $query .= "FROM " . $db_connect['table'] . " ";
+
+    // SELECT MAX(`DATE`) as DATE
+    // FROM tbTeleTempo
+    return $query;
+}
+
 function queryInstantly () {
-    global $db_connect;
-    global $config_table;
-    global $variantes_sql;
+    global $db_connect, $config_table, $variantes_sql;
 
     $mesures = array ("OPTARIF", "IINST1", "PAPP", "DEMAIN");
 
@@ -81,9 +137,7 @@ function queryInstantly () {
 }
 
 function queryDaily ($timestampdebut, $timestampfin) {
-    global $db_connect;
-    global $config_table;
-    global $variantes_sql;
+    global $db_connect, $config_table, $variantes_sql;
 
     $mesures = array ("PTEC", "IINST1", "PAPP");
 
@@ -117,10 +171,8 @@ function queryDaily ($timestampdebut, $timestampfin) {
 }
 
 function queryHistory ($optarif, $timestampdebut, $dateformatsql, $timestampfin) {
-    global $db_connect;
-    global $config_table;
+    global $db_connect, $config_table, $variantes_sql;
     global $teleinfo;
-    global $variantes_sql;
 
     // $optarif = getOpTarif(); // Passé en paramètre
 
@@ -173,46 +225,6 @@ function queryHistory ($optarif, $timestampdebut, $dateformatsql, $timestampfin)
     // FROM tbTeleTempo
     // WHERE UNIX_TIMESTAMP(DATE) BETWEEN xxxx and yyyy
     // ORDER BY PERIODE, DATE
-    return $query;
-}
-
-/* Actuellement, ne sert pas */
-function queryMaxPeriod ($timestampdebut, $timestampfin) {
-    global $db_connect;
-    global $config_table;
-    global $variantes_sql;
-
-    $mesures = array ("PAPP", "IINST1");
-
-    $tDate = strtoupper($config_table["type_date"]);
-    $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["TIMESTAMP"][$tDate]);
-    $date = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["DATE"][$tDate]);
-
-    // Select
-    $query = "SELECT ";
-    // Mesures
-    foreach($mesures as $field){
-        $query .= str_replace(
-            array("%field%", "%mesure%"),
-            array($config_table["table"][$field], $field),
-            "MAX(`%field%`) as %mesure%, ");
-    }
-    // Suppression de la dernière virgule
-    $query = substr($query, 0, -2) . " ";
-    // From
-    $query .= "FROM " . $db_connect['table'] . " ";
-    // Where
-    $query .= str_replace(
-        array("%date%", "%debut%", "%fin%"),
-        array($timestamp, $timestampdebut, $timestampfin),
-        "WHERE %date% BETWEEN %debut% and %fin%") . " ";
-    // Order By
-    $query .= "ORDER BY " . $config_table["table"]["DATE"];
-
-    // SELECT MAX(`PAPP`) as PAPP, MAX(`IINST1`) as IINST1,
-    // FROM tbTeleTempo
-    // WHERE UNIX_TIMESTAMP(DATE) BETWEEN xxxx and yyyy
-    // ORDER BY DATE
     return $query;
 }
 

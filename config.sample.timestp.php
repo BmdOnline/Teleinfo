@@ -21,30 +21,30 @@ $db_connect = array (
 // Ces données permettent au programme de fonctionner avec différentes structures de données
 $config_table = array (
     // Quelques informations sur la configuration
-    "type_date" => "date", // "date" ou "timestamp" selon le type de stockage de la date
+    "type_date" => "timestamp", // "date" ou "timestamp" selon le type de stockage de la date
     // Nom des champs de la table.
     //   Clé    = nom interne au programme : NE PAS MODIFIER
     //   Valeur = nom du champ dans la table téléinfo
     // Adapter les valeurs du tableau si le nom du champ est différent
     "table" => array (
-        "DATE"     => "DATE",    // => vaut soit "DATE", soit "TIMESTAMP"
-        "OPTARIF"  => "OPTARIF", // option tarifaire souscrite
-        "ISOUSC"   => "ISOUSC",  // intensité souscrite
-        "BASE"     => "BASE",    // BASE
-        "HP"       => "HCHP",    // HCHP
-        "HC"       => "HCHC",    // HCHC
-        "HPJB"     => "BBRHPJB", // BBRHPJB
-        "HPJW"     => "BBRHPJW", // BBRHPJW
-        "HPJR"     => "BBRHPJR", // BBRHPJR
-        "HCJB"     => "BBRHCJB", // BBRHCJB
-        "HCJW"     => "BBRHCJW", // BBRHCJW
-        "HCJR"     => "BBRHCJR", // BBRHCJR
-        "HN"       => "EJPHN",   // EJPN
-        "HPM"      => "EJPHPM",  // EJPHPM
-        "PTEC"     => "PTEC",    // période tarifaire en cours
-        "DEMAIN"   => "DEMAIN",  // prévision du lendemain (formule Tempo)
-        "IINST1"   => "IINST1",  // => vaut soit "IINST1" soit "INST1"
-        "PAPP"     => "PAPP"     // puissance apparente
+        "DATE"     => "TIMESTAMP", // => vaut soit "DATE", soit "TIMESTAMP"
+        "OPTARIF"  => "OPTARIF",   // option tarifaire souscrite
+        "ISOUSC"   => "ISOUSC",    // intensité souscrite
+        "BASE"     => "BASE",      // BASE
+        "HP"       => "HCHP",      // HCHP
+        "HC"       => "HCHC",      // HCHC
+        "HPJB"     => "BBRHPJB",   // BBRHPJB
+        "HPJW"     => "BBRHPJW",   // BBRHPJW
+        "HPJR"     => "BBRHPJR",   // BBRHPJR
+        "HCJB"     => "BBRHCJB",   // BBRHCJB
+        "HCJW"     => "BBRHCJW",   // BBRHCJW
+        "HCJR"     => "BBRHCJR",   // BBRHCJR
+        "HN"       => "EJPHN",     // EJPN
+        "HPM"      => "EJPHPM",    // EJPHPM
+        "PTEC"     => "PTEC",      // période tarifaire en cours
+        "DEMAIN"   => "null",        // prévision du lendemain (formule Tempo)
+        "IINST1"   => "INST1",     // => vaut soit "IINST1" soit "INST1"
+        "PAPP"     => "PAPP"       // puissance apparente
     )
 );
 

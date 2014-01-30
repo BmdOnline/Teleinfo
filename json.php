@@ -3,36 +3,72 @@ setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
 error_reporting(0);
 
-// Adapté du code de Domos.
+// Adapté du code de Domos, dont il ne doit plus rester grand chose !
 // cf . http://vesta.homelinux.net/wiki/teleinfo_papp_jpgraph.html
 
-// Config : Connexion MySql et requête. et prix du kWh
 include_once("config.php");
 include_once("queries.php");
+include_once("tarifs.php");
 
-function getOpTarif() {
-     global $teleinfo;
-    $query = queryOpTarif();
+function getOPTARIF($full = false) {
+    global $teleinfo;
+    // full : Identifie le type de résultat attendu
+    //   true  :  retourne un tableau avec optarif & isousc
+    //   false :  retourne optarif
+
+    $query = queryOPTARIF();
 
     $result = mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
     $nbenreg = mysql_num_rows($result);
     if ($nbenreg > 0) {
         $row = mysql_fetch_array($result);
         $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
+        $isousc = $row["ISOUSC"];
     }
-    else
+    else {
       $optarif = null;
+      $isousc = null;
+    }
 
     mysql_free_result($result);
 
-    return $optarif;
+    if ($full) {
+        return array (
+            "OPTARIF" => $optarif,
+            "ISOUSC" => $isousc
+        );
+    } else {
+        return $optarif;
+    }
+}
+
+// Retourne la date du dernier relevé
+// Sert pour éviter les zones vides lorsque le relevé ne se fait pas / plus
+// Pas utilisé actuellement car ralentit les traitements
+// Le gain ne compense pas la perte de temps.
+function getMaxDate() {
+    $query = queryMaxDate();
+
+    $result = mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
+    $nbenreg = mysql_num_rows($result);
+    if ($nbenreg > 0) {
+        $row = mysql_fetch_array($result);
+        $date = $row["DATE"];
+    }
+    else {
+      $date = null;
+    }
+
+    mysql_free_result($result);
+
+    return $date;
 }
 
 /****************************************/
 /*    Graph consommation instantanée    */
 /****************************************/
 function instantly () {
-    global $refresh_auto, $refresh_delay;
+    global $config;
 
     $date = isset($_GET['date'])?$_GET['date']:null;
 
@@ -51,22 +87,33 @@ function instantly () {
 
     $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
-    $nbdata=0;
     $nbenreg = mysql_num_rows($result);
     if ($nbenreg > 0) {
         $row = mysql_fetch_array($result);
         $optarif = $row["OPTARIF"];
         $demain = $row["DEMAIN"];
         $date_deb = $row["TIMESTAMP"];
-        $val = floatval(str_replace(",", ".", $row["PAPP"]));
+        $valP = floatval(str_replace(",", ".", $row["PAPP"]));
+        $valI = floatval(str_replace(",", ".", $row["IINST1"]));
+    };
+    mysql_free_result($result);
+
+    $query = queryMaxPeriod ($timestampdebut2, $timestampfin);
+
+    $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
+    $nbenreg = mysql_num_rows($result);
+    if ($nbenreg > 0) {
+        $row = mysql_fetch_array($result);
+        $maxP = max($valP, $row["PAPP"]);
+        $maxI = max($valI, $row["IINST1"]);
     };
     mysql_free_result($result);
 
     $datetext = strftime("%c",$date_deb);
 
-    $seuils = array (
+    $seuilsP = array (
         'min' => 0,
-        'max' => 10000,
+        'max' => ceil($maxP / 500) * 500, // Arrondi à 500 "au dessus"
     );
 
     // Subtitle pour la période courante
@@ -84,12 +131,12 @@ function instantly () {
         'subtitle' => $subtitle,
         'debut' => $date_deb*1000, // $date_deb_UTC,
         'W_name' => "Watts",
-        'W_data'=> $val,
-        'seuils' => $seuils,  // non utilisé pour l'instant
+        'W_data'=> $valP,
+        'W_seuils' => $seuilsP,
         'optarif' => $optarif,
         'demain' => $demain,
-        'refresh_auto' => $refresh_auto,
-        'refresh_delay' => $refresh_delay
+        'refresh_auto' => $config["refreshAuto"],
+        'refresh_delay' => $config["refreshDelay"]
     );
 
     return $instantly;
@@ -101,15 +148,16 @@ function instantly () {
 function daily () {
     global $teleinfo;
 
-    $optarif = getOpTarif();
+    $optarif = getOPTARIF();
 
     $date = isset($_GET['date'])?$_GET['date']:null;
 
     $heurecourante = date('H') ;              // Heure courante.
     $timestampheure = mktime($heurecourante+1,0,0,date("m"),date("d"),date("Y"));  // Timestamp courant à heure fixe (mn et s à 0).
 
-    // Meilleure date entre celle donnée en paramètre et celle calculée
+    // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
     $date = ($date)?min($date, $timestampheure):$timestampheure;
+    //$date = min($date, getMaxDate());
 
     $periodesecondes = 24*3600 ;                            // 24h.
     $timestampfin = $date;
@@ -263,10 +311,9 @@ function daily () {
 function history() {
     global $teleinfo;
 
-    $optarif = getOpTarif();
-    $tab_prix = getTarifs($optarif);
-    ksort($tab_prix);
-    $prix = end($tab_prix);
+    $tab_optarif = getOPTARIF(true);
+    $optarif = $tab_optarif["OPTARIF"];
+    $isousc = $tab_optarif["ISOUSC"];
 
     $duree = isset($_GET['duree'])?$_GET['duree']:8;
     $periode = isset($_GET['periode'])?$_GET['periode']:"jours";
@@ -278,8 +325,9 @@ function history() {
             $timestampheure = mktime(0,0,0,date("m"),date("d"),date("Y"));   // Timestamp courant, 0h
             $timestampheure += 24*3600;                                      // Timestamp courant +24h
 
-            // Meilleure date entre celle donnée en paramètre et celle calculée
+            // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
+            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
 
             // Périodes
             $periodesecondes = $duree*24*3600;                               // Periode en secondes
@@ -289,15 +337,16 @@ function history() {
 
             $xlabel = $duree  . " jours";
             $dateformatsql = "%a %e";
-            $abonnement = $prix["AboAnnuel"] / 365;
+            $divabonnement = 365;
             break;
         case "semaines":
             // Calcul de la fin de période courante
             $timestampheure = mktime(0,0,0,date("m"),date("d"),date("Y"));   // Timestamp courant, 0h
             $timestampheure += 24*3600;                                      // Timestamp courant +24h
 
-            // Meilleure date entre celle donnée en paramètre et celle calculée
+            // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
+            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
 
             // Avance d'un jour tant que celui-ci n'est pas un lundi
             while ( date("w", $date) != 1 )
@@ -312,16 +361,21 @@ function history() {
 
             $xlabel = $duree . " semaines";
             $dateformatsql = "sem %v (%x)";
-            $abonnement = $prix["AboAnnuel"] / 52;
+            $divabonnement = 52;
             break;
         case "mois":
             // Calcul de la fin de période courante
             $timestampheure = mktime(0,0,0,date("m"),date("d"),date("Y")); // Timestamp courant, 0h
-            //$timestampheure = mktime(0,0,0,date("m")+1,1,date("Y"));     // Mois suivant, 0h
 
-            // Meilleure date entre celle donnée en paramètre et celle calculée
+            // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
-            $date = mktime(0,0,0,date("m")+1,1,date("Y"));                 // Mois suivant, 0h
+            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
+
+            // Avance d'un jour tant qu'on n'est pas le premier du mois
+            while ( date("d", $date) != 1 )
+            {
+                $date += 24*3600;
+            }
 
             // Périodes
             $timestampfin = $date;                                         // Fin de la période
@@ -331,14 +385,16 @@ function history() {
             $xlabel = $duree . " mois";
             $dateformatsql = "%b (%Y)";
             if ($duree > 6) $dateformatsql = "%b %Y";
-            $abonnement = $prix["AboAnnuel"] / 12;
+            $divabonnement = 12;
             break;
         case "ans":
             // Calcul de la fin de période courante
             $timestampheure = mktime(0,0,0,date("m"),date("d"),date("Y"));         // Timestamp courant, 0h
 
-            // Meilleure date entre celle donnée en paramètre et celle calculée
+            // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
+            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
+
             $date = mktime(0,0,0,1,1,date("Y", $date)+1);                          // Année suivante, 0h
 
             // Périodes
@@ -349,7 +405,7 @@ function history() {
             $xlabel = $duree . " an";
             //$xlabel = "l'année ".(date("Y",$timestampdebut2)-$duree)." et ".(date("Y",$timestampfin)-$duree);
             $dateformatsql = "%b %Y";
-            $abonnement = $prix["AboAnnuel"] / 12;
+            $divabonnement = 12;
             break;
         default:
             die("Periode erronée, valeurs possibles: [8jours|8semaines|8mois|1an] !");
@@ -372,7 +428,9 @@ function history() {
         $kwh[$ptec] = array();
         $kwhp[$ptec] = array();
     }
+    $categories = array();
     $timestp = array();
+    $timestpp = array();
 
     // Calcul des consommations
     while ($row = mysql_fetch_array($result))
@@ -381,6 +439,7 @@ function history() {
         if ($ts < $timestampdebut2) {
             // Période précédente
             $cumul = null; // reset (sinon on cumule à chaque étape de la boucle)
+            $timestpp[] = $row["TIMESTAMP"];
             foreach($teleinfo["PERIODES"][$optarif] as $ptec){
                 // On conserve le détail (qui sera affiché en infobulle)
                 $kwhp[$ptec][] = floatval(isset($row[$ptec]) ? $row[$ptec] : 0);
@@ -396,7 +455,8 @@ function history() {
                 //$date_deb = strtotime($row["REC_DATE"]);
             }
             // Ajout les éléments actuels à chaque tableau
-            $timestp[] = $row["PERIODE"];
+            $categories[] = $row["PERIODE"];
+            $timestp[] = $row["TIMESTAMP"];
             foreach($teleinfo["PERIODES"][$optarif] as $ptec){
                 $kwh[$ptec][] = floatval(isset($row[$ptec]) ? $row[$ptec] : 0);
             }
@@ -407,6 +467,7 @@ function history() {
     if (count($kwh) < $duree) {
         // pad avec une valeur négative, pour ajouter en début de tableau
         $timestp = array_pad ($timestp, -$duree, null);
+        $categories = array_pad ($categories, -$duree, null);
         foreach($kwh as &$current){
             $current = array_pad ($current, -$duree, null);
         }
@@ -415,6 +476,7 @@ function history() {
     // On vérifie la durée de la période précédente
     if (count($kwhprec) < count(reset($kwh))) {
         // pad avec une valeur négative, pour ajouter en début de tableau
+        $timestpp = array_pad ($timestpp, -count(reset($kwh)), null);
         $kwhprec = array_pad ($kwhprec, -count(reset($kwh)), null);
         foreach($kwhp as &$current){
             $current = array_pad ($current, -count(reset($kwh)), null);
@@ -433,96 +495,154 @@ function history() {
     $datetext = "$ddjour/$ddmois/$ddannee  $ddheure:$ddminute";
     $ddmois=$ddmois-1; // nécessaire pour Date.UTC() en javascript qui a le mois de 0 à 11 !!!
 
-    // Calcul des consommations
-    foreach($teleinfo["PERIODES"][$optarif] as $ptec){
-        $mnt_kwh[$ptec] = 0;
-        $total_kwh[$ptec] = 0;
-        $mnt_kwhp[$ptec] = 0;
-        $total_kwhp[$ptec] = 0;
+    // Calcul des coûts
+    $tab_prix = getTarifsEDF($optarif, $isousc);
+
+    foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
+        $mnt["KWH"][$ptec] = 0;
+        $mntp["KWH"][$ptec] = 0;
     }
-
-    $mnt_abo = 0;
-    $mnt_abop = 0;
     $i = 0;
+    $rounds = max(count(reset($kwh)), count(reset($kwhp)));
+    while ($i < $rounds) {
+        // Puriste, on sépare les traitements des périodes courante et précédente.
+        // - Si l'option tarifaire évolue (pas encore pris en charge)
+        // - Si les taxes évoluent
 
-    while ($i < count(reset($kwh))) {
-        foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
-            $mnt_kwh[$ptec] += $kwh[$ptec][$i] * $prix["periode"][strtoupper($ptec)];
-            $total_kwh[$ptec] += $kwh[$ptec][$i];
 
-            $mnt_kwhp[$ptec] += $kwhp[$ptec][$i] * $prix["periode"][strtoupper($ptec)];
-            $total_kwhp[$ptec] += $kwhp[$ptec][$i];
+        // Période courante
+        // On recherche la base tarifaire pour cette période (date)
+        $cur_prix = getTarifs($tab_prix, $timestp[$i]);
+
+        foreach($cur_prix["TAXES_C"] as $tkey => $tval) {
+            $mnt["TAXES"][$tkey][$i] = 0; // Init à zéro
         }
-        $mnt_abo += $abonnement;
-        $mnt_abop += $abonnement;
+        $mnt["TOTAL"][$i] = 0;
+        $conso = false;
+
+        foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
+            // TaxesC
+            foreach($cur_prix["TAXES_C"] as $tkey => $tval) {
+                $mnt["TAXES"][$tkey][$i] += $kwh[$ptec][$i] * $cur_prix["TAXES_C"][$tkey];
+                $mnt["TOTAL"][$i] += $kwh[$ptec][$i] * $cur_prix["TAXES_C"][$tkey];
+            }
+            // Consommation
+            $mnt["TARIFS"][$ptec][$i] = $kwh[$ptec][$i] * $cur_prix["TARIFS"][$ptec];
+            $mnt["TOTAL"][$i] += $kwh[$ptec][$i] * $cur_prix["TARIFS"][$ptec];
+            $mnt["KWH"][$ptec] += $kwh[$ptec][$i];
+            $conso = ($conso or ($kwh[$ptec][$i]!=0));
+        }
+        // TaxesA
+        foreach($cur_prix["TAXES_A"] as $tkey => $tval) {
+            $mnt["TAXES"][$tkey][$i] = $cur_prix["TAXES_A"][$tkey] / $divabonnement;
+            $mnt["TOTAL"][$i] += $cur_prix["TAXES_A"][$tkey] / $divabonnement;
+        }
+        // Abonnement
+        $mnt["ABONNEMENTS"][$i] = $conso * $cur_prix["ABONNEMENTS"][$optarif] / $divabonnement;
+        $mnt["TOTAL"][$i] += $conso * $cur_prix["ABONNEMENTS"][$optarif] / $divabonnement;
+
+        // Période précédente
+        // On recherche la base tarifaire pour la période précédente
+        $prec_prix = getTarifs($tab_prix, $timestpp[$i]);
+
+        foreach($prec_prix["TAXES_C"] as $tkey => $tval) {
+            $mntp["TAXES"][$tkey][$i] = 0; // Init à zéro
+        }
+        $mntp["TOTAL"][$i] = 0;
+        $conso = false;
+
+        foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
+            // TaxesC
+            foreach($prec_prix["TAXES_C"] as $tkey => $tval) {
+                $mntp["TAXES"][$tkey][$i] += $kwhp[$ptec][$i] * $prec_prix["TAXES_C"][$tkey];
+                $mntp["TOTAL"][$i] += $kwhp[$ptec][$i] * $prec_prix["TAXES_C"][$tkey];
+            }
+            // Consommation
+            $mntp["TARIFS"][$ptec][$i] = $kwhp[$ptec][$i] * $prec_prix["TARIFS"][$ptec];
+            $mntp["TOTAL"][$i] += $kwhp[$ptec][$i] * $prec_prix["TARIFS"][$ptec];
+            $mntp["KWH"][$ptec] += $kwhp[$ptec][$i];
+            $conso = ($conso or ($kwhp[$ptec][$i]!=0));
+        }
+        // TaxesA
+        foreach($prec_prix["TAXES_A"] as $tkey => $tval) {
+            $mntp["TAXES"][$tkey][$i] = $prec_prix["TAXES_A"][$tkey] / $divabonnement;
+            $mntp["TOTAL"][$i] += $prec_prix["TAXES_A"][$tkey] / $divabonnement;
+        }
+        // Abonnement
+        $mntp["ABONNEMENTS"][$i] = $conso * $prec_prix["ABONNEMENTS"][$optarif] / $divabonnement;
+        $mntp["TOTAL"][$i] += $conso * $prec_prix["ABONNEMENTS"][$optarif] / $divabonnement;
+
         $i++ ;
     }
-    $mnt_total = $mnt_abo + array_sum($mnt_kwh);
-    $mnt_totalp = $mnt_abop + array_sum($mnt_kwhp);
 
-    /* Prix à retourner */
-    $prix = $prix["periode"];
-    $prix["abonnement"] = $abonnement;
+    // Totaux période courante
+    foreach($mnt["TAXES"] as $tkey => $tval) {
+        $total_mnt["TAXES"][$tkey] = array_sum($mnt["TAXES"][$tkey]);
+    }
+    foreach($mnt["TARIFS"] as $tkey => $tval) {
+        $total_mnt["TARIFS"][$tkey] = array_sum($mnt["TARIFS"][$tkey]);
+    }
+    $total_mnt["ABONNEMENTS"] = array_sum($mnt["ABONNEMENTS"]);
+    $total_mnt["TOTAL"] = array_sum($mnt["TOTAL"]);
+    $total_mnt["KWH"] = array_sum($mnt["KWH"]);
+
+    // Totaux période précédente
+    foreach($mntp["TAXES"] as $tkey => $tval) {
+        $total_mntp["TAXES"][$tkey] = array_sum($mntp["TAXES"][$tkey]);
+    }
+    foreach($mntp["TARIFS"] as $tkey => $tval) {
+        $total_mntp["TARIFS"][$tkey] = array_sum($mntp["TARIFS"][$tkey]);
+    }
+    $total_mntp["ABONNEMENTS"] = array_sum($mntp["ABONNEMENTS"]);
+    $total_mntp["TOTAL"] = array_sum($mntp["TOTAL"]);
+    $total_mntp["KWH"] = array_sum($mntp["KWH"]);
 
     // Subtitle pour la période courante
-    $subtitle = "<b>Coût sur la période</b> ".round($mnt_total,2)." Euro (".array_sum($total_kwh)." KWh)<br />";
-    $subtitle = $subtitle."(Abonnement : ".round($mnt_abo,2);
-    foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
-        if ($mnt_kwh[$ptec] != 0) {
-            $subtitle = $subtitle." + ".$ptec." : ".round($mnt_kwh[$ptec],2);
-        }
-    }
-    $subtitle = $subtitle.")<br /><b>Total KWh</b> ";
-
-    $prefix = "";
-    foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
-        if ($total_kwh[$ptec] != 0) {
-            $subtitle = $subtitle.$prefix.$ptec." : ".$total_kwh[$ptec];
-            if ($prefix=="") {
-                $prefix = " + ";
+    $subtitle = "";
+    if ($total_mnt["TOTAL"] != 0) { // A priori, toujours vrai !
+        $subtitle = $subtitle."<b>Coût sur la période</b> ".round($total_mnt["TOTAL"],2)." Euro (".$total_mnt["KWH"]." KWh)<br />";
+        $subtitle = $subtitle."(Abonnement : ".round($total_mnt["ABONNEMENTS"],2);
+        $subtitle = $subtitle." + Taxes (" . implode(", ", array_keys($total_mnt["TAXES"])) . ") : ".round(array_sum($total_mnt["TAXES"]),2);
+        foreach($total_mnt["TARIFS"] as $ptec => $val) {
+            if ($total_mnt["TARIFS"][$ptec] != 0) {
+                $subtitle = $subtitle." + ".$ptec." : ".round($total_mnt["TARIFS"][$ptec],2);
             }
         }
-    }
-
-    // Subtitle pour la période courante
-    $subtitle = "<b>Coût sur la période</b> ".round($mnt_total,2)." Euro (".array_sum($total_kwh)." KWh)<br />";
-    $subtitle = $subtitle."(Abonnement : ".round($mnt_abo,2);
-    foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
-        if ($mnt_kwh[$ptec] != 0) {
-            $subtitle = $subtitle." + ".$ptec." : ".round($mnt_kwh[$ptec],2);
-        }
-    }
-    $subtitle = $subtitle.")";
-    if ((count($teleinfo["PERIODES"][$optarif]) > 1) && (array_sum($total_kwh) > 0)) {
-        $subtitle = $subtitle."<br /><b>Total KWh</b> ";
-        $prefix = "";
-        foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
-            if ($total_kwh[$ptec] != 0) {
-                $subtitle = $subtitle.$prefix.$ptec." : ".$total_kwh[$ptec];
-                if ($prefix=="") {
-                    $prefix = " + ";
+        $subtitle = $subtitle.")";
+        if ((count($total_mnt["TARIFS"]) > 1) && ($total_mnt["KWH"] > 0)) {
+            $subtitle = $subtitle."<br /><b>Total KWh</b> ";
+            $prefix = "";
+            foreach($mnt["KWH"] as $ptec => $val) {
+                if ($mnt["KWH"][$ptec] != 0) {
+                    $subtitle = $subtitle.$prefix.$ptec." : ".$mnt["KWH"][$ptec];
+                    if ($prefix=="") {
+                        $prefix = " + ";
+                    }
                 }
             }
         }
     }
 
     // Subtitle pour la période précédente
-    $subtitle = $subtitle."<br /><b>Coût sur la période précédente</b> ".round($mnt_totalp,2)." Euro (".array_sum($total_kwhp)." KWh)<br />";
-    $subtitle = $subtitle."(Abonnement : ".round($mnt_abo,2);
-    foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
-        if ($mnt_kwhp[$ptec] != 0) {
-            $subtitle = $subtitle." + ".$ptec." : ".round($mnt_kwhp[$ptec],2);
+    if ($total_mntp["TOTAL"] != 0) {
+        $subtitle = $subtitle."<br /><b>Coût sur la période précédente</b> ".round($total_mntp["TOTAL"],2)." Euro (".$total_mntp["KWH"]." KWh)<br />";
+        $subtitle = $subtitle."(Abonnement : ".round($total_mntp["ABONNEMENTS"],2);
+        $subtitle = $subtitle." + Taxes (" . implode(", ", array_keys($total_mntp["TAXES"])) . ") : ".round(array_sum($total_mntp["TAXES"]),2);
+        foreach($total_mntp["TARIFS"] as $ptec => $val) {
+            if ($total_mntp["TARIFS"][$ptec] != 0) {
+                $subtitle = $subtitle." + ".$ptec." : ".round($total_mntp["TARIFS"][$ptec],2);
+            }
         }
-    }
-    $subtitle = $subtitle.")";
-    if ((count($teleinfo["PERIODES"][$optarif]) > 1) && (array_sum($total_kwhp) > 0)) {
-        $subtitle = $subtitle."<br /><b>Total KWh</b> ";
-        $prefix = "";
-        foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
-            if ($total_kwhp[$ptec] != 0) {
-                $subtitle = $subtitle.$prefix.$ptec." : ".$total_kwhp[$ptec];
-                if ($prefix=="") {
-                    $prefix = " + ";
+        $subtitle = $subtitle.")";
+        if ((count($total_mntp["TARIFS"]) > 1) && ($total_mntp["KWH"] > 0)) {
+            $subtitle = $subtitle."<br /><b>Total KWh</b> ";
+            $prefix = "";
+            foreach($mntp["KWH"] as $ptec => $val) {
+                if ($mntp["KWH"][$ptec] != 0) {
+                    $subtitle = $subtitle.$prefix.$ptec." : ".$mntp["KWH"][$ptec];
+                    if ($prefix=="") {
+                        $prefix = " + ";
+                    }
                 }
             }
         }
@@ -539,8 +659,11 @@ function history() {
         'debut' => $timestampfin*1000,
         'optarif' => $optarif,
         'series' => $series,
-        'prix' => $prix,
-        'categories' => $timestp,
+        'prix' => $mnt,
+        'prix_tot' => $total_mnt,
+        'PREC_prix' => $mntp,
+        'PREC_prix_tot' => $total_mntp,
+        'categories' => $categories,
         'PREC_color' => $teleinfo["COULEURS"]["PREC"],
         'PREC_name' => 'Période Précédente',
         'PREC_data' => $kwhprec,
@@ -568,18 +691,18 @@ function main() {
         mysql_query("SET lc_time_names = 'fr_FR'");  // Pour afficher date en français dans MySql.
 
         switch ($query) {
-        case "instantly":
-            $data=instantly();
-            break;
-        case "daily":
-            $data=daily();
-            break;
-        case "history":
-            $data=history();
-            break;
-        default:
-            break;
-      };
+            case "instantly":
+                $data=instantly();
+                break;
+            case "daily":
+                $data=daily();
+                break;
+            case "history":
+                $data=history();
+                break;
+            default:
+                break;
+        };
       mysql_close() ;
 
       echo json_encode($data);

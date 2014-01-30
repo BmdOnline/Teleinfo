@@ -4,11 +4,6 @@
 
 var start = {}; // = new Date();
 
-var detailPrix = [];
-/*var totalBASE = 0;
-var totalHP = 0;
-var totalHC = 0;*/
-var totalPrix = 0;
 var animation = true;
 
 var chart_elec0;
@@ -131,42 +126,42 @@ function init_chart0(data) {
 
         // the value axis
         yAxis: {
-            min: 0,
-            max: 10000,
+            min: data.W_seuils.min,
+            max: data.W_seuils.max,
 
             minorTickInterval: 'auto',
             minorTickWidth: 1,
             minorTickLength: 10,
             minorTickPosition: 'inside',
-            minorTickColor: '#666',
+            minorTickColor: '#999',
 
-            tickPixelInterval: 30,
+            tickPixelInterval: 50,
             tickWidth: 2,
             tickPosition: 'inside',
-            tickLength: 10,
+            tickLength: 15,
             tickColor: '#666',
             labels: {
-                step: 4,
+                step: 2,
                 rotation: 'auto'
             },
             title: {
                 text: 'Watts'
             },
             plotBands: [{
-                from: 0,
-                to: 300,
+                from: Math.min(0, data.W_seuils.max),
+                to: Math.min(300, data.W_seuils.max),
                 color: '#55BF3B' // green
             }, {
-                from: 300,
-                to: 1000,
+                from: Math.min(300, data.W_seuils.max),
+                to: Math.min(1000, data.W_seuils.max),
                 color: '#DDDF0D' // yellow
             }, {
-                from: 1000,
-                to: 3000,
+                from: Math.min(1000, data.W_seuils.max),
+                to: Math.min(3000, data.W_seuils.max),
                 color: '#FFA500' // orange
             }, {
-                from: 3000,
-                to: 10000,
+                from: Math.min(3000, data.W_seuils.max),
+                to: Math.min(10000, data.W_seuils.max),
                 color: '#DF5353' // red
             }]
         },
@@ -598,55 +593,78 @@ function init_chart2(data) {
             minorGridLineWidth: 0
         },
         tooltip: {
+            useHTML: true,
             formatter: function () {
                 var tooltip;
+
                 var thisSerieName = this.series.name;
                 var thisPtX = this.point.x;
                 var thisPtY = this.point.y;
 
-                if (this.series.name === data.PREC_name) { // 'Période Précédente') {
+                if (thisSerieName !== data.PREC_name) { // Période courante
                     // Date & Consommation
-                    tooltip = '<b>' + this.key + ' </b><br /><b>' + this.series.name + ' : ' + Highcharts.numberFormat(this.y, 2) + ' kWh</b><br />';
+                    tooltip = '<span style="color:' + this.series.color + '"><b>Détails de la période</b></span><br />';
+                    tooltip += '<b>' + this.key + ' </b> ~ <b> Total ' + data.optarif + ' : ' + Highcharts.numberFormat(this.point.stackTotal, 2) + ' kWh</b><br />';
 
-                    // Coût détaillé
-                    totalPrix = 0;
-                    $.each(data.series, function (serie_name, serie_title) {
-                        // Ici, on est hors de porté du "this" de la fonction formatter.
-                        // On utilise donc les variables nécessaire (thisPtX...)
-                        detailPrix[serie_name] = data.prix[serie_name] * data.PREC_data_detail[serie_name][thisPtX];
-                        if ((Object.keys(data.series).length > 1) && (detailPrix[serie_name] !== 0)) {
-                            tooltip += serie_name + ' : ' + Highcharts.numberFormat(detailPrix[serie_name], 2) + ' Euro (' + data.PREC_data_detail[serie_name][thisPtX] + ' kWh)<br />';
-                        }
-                        totalPrix += detailPrix[serie_name];
+                    // Abonnement
+                    tooltip += 'Abonnement : ' + Highcharts.numberFormat(data.prix.ABONNEMENTS[thisPtX], 2) + ' Euro<br />';
+
+                    // Taxes
+                    tooltip += 'Taxes :<br />';
+                    $.each(data.prix.TAXES, function (serie_name, serie_data) {
+                        tooltip += serie_name + ' : ' + Highcharts.numberFormat(data.prix.TAXES[serie_name][thisPtX], 2) + ' Euro<br />';
                     });
 
-                    // Coût total
-                    totalPrix = Highcharts.numberFormat((totalPrix + data.prix.abonnement), 2);
-                    tooltip += 'Abonnement sur la période : ' + Highcharts.numberFormat(data.prix.abonnement, 2) + ' Euro<br />';
-                    tooltip += '<b>Total: ' + totalPrix + ' Euro<b>';
-                } else {
-                    // Date & Consommation
-                    tooltip = '<b>' + this.key + ' </b><br /><b> Tarification ' + data.optarif + ' : ' + Highcharts.numberFormat(this.point.stackTotal, 2) + ' kWh</b><br />';
-
                     // Coût détaillé
-                    totalPrix = 0;
+                    tooltip += 'Consommé :<br />';
                     $.each(data.series, function (serie_name, serie_title) {
                         // Ici, on est hors de porté du "this" de la fonction formatter.
                         // On utilise donc les variables nécessaire (thisPtX...)
-                        detailPrix[serie_name] = data.prix[serie_name] * data[serie_name + "_data"][thisPtX];
-                        if ((Object.keys(data.series).length > 1) && (detailPrix[serie_name] !== 0)) {
-                            if (serie_title === thisSerieName) {
+                        if (data.prix.TARIFS[serie_name][thisPtX] !== 0) {
+                            tooltip +='<span style="color:' + data[serie_name + "_color"] + '">';
+                            if ((serie_title === thisSerieName) && (Object.keys(data.series).length > 1)) {
                                 tooltip += "* ";
                             }
-                            tooltip += serie_name + ' : ' + Highcharts.numberFormat(detailPrix[serie_name], 2) + ' Euro (' + data[serie_name + "_data"][thisPtX] + ' kWh)<br />';
+                            tooltip += serie_name + ' : ' + Highcharts.numberFormat(data.prix.TARIFS[serie_name][thisPtX], 2) + ' Euro';
+                            tooltip += ' (' + data[serie_name + "_data"][thisPtX] + ' kWh)<br />';
+                            tooltip +='</span>';
                         }
-                        totalPrix += detailPrix[serie_name];
                     });
 
                     // Coût total
-                    totalPrix = Highcharts.numberFormat((totalPrix + data.prix.abonnement), 2);
-                    tooltip += 'Abonnement sur la période : ' + Highcharts.numberFormat(data.prix.abonnement, 2) + ' Euro<br />';
-                    tooltip += '<b>Total: ' + totalPrix + ' Euro<b>';
+                    tooltip += '<b>Total : ' + Highcharts.numberFormat(data.prix.TOTAL[thisPtX], 2) + ' Euro<b>';
+                } else { // Période Précédente
+                    // Date & Consommation
+                    tooltip = '<span style="color:' + data.PREC_color + '"><b>Détails de la période précédente</b></span><br />';
+                    tooltip += '<b>' + this.key + ' </b> ~ <b> Total ' + data.optarif + ' : ' + Highcharts.numberFormat(this.y, 2) + ' kWh</b><br />';
+
+                    // Abonnement
+                    tooltip += 'Abonnement : ' + Highcharts.numberFormat(data.PREC_prix.ABONNEMENTS[thisPtX], 2) + ' Euro<br />';
+
+                    // Taxes
+                    tooltip += 'Taxes :<br />';
+                    $.each(data.PREC_prix.TAXES, function (serie_name, serie_data) {
+                        tooltip += serie_name + ' : ' + Highcharts.numberFormat(data.PREC_prix.TAXES[serie_name][thisPtX], 2) + ' Euro<br />';
+                    });
+
+                    // Coût détaillé
+                    tooltip += 'Consommé :<br />';
+                    $.each(data.series, function (serie_name, serie_title) {
+                        // Ici, on est hors de porté du "this" de la fonction formatter.
+                        // On utilise donc les variables nécessaire (thisPtX...)
+                        if (data.PREC_prix.TARIFS[serie_name][thisPtX] !== 0) {
+                            tooltip +='<span style="color:' + data[serie_name + "_color"] + '">';
+                            if ((serie_title === thisSerieName) && (Object.keys(data.series).length > 1)) {
+                                tooltip += "* ";
+                            }
+                            tooltip += serie_name + ' : ' + Highcharts.numberFormat(data.PREC_prix.TARIFS[serie_name][thisPtX], 2) + ' Euro';
+                            tooltip += ' (' + data.PREC_data_detail[serie_name][thisPtX] + ' kWh)<br />';
+                            tooltip +='</span>';
+                        }
+                    });
+
+                    // Coût total
+                    tooltip += '<b>Total : ' + Highcharts.numberFormat(data.PREC_prix.TOTAL[thisPtX], 2) + ' Euro<b>';
                 }
                 return tooltip;
             }
