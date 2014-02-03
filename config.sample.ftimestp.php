@@ -35,7 +35,7 @@ $config_table = array (
     //   Valeur = nom du champ dans la table téléinfo
     // Adapter les valeurs du tableau si le nom du champ est différent
     "table" => array (
-        "DATE"     => "TIMESTAMP", // => généralement, vaut soit "DATE", soit "TIMESTAMP"
+        "DATE"     => "FTIMESTAMP", // => généralement, vaut soit "DATE", soit "TIMESTAMP"
         "OPTARIF"  => "OPTARIF",   // option tarifaire souscrite
         "ISOUSC"   => "ISOUSC",    // intensité souscrite
         "BASE"     => "BASE",      // BASE
@@ -51,7 +51,7 @@ $config_table = array (
         "HPM"      => "EJPHPM",    // EJPHPM
         "PTEC"     => "PTEC",      // période tarifaire en cours
         "DEMAIN"   => "null",      // prévision du lendemain (formule Tempo)
-        "IINST1"   => "INST1",     // => généralement, vaut soit "IINST1" soit "INST1"
+        "IINST1"   => "INST",      // => généralement, vaut soit "IINST1" soit "INST1"
         "PAPP"     => "PAPP"       // puissance apparente
     )
 );

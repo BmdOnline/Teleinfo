@@ -1,4 +1,12 @@
 <?php
+/*********************************/
+/*    Paramètres du programme    */
+/*********************************/
+$config["refreshAuto"]      = true; // active le rafraichissement automatique
+$config["refreshDelay"]     = 120;  // relancé toutes les 120 secondes
+
+$config["usetemplate"]      = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
+
 /***********************/
 /*    Données MySQL    */
 /***********************/
@@ -27,24 +35,24 @@ $config_table = array (
     //   Valeur = nom du champ dans la table téléinfo
     // Adapter les valeurs du tableau si le nom du champ est différent
     "table" => array (
-        "DATE"     => "DATE",    // => vaut soit "DATE", soit "TIMESTAMP"
-        "OPTARIF"  => "OPTARIF", // option tarifaire souscrite
-        "ISOUSC"   => "ISOUSC",  // intensité souscrite
-        "BASE"     => "BASE",    // BASE
-        "HP"       => "HCHP",    // HCHP
-        "HC"       => "HCHC",    // HCHC
-        "HPJB"     => "BBRHPJB", // BBRHPJB
-        "HPJW"     => "BBRHPJW", // BBRHPJW
-        "HPJR"     => "BBRHPJR", // BBRHPJR
-        "HCJB"     => "BBRHCJB", // BBRHCJB
-        "HCJW"     => "BBRHCJW", // BBRHCJW
-        "HCJR"     => "BBRHCJR", // BBRHCJR
-        "HN"       => "EJPHN",   // EJPN
-        "HPM"      => "EJPHPM",  // EJPHPM
-        "PTEC"     => "PTEC",    // période tarifaire en cours
-        "DEMAIN"   => "DEMAIN",  // prévision du lendemain (formule Tempo)
-        "IINST1"   => "IINST1",  // => vaut soit "IINST1" soit "INST1"
-        "PAPP"     => "PAPP"     // puissance apparente
+        "DATE"     => "DATE",      // => généralement, vaut soit "DATE", soit "TIMESTAMP"
+        "OPTARIF"  => "OPTARIF",   // option tarifaire souscrite
+        "ISOUSC"   => "ISOUSC",    // intensité souscrite
+        "BASE"     => "BASE",      // BASE
+        "HP"       => "HCHP",      // HCHP
+        "HC"       => "HCHC",      // HCHC
+        "HPJB"     => "BBRHPJB",   // BBRHPJB
+        "HPJW"     => "BBRHPJW",   // BBRHPJW
+        "HPJR"     => "BBRHPJR",   // BBRHPJR
+        "HCJB"     => "BBRHCJB",   // BBRHCJB
+        "HCJW"     => "BBRHCJW",   // BBRHCJW
+        "HCJR"     => "BBRHCJR",   // BBRHCJR
+        "HN"       => "EJPHN",     // EJPN
+        "HPM"      => "EJPHPM",    // EJPHPM
+        "PTEC"     => "PTEC",      // période tarifaire en cours
+        "DEMAIN"   => "DEMAIN",    // prévision du lendemain (formule Tempo)
+        "IINST1"   => "IINST1",    // => généralement, vaut soit "IINST1" soit "INST1"
+        "PAPP"     => "PAPP"       // puissance apparente
     )
 );
 
@@ -69,8 +77,8 @@ $teleinfo["OPTARIF"] = array(
 // Adapter les clés du tableau si le contenu du champ est différent
 $teleinfo["PTEC"] = array(
     "TH.." => "BASE",
-    "HP"   => "HP",
-    "HC"   => "HC",
+    "HP.." => "HP",
+    "HC.." => "HC",
     "HPJB" => "HPJB",
     "HPJW" => "HPJW",
     "HPJR" => "HPJR",
@@ -135,8 +143,4 @@ $teleinfo["COULEURS"] = array(
 /*    Données EDF    */
 /*********************/
 $config["nbPhasesCompteur"] = 1;    // 1 pour monophasé ou 3 pour triphasé
-
-$config["refreshAuto"]      = true; // active le rafraichissement automatique
-$config["refreshDelay"]     = 120;  // relancé toutes les 120 secondes
-
 ?>

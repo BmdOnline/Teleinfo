@@ -1,7 +1,7 @@
 <?php
 setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
-error_reporting(0);
+error_reporting(E_ERROR);
 
 // Adapté du code de Domos, dont il ne doit plus rester grand chose !
 // cf . http://vesta.homelinux.net/wiki/teleinfo_papp_jpgraph.html
@@ -710,5 +710,4 @@ function main() {
 }
 
 main();
-
 ?>

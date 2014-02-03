@@ -48,6 +48,7 @@
         * Les taxes sont clairement identifiées.
         * Les évolutions de TVA sont également prises en charge.
     - change : JSON fournit la prochaine période tarifaire pour traitement éventuel. (BmdOnline)
+    - change : L'utilisation de templates pour générer les pages est désactivé par défaut. (BmdOnline)
     - bugfix : Meilleure gestion des périodes vides dans le graphique historique. (BmdOnline)
 
 ###Version 4.1 (dev)
@@ -122,16 +123,43 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://pen
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.anthony.free.fr/?p=111)
 
 ###Templates
-Actuellement, 2 templates sont proposés pour chacun des affichages (desktop & mobile).
-Pour en changer, il faut remplacer le contenu du répertoire "tpl"...
+Actuellement, 2 modèles de mise en page sont proposés pour chacun des affichages (desktop & mobile).
+Par défaut, les templates ne sont pas activés. L'affichage utilise des fichiers HTML préparés.
+
+#### Gestion par fichiers HTML
+Des fichiers sont proposés pour chacun des modes d'affichage.
+
+Pour changer de modèle, il faut adapter le fichier "teleinfo.php" :
+```php
+    } else {
+        header("Vary: User-Agent");
+        if ($mobile) {
+            readfile("tpl/teleinfo.tabs.mobile.html");
+        } else {
+            readfile("tpl/teleinfo.tabs.html");
+        }
+    }
+```
+
+* Pour la vesion desktop, les fichiers :
+    - tpl/teleinfo.single.html
+    - tpl/teleinfo.tabs.html
+* Pour la vesion mobile, les fichiers :
+    - tpl/teleinfo.single.mobile.html
+    - tpl/teleinfo.tabs.mobile.html
+
+#### Gestion par templates
+Le moteur de template utilisé est RainTPL. Il est possible de modifier les pages en utilisant la syntaxe adéquate.
+
+Pour changer de modèle, il faut remplacer le contenu du répertoire "tpl/files"...
 * Pour la vesion desktop, depuis :
-    - tpl/desktop - lineaire
-    - tpl/desktop - onglets
+    - tpl/files/desktop - lineaire
+    - tpl/files/desktop - onglets
 * Pour la vesion mobile, depuis :
-    - tpl/mobile - lineaire
-    - tpl/mobile - onglets
+    - tpl/files/mobile - lineaire
+    - tpl/files/mobile - onglets
 * Dans tous les cas, en ajoutant les fichiers communs depuis :
-    - tpl/commun
+    - tpl/files/commun
 
 Important :
 A chaque changement de template, ne pas oublier de vider le contenu du répertoire "cache".

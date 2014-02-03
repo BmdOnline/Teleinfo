@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta content="no-cache" http-equiv="Pragma">
+        <title>Graph Conso &Eacute;lectrique</title>
+
+        <!-- JQuery 1.10.2 // Only for IE 6/7/8 compatibility -->
+        <!--<script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>-->
+
+        <!-- JQuery 2.1.0 // Not compatible with old browsers -->
+        <script type="text/javascript" src="./js/jquery-2.1.0-pre.min.js"></script>
+
+        <!-- JQuery UI -->
+        <!-- JS minified with http://closure-compiler.appspot.com/home -->
+        <!-- CSS minified with http://cssminifier.com/minify -->
+        <script type="text/javascript" src="./js/jquery-ui-1.11.0pre.min.js"></script>
+        <link rel="stylesheet" href="./css/ui-darkness/jquery-ui-1.11.0pre.min.css">
+
+        <!-- HighCharts -->
+        <script type="text/javascript" src="./js/highstock.js"></script>
+        <script type="text/javascript" src="./js/highcharts-more.js"></script>
+
+        <!-- JQuery Mobile -->
+        <script type="text/javascript" src="./js/jquery.mobile-1.4.0-rc.1.min.js"></script>
+        <link rel="stylesheet" href="./css/jquery.mobile-1.4.0-rc.1.min.css">
+
+        <link rel="shortcut icon" href="./favicon.ico">
+        <link rel="stylesheet" href="teleinfo.css">
+        <script type='text/javascript' src="teleinfo.js"></script>
+    </head>
+
+    <body>
+        <div id="page0" data-theme="a" data-role="page" data-quicklinks="true">
+            <div data-role="header">
+                <h3>Graph Conso &Eacute;lectrique</h3>
+            </div> <!-- /header -->
+
+            <div class="ui-content"> <!-- Chart0 -->
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <button class="button_chart0" id="chart0_refresh" value="now">Rafra&icirc;chir</button>
+                </div>
+                <div id="chart0_legende">...</div>
+                <div class="chart" id="chart0"></div>
+            </div>
+
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                          <li><a href="#page0" id="nav_page0" data-icon="check">Instantan&eacute;</a></li>
+                          <li><a href="#page1" id="nav_page1" data-icon="clock">Aper&ccedil;u 24h</a></li>
+                          <li><a href="#page2" id="nav_page2" data-icon="calendar">Historiques</a></li>
+                    </ul>
+                </div> <!-- /navbar -->
+            </div> <!-- /footer -->
+        </div> <!-- /page -->
+
+
+        <div id="page1" data-theme="a" data-role="page" data-quicklinks="true">
+            <div data-role="header">
+                <h3>Graph Conso &Eacute;lectrique</h3>
+            </div> <!-- /header -->
+
+            <div class="ui-content"> <!-- Chart1 -->
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <button class="button_chart1" id="chart1_date_prec" value="1prec">&laquo;&nbsp;- 24h</button>
+                    <button class="button_chart1" id="chart1_date_now" value="now">Aujourd'hui</button>
+                    <button class="button_chart1" id="chart1_date_suiv" value="1suiv">+ 24h&nbsp;&raquo;</button>
+                </div>
+                <div id="chart1_legende">...</div>
+                <div class="chart" id="chart1"></div>
+            </div>
+
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                          <li><a href="#page0" id="nav_page0" data-icon="check">Instantan&eacute;</a></li>
+                          <li><a href="#page1" id="nav_page1" data-icon="clock">Aper&ccedil;u 24h</a></li>
+                          <li><a href="#page2" id="nav_page2" data-icon="calendar">Historiques</a></li>
+                    </ul>
+                </div> <!-- /navbar -->
+            </div> <!-- /footer -->
+        </div> <!-- /page -->
+
+        <div id="page2" data-theme="a" data-role="page" data-quicklinks="true">
+            <div data-role="header">
+                <h3>Graph Conso &Eacute;lectrique</h3>
+            </div> <!-- /header -->
+
+            <div class="ui-content"> <!-- Chart2 -->
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <select class="select_chart2" id="duree">
+                        <option value="1">1</option>
+                        <option value="8">8</option>
+                        <option value="14">14</option>
+                    </select>
+                    <select class="select_chart2" id="periode">
+                        <option value="jours">Jour(s)</option>
+                        <option value="semaines">Semaine(s)</option>
+                        <option value="mois">Mois(s)</option>
+                        <option value="ans">An(s)</option>
+                    </select>
+                </div>
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <button class="button_chart2" id="chart2_date_prec" value="1prec">&laquo;</button>
+                    <button class="button_chart2" id="chart2_date_now" value="now">Aujourd'hui</button>
+                    <button class="button_chart2" id="chart2_date_suiv" value="1suiv">&raquo;</button>
+                </div>
+                <div id="chart2_legende">Coût sur la période ...</div>
+                <div class="chart" id="chart2"></div>
+            </div>
+
+            <div data-role="footer" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                          <li><a href="#page0" id="nav_page0" data-icon="check">Instantan&eacute;</a></li>
+                          <li><a href="#page1" id="nav_page1" data-icon="clock">Aper&ccedil;u 24h</a></li>
+                          <li><a href="#page2" id="nav_page2" data-icon="calendar">Historiques</a></li>
+                    </ul>
+                </div> <!-- /navbar -->
+            </div> <!-- /footer -->
+        </div> <!-- /page -->
+    </body>
+</html>
