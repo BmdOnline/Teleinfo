@@ -108,7 +108,7 @@ function queryMaxDate () {
 function queryInstantly () {
     global $db_connect, $config_table, $variantes_sql;
 
-    $mesures = array ("OPTARIF", "IINST1", "PAPP", "DEMAIN");
+    $mesures = array ("PAPP", "IINST1", "ISOUSC", "OPTARIF", "PTEC", "DEMAIN");
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["TIMESTAMP"][$tDate]);
@@ -130,7 +130,8 @@ function queryInstantly () {
         "WHERE %date%=(SELECT MAX(%date%) FROM %table%)");
 
     // SELECT UNIX_TIMESTAMP(DATE) as TIMESTAMP,
-    //   OPTARIF AS OPTARIF, IINST1 AS IINST1, PAPP AS PAPP, DEMAIN AS DEMAIN
+    //   IINST1 AS IINST1, PAPP AS PAPP, ISOUSC AS ISCOUSC,
+    //   OPTARIF AS OPTARIF, PTEC AS PTEC, DEMAIN AS DEMAIN
     // FROM tbTeleinfo
     // WHERE DATE=(SELECT MAX(DATE) FROM tbTeleinfo)
     return $query;
@@ -139,7 +140,7 @@ function queryInstantly () {
 function queryDaily ($timestampdebut, $timestampfin) {
     global $db_connect, $config_table, $variantes_sql;
 
-    $mesures = array ("PTEC", "IINST1", "PAPP");
+    $mesures = array ("OPTARIF", "PTEC", "IINST1", "PAPP");
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["TIMESTAMP"][$tDate]);
@@ -163,7 +164,7 @@ function queryDaily ($timestampdebut, $timestampfin) {
     $query .= "ORDER BY " . $config_table["table"]["DATE"];
 
     // SELECT UNIX_TIMESTAMP(DATE) as TIMESTAMP,
-    //   IINST1 AS IINST1, PAPP AS PAPP
+    //   OPTARIF AS OPTARIF, PTEC AS PTEC, IINST1 AS IINST1, PAPP AS PAPP
     // FROM tbTeleinfo
     // WHERE UNIX_TIMESTAMP(DATE) BETWEEN xxxx and yyyy
     // ORDER BY DATE
@@ -174,9 +175,7 @@ function queryHistory ($optarif, $timestampdebut, $dateformatsql, $timestampfin)
     global $db_connect, $config_table, $variantes_sql;
     global $teleinfo;
 
-    // $optarif = getOpTarif(); // Passé en paramètre
-
-    $mesures = array ("OPTARIF");
+    $mesures = array ("OPTARIF", "PTEC");
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["TIMESTAMP"][$tDate]);
@@ -215,7 +214,7 @@ function queryHistory ($optarif, $timestampdebut, $dateformatsql, $timestampfin)
     $query .= "ORDER BY " . $config_table["table"]["DATE"];
 
     // SELECT UNIX_TIMESTAMP(DATE) AS TIMESTAMP, DATE_FORMAT(DATE, '%a %e') AS PERIODE,
-    //   OPTARIF AS OPTARIF,
+    //   OPTARIF AS OPTARIF, PTEC AS PTEC,
     //   ROUND(((MAX(`BBRHPJB`) - MIN(`BBRHPJB`)) / 1000), 1) AS HPJB,
     //   ROUND(((MAX(`BBRHPJW`) - MIN(`BBRHPJW`)) / 1000), 1) AS HPJW,
     //   ROUND(((MAX(`BBRHPJR`) - MIN(`BBRHPJR`)) / 1000), 1) AS HPJR,

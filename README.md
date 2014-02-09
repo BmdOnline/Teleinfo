@@ -20,7 +20,13 @@
 
 ###Version 4.2 (dev)
 * Interface
-    - change : Affiche la prochaine période tarifaire des abonnements Tempo. (BmdOnline)
+    - change : Ajout d'un calendrier pour sélectionner la période dans la vue "Aperçu 24h". (BmdOnline)
+    - change : Affichage des données concernant l'abonnement et la consommation courante dans la vue "Instantané". (BmdOnline)
+        * Option tarifaire et intensité souscrite.
+        * Période tarifaire actuelle.
+        * Puissance et intensité maximales sur 24h.
+        * Prochaine période tarifaire (abonnement Tempo).
+    - change : Ajout d'icônes pour illustrer les boutons de navigation. (BmdOnline)
 
 * Graphiques
     - change : L'échelle de la gauge instantanée s'ajuste automatiquement. (energy01 & BmdOnline)
@@ -220,14 +226,18 @@ Attention à la casse (majuscule / minuscule) !
 ```
 
 ###Reste à faire
+- [x] Afficher les informations concernant l'abonnement dans l'onglet instantané.
+- [x] Afficher les consommations MAX (imax, pmax) dans l'onglet instantané.
 - [x] Prévoir une version "mobile", pour les smartphones et tablettes.
-- [] Proposer de visualiser une période précédente ou une moyenne en surimpression de l'historique.
-- [] Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
-    - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
-- [] Fiabiliser les passages aux heures hiver/été.
-- [] Ajout d'un calendrier à la place du bouton "Aujourd'hui".
-    - Il existe 2 calendriers JQueryUI et JQueryMobile.
 - [x] Prévoir un rafraîchissement automatique, avec temporisation.
 - [x] Réutiliser le fichier config.php (régression de la v4).
 - [x] Gestion dynamique du maximum de la gauge d'intensité.
 - [x] Meilleure gestion des tarifs.
+- [x] Ajout d'un calendrier à la place du bouton "Aujourd'hui".
+- [] Ajout d'un calendrier à la place du bouton "Aujourd'hui" pour l'historique.
+    - La navigation doit dépendre du type d'historique (jour / semaine / mois)...
+- [] Revoir les seuils de la gauge instantanée.
+- [] Proposer de visualiser une période précédente ou une moyenne en surimpression de l'historique.
+- [] Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
+    - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
+- [] Fiabiliser les passages aux heures hiver/été.

@@ -31,16 +31,18 @@
 
         header("Vary: User-Agent");
         if ($mobile) {
-            $tpl->draw("teleinfo.mobile");
+            $tpl->draw($config["template"]["mobile"]);
         } else {
-            $tpl->draw("teleinfo");
+            $tpl->draw($config["template"]["desktop"]);
         }
     } else {
         header("Vary: User-Agent");
         if ($mobile) {
-            readfile("tpl/teleinfo.tabs.mobile.html");
+            //readfile("tpl/teleinfo.tabs.mobile.html");
+            readfile($config["notemplate"]["mobile"]); // FIXME: Security hole
         } else {
-            readfile("tpl/teleinfo.tabs.html");
+            //readfile("tpl/teleinfo.tabs.html");
+            readfile($config["notemplate"]["desktop"]); // FIXME: Security hole
         }
     }
 ?>

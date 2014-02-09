@@ -52,8 +52,12 @@ jQuery(function ($) {
 function init_chart0_navigation() {
     "use strict";
 
-    // Libelles des boutons
-    $("#chart0_refresh").html("Rafra&icirc;chir");
+    // Date du calendrier
+    var curDate = new Date();
+    curDate.setTime($("#chart0").highcharts().debut);
+    curDate.setDate(curDate.getDate() - 1); // -1 Jour
+    $("#chart0_date").val(curDate.getTime());
+
 }
 
 function init_chart0(data) {
@@ -190,10 +194,11 @@ function init_chart0(data) {
 function init_chart1_navigation() {
     "use strict";
 
-    // Libelles des boutons
-    $("#chart1_date_prec").html("&laquo;&nbsp;- 24h");
-    $("#chart1_date_now").html("Aujourd'hui");
-    $("#chart1_date_suiv").html("+ 24h&nbsp;&raquo;");
+    // Date du calendrier
+    var curDate = new Date();
+    curDate.setTime($("#chart1").highcharts().debut);
+    curDate.setDate(curDate.getDate() - 1); // -1 Jour
+    $("#chart1_date").val(curDate.getTime());
 }
 
 function init_chart1(data) {
@@ -465,10 +470,25 @@ function init_chart2_navigation(duree, periode) {
     $('.select_chart2#periode').selectmenu('refresh', true);
     //$(".select_chart2#periode").refresh;
 
-    // Libelles des boutons
-    $("#chart2_date_prec").html("&laquo;&nbsp;- " + txtdecalage);
-    $("#chart2_date_now").html("Aujourd'hui");
-    $("#chart2_date_suiv").html("+ " + txtdecalage + "&nbsp;&raquo;");
+    // Libelles des boutons //ui-button-text
+    var btn = {};
+    btn = $("#chart2_date_prec").find('span.ui-button-text');
+    if (btn.length == 0) { // jQuery Mobile n'utilise pas de <span>
+        btn = btn.prevObject;
+    }
+    btn.html("- " + txtdecalage);
+
+    btn = $("#chart2_date_suiv").find('span.ui-button-text');
+    if (btn.length == 0) { // jQuery Mobile n'utilise pas de <span>
+        btn = btn.prevObject;
+    }
+    btn.html("+ " + txtdecalage);
+
+    // Date du calendrier
+    var curDate = new Date();
+    curDate.setTime($("#chart2").highcharts().debut);
+    curDate.setDate(curDate.getDate() - 1); // -1 Jour
+    $("#chart2_date").val(curDate.getTime());
 }
 
 function init_chart2(data) {
@@ -753,6 +773,10 @@ function process_chart1_button(object) {
     newdate.setTime(curdate);
 
     switch (object.value) {
+    case "date":
+        newdate = undefined;
+        $("#chart1_date").datepicker('show');
+        break;
     case "1prec":
         newdate.setDate(newdate.getDate() - 1);
         break;
@@ -765,7 +789,10 @@ function process_chart1_button(object) {
     default:
         newdate = null;
     }
-    refresh_chart1(newdate);
+
+    if (newdate !== undefined) {
+        refresh_chart1(newdate);
+    }
 }
 
 function process_chart2_button(object) {
@@ -780,6 +807,10 @@ function process_chart2_button(object) {
     var coefdate;
     // Type de changement de date
     switch (object.value) {
+    case "date":
+        newdate = undefined;
+        $("#chart2_date").datepicker('show');
+        break;
     case "1prec":
         // on recule
         coefdate = -1;
@@ -822,7 +853,9 @@ function process_chart2_button(object) {
         }
     }
 
-    refresh_chart2(duree, periode, newdate);
+    if (newdate !== undefined) {
+        refresh_chart2(duree, periode, newdate);
+    }
 }
 
 function process_chart2_select(object) {
@@ -869,6 +902,28 @@ function refresh_charts(pageName) {
     }
 }
 
+function change_date() {
+    "use strict";
+    var thisID = $(this).attr("id");
+
+    var newdate = new Date();
+    newdate.setTime($(this).val());
+    newdate.setDate(newdate.getDate() + 1); // +1 Jour
+
+    switch (thisID) {
+    case 'chart0_date':
+        refresh_chart0(newdate);
+        break;
+    case 'chart1_date':
+        refresh_chart1(newdate);
+        break;
+    case 'chart2_date':
+        refresh_chart2(newdate);
+        break;
+    default:
+    }
+}
+
 function init_events() {
     "use strict";
 
@@ -892,12 +947,49 @@ function init_events() {
             change: function (e, object) {process_chart2_select(object); }
         });
     }
+    // Evénement datepicker (select)
+    $('.datepicker').each(function () {
+        var itemID = "#" + $(this).attr('id');
+        $(itemID).datepicker("option", "onSelect", change_date);
+    });
 }
 
 if ($.mobile) {
      //jq mobile loaded
     $(document).on("pageshow", '[data-role="page"]', function (event, ui) {
         "use strict";
+
+        // Initialisation jQueryUI datepicker
+        $.datepicker.setDefaults($.datepicker.regional["fr"]);
+        $('.datepicker').each(function () {
+            var itemID = "#" + $(this).attr('id');
+            $(itemID).datepicker({
+                showAnim: "blind",
+                showOn: "button",
+                //buttonImage: "images/glyphish/83-calendar.png",
+                buttonImage: "images/tango icons/X-office-calendar-alpha.png",
+                buttonText: "Sélection de la date",
+                buttonImageOnly: true,
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                dateFormat: $.datepicker.TIMESTAMP, // $.datepicker.ISO_8601,
+                maxDate: 0
+            });
+        });
+
+        // Enhance tooltip appearence, using JQuery styling
+        if ($(document).tooltip) {
+            // UI loaded
+            $(document).tooltip({
+                // use the built-in fadeIn/fadeOut effect
+                effect: "fade"
+            });
+        } else {
+            // not
+        }
 
         init_events();
 
@@ -912,6 +1004,7 @@ if ($.mobile) {
             pageName = $(this).attr("id");
             $("#nav_" + pageName, "#" + pageName).addClass("ui-btn-active");
         }
+
     });
     $(document).on("pagechange", function (event, ui) {
         "use strict";
@@ -932,12 +1025,55 @@ if ($.mobile) {
         $('.button_chart1').button();
         $('.button_chart2').button();
 
+        // Icones jQueryUI
+        $('#chart0_refresh').button("option", "icons", {primary: "ui-icon-refresh"});
+        $('#chart1_date_prec').button( "option", "icons", {primary: "ui-icon-arrowthick-1-w"});
+        $('#chart1_date_select').button( "option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
+        $('#chart1_date_suiv').button( "option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
+
+        $('#chart2_date_prec').button( "option", "icons", {primary: "ui-icon-arrowthick-1-w"});
+        $('#chart2_date_now').button( "option", "icons", {primary: "ui-icon-calendar"});
+        $('#chart2_date_select').button( "option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
+        $('#chart2_date_suiv').button( "option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
+
         // Initialisation jQueryUI selectmenu
         $('.select_chart2').selectmenu({
             dropdown: false
         });
         // Overflow : permet de limiter la hauteur des listes déroulantes (via css)
         $('.select_chart2').selectmenu("menuWidget").addClass("ui-selectmenu-overflow");
+
+        // Initialisation jQueryUI datepicker
+        $.datepicker.setDefaults($.datepicker.regional["fr"]);
+        $('.datepicker').each(function () {
+            var itemID = "#" + $(this).attr('id');
+            $(itemID).datepicker({
+                showAnim: "blind",
+                showOn: "button",
+                //buttonImage: "images/glyphish/83-calendar.png",
+                buttonImage: "images/tango icons/X-office-calendar-alpha.png",
+                buttonText: "Sélection de la date",
+                buttonImageOnly: true,
+                showButtonPanel: true,
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                dateFormat: $.datepicker.TIMESTAMP, // $.datepicker.ISO_8601,
+                maxDate: 0
+            });
+        });
+
+        // Enhance tooltip appearence, using JQuery styling
+        if ($(document).tooltip) {
+            // UI loaded
+            $(document).tooltip({
+                // use the built-in fadeIn/fadeOut effect
+                effect: "fade"
+            });
+        } else {
+            // not
+        }
 
         init_events();
 

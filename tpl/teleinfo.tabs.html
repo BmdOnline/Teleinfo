@@ -15,6 +15,7 @@
         <!-- JS minified with http://closure-compiler.appspot.com/home -->
         <!-- CSS minified with http://cssminifier.com/minify -->
         <script type="text/javascript" src="./js/jquery-ui-1.11.0pre.min.js"></script>
+        <script type="text/javascript" src="./js/jquery-ui-i18n-1.11.0pre.min.js"></script>
         <link rel="stylesheet" href="./css/ui-darkness/jquery-ui-1.11.0pre.min.css">
 
         <!-- HighCharts -->
@@ -36,7 +37,7 @@
 
             <div id="page0"> <!-- Chart0 -->
                 <div class="button_group">
-                    <button class="button_chart0" id="chart0_refresh" value="now">Rafra&icirc;chir</button>
+                    <button class="button_chart0" id="chart0_refresh" value="now" title="R&eacute;actualiser">Rafra&icirc;chir</button>
                 </div>
                 <div id="chart0_legende">...</div>
                 <div class="chart" id="chart0"></div>
@@ -44,9 +45,10 @@
 
             <div id="page1"> <!-- Chart1 -->
                 <div class="button_group">
-                    <button class="button_chart1" id="chart1_date_prec" value="1prec">&laquo;&nbsp;- 24h</button>
-                    <button class="button_chart1" id="chart1_date_now" value="now">Aujourd'hui</button>
-                    <button class="button_chart1" id="chart1_date_suiv" value="1suiv">+ 24h&nbsp;&raquo;</button>
+                    <input type="text" class="datepicker" id="chart1_date" />
+                    <button class="button_chart1" id="chart1_date_prec" value="1prec" title="Jour pr&eacute;c&eacute;dent">- 24h</button>
+                    <button class="button_chart1" id="chart1_date_select" value="date" title="S&eacute;lectionner un jour">Jour</button>
+                    <button class="button_chart1" id="chart1_date_suiv" value="1suiv" title="Jour suivant">+ 24h</button>
                 </div>
                 <div id="chart1_legende">...</div>
                 <div class="chart" id="chart1"></div>
@@ -67,9 +69,10 @@
                     </select>
                 </div>
                 <div class="button_group">
-                    <button class="button_chart2" id="chart2_date_prec" value="1prec">&laquo;</button>
-                    <button class="button_chart2" id="chart2_date_now" value="now">Aujourd'hui</button>
-                    <button class="button_chart2" id="chart2_date_suiv" value="1suiv">&raquo;</button>
+                    <button class="button_chart2" id="chart2_date_prec" value="1prec" title="Reculer">-1 jour</button>
+                    <button class="button_chart2" id="chart2_date_now" value="now" title="Aujourd'hui">Aujourd'hui</button>
+                    <!--<button class="button_chart2" id="chart2_date_select" value="date" title="S&eacute;lectionner une date">Date</button>-->
+                    <button class="button_chart2" id="chart2_date_suiv" value="1suiv" title="Avancer">+1 jour</button>
                 </div>
                 <div id="chart2_legende">Coût sur la période ...</div>
                 <div class="chart" id="chart2"></div>

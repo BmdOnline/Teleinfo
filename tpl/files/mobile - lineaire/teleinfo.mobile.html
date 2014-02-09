@@ -14,7 +14,7 @@
                     <div data-role="collapsible" data-collapsed="false"1 data-inset="false" data-mini="true"> <!-- Chart0 -->
                         <h3>Puissance Instantan&eacute;e</h3>
                         <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
-                            <button class="button_chart0" id="chart0_refresh" value="now">Rafra&icirc;chir</button>
+                            <button class="button_chart0" id="chart0_refresh" value="now" title="R&eacute;actualiser" data-icon="refresh" data-iconpos="left">Rafra&icirc;chir</button>
                         </div>
                         <div id="chart0_legende">...</div>
                         <div class="chart" id="chart0"></div>
@@ -23,9 +23,10 @@
                     <div data-role="collapsible" data-collapsed="true" data-inset="false" data-mini="true"> <!-- Chart1 -->
                         <h3>Aper&ccedil;u 24h</h3>
                         <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
-                            <button class="button_chart1" id="chart1_date_prec" value="1prec">&laquo;&nbsp;- 24h</button>
-                            <button class="button_chart1" id="chart1_date_now" value="now">Aujourd'hui</button>
-                            <button class="button_chart1" id="chart1_date_suiv" value="1suiv">+ 24h&nbsp;&raquo;</button>
+                            <input type="hidden" class="datepicker" id="chart1_date" data-role="datepicker" />
+                            <button class="button_chart1" id="chart1_date_prec" value="1prec" title="Jour pr&eacute;c&eacute;dent" data-icon="arrow-l" data-iconpos="left">- 24h</button>
+                           <button class="button_chart1" id="chart1_date_select" value="date" title="S&eacute;lectionner un jour" data-icon="grid" data-iconpos="left">Jour</button>
+                            <button class="button_chart1" id="chart1_date_suiv" value="1suiv" title="Jour suivant" data-icon="arrow-r" data-iconpos="right">+ 24h</button>
                         </div>
                         <div id="chart1_legende">...</div>
                         <div class="chart" id="chart1"></div>
@@ -47,9 +48,11 @@
                             </select>
                         </div>
                         <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
-                            <button class="button_chart2" id="chart2_date_prec" value="1prec">&laquo;</button>
-                            <button class="button_chart2" id="chart2_date_now" value="now">Aujourd'hui</button>
-                            <button class="button_chart2" id="chart2_date_suiv" value="1suiv">&raquo;</button>
+                            <input type="hidden" class="datepicker" id="chart2_date" data-role="datepicker" />
+                            <button class="button_chart2" id="chart2_date_prec" value="1prec" title="Reculer" data-icon="arrow-l" data-iconpos="left">-1 jour</button>
+                            <button class="button_chart2" id="chart2_date_now" value="now" title="Aujourd'hui" data-icon="grid" data-iconpos="left">Aujourd'hui</button>
+                            <!--<button class="button_chart2" id="chart2_date_select" value="date" title="S&eacute;lectionner une date" data-icon="grid" data-iconpos="left">Date</button>-->
+                            <button class="button_chart2" id="chart2_date_suiv" value="1suiv" title="Avancer" data-icon="arrow-r" data-iconpos="left">+1 jour</button>
                         </div>
                         <div id="chart2_legende">Coût sur la période ...</div>
                         <div class="chart" id="chart2"></div>

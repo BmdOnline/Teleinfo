@@ -2,10 +2,14 @@
 /*********************************/
 /*    Paramètres du programme    */
 /*********************************/
-$config["refreshAuto"]      = true; // active le rafraichissement automatique
-$config["refreshDelay"]     = 120;  // relancé toutes les 120 secondes
+$config["refreshAuto"]           = true; // active le rafraichissement automatique
+$config["refreshDelay"]          = 120;  // relancé toutes les 120 secondes
 
-$config["usetemplate"]      = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
+$config["usetemplate"]           = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
+$config["template"]["desktop"]   = "teleinfo";
+$config["template"]["mobile"]    = "teleinfo.mobile";
+$config["notemplate"]["desktop"] = "tpl/teleinfo.tabs.html";
+$config["notemplate"]["mobile"]  = "tpl/teleinfo.tabs.mobile.html";
 
 /***********************/
 /*    Données MySQL    */
