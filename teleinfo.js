@@ -60,42 +60,56 @@ function init_chart0_navigation() {
 
 }
 
-function init_chart0(data) {
+function init_chart0(data, serie) {
     "use strict";
 
-    return {
-        chart: {
-            renderTo: 'chart0',
-            animation: animation,
-            type: 'gauge',
-            plotBackgroundColor: null,
-            plotBackgroundImage: null,
-            plotBorderWidth: 0,
-            plotShadow: false,
-            events: {
-                load: function (chart) {
-                    this.setTitle(null, {
-                        text: 'Construit en ' + (new Date() - start) + 'ms'
-                    });
-                    if ($('#chart0_legende').length) {
-                        if (data.subtitle.length > 0) $('#chart0_legende').show();
-                        $("#chart0_legende").html(data.subtitle);
-                    }
-                    this.debut = data.debut;
-                    init_chart0_navigation();
-                }
-            },
-            borderColor: '#EBBA95',
-            borderWidth: 2,
-            borderRadius: 10
-        },
-        title: {
-            text: 'Puissance instantanée'
-        },
-        credits: {
-            enabled: false
-        },
-        pane: {
+    // Préparation des séries à afficher (nombre de gauges)
+    var serieNames = [];
+    if (serie !== undefined) {
+        serieNames.push(serie);
+    } else {
+        $.each(data.series, function (serie_name, serie_title) {
+            serieNames.push(serie_name);
+        });
+    }
+
+    // Eléments du graphique
+    var graphPanes = [];
+    var plotBands = [];
+    var graphYAxis = [];
+    var graphSeries = [];
+    var gPos;
+    var gStep = 100 / serieNames.length;
+    var centerPos = [];
+    var band_min;
+    $.each(serieNames, function (serie_num, serie_name) {
+        gPos = (gStep / 2) + (gStep * serie_num);
+        if ($("#chart0").height() <= $("#chart0").width()) {
+            centerPos = [ // Horizontal
+	            Highcharts.numberFormat(gPos, 0) + '%',
+	            '50%'
+	        ];
+	    } else {
+            centerPos = [ // Vertical
+	            '50%',
+	            Highcharts.numberFormat(gPos, 0) + '%',
+	        ];
+	    }
+
+        band_min = 0;
+        plotBands = []; // RAZ
+        $.each(data.bands[serie_name], function (band_max, band_color) {
+            plotBands.push({
+                from: Math.min(band_min, data.seuils[serie_name].max),
+                to: Math.min(band_max, data.seuils[serie_name].max),
+                color: band_color
+            });
+            band_min = band_max;
+        });
+
+        graphPanes.push({
+	        center: centerPos,
+	        //size: '70%', // A prévoir
             startAngle: -150,
             endAngle: 150,
             background: [{
@@ -126,12 +140,11 @@ function init_chart0(data) {
                 outerRadius: '105%',
                 innerRadius: '103%'
             }]
-        },
-
-        // the value axis
-        yAxis: {
-            min: data.W_seuils.min,
-            max: data.W_seuils.max,
+        });
+        graphYAxis.push({
+            min: data.seuils[serie_name].min,
+            max: data.seuils[serie_name].max,
+            pane: serie_num,
 
             minorTickInterval: 'auto',
             minorTickWidth: 1,
@@ -139,55 +152,88 @@ function init_chart0(data) {
             minorTickPosition: 'inside',
             minorTickColor: '#999',
 
-            tickPixelInterval: 50,
+            tickInterval: data.seuils[serie_name].max / 10, // 10 graduations au total
             tickWidth: 2,
-            tickPosition: 'inside',
             tickLength: 15,
+            tickPosition: 'inside',
             tickColor: '#666',
             labels: {
                 step: 2,
                 rotation: 'auto'
             },
             title: {
-                text: 'Watts'
+                text: data.series[serie_name] // 'Watts'
             },
-            plotBands: [{
-                from: Math.min(0, data.W_seuils.max),
-                to: Math.min(300, data.W_seuils.max),
+            plotBands: plotBands,/*[{
+                from: Math.min(0, data.seuils[serie_name].max),
+                to: Math.min(300, data.seuils[serie_name].max),
                 color: '#55BF3B' // green
             }, {
-                from: Math.min(300, data.W_seuils.max),
-                to: Math.min(1000, data.W_seuils.max),
+                from: Math.min(300, data.seuils[serie_name].max),
+                to: Math.min(1000, data.seuils[serie_name].max),
                 color: '#DDDF0D' // yellow
             }, {
-                from: Math.min(1000, data.W_seuils.max),
-                to: Math.min(3000, data.W_seuils.max),
+                from: Math.min(1000, data.seuils[serie_name].max),
+                to: Math.min(3000, data.seuils[serie_name].max),
                 color: '#FFA500' // orange
             }, {
-                from: Math.min(3000, data.W_seuils.max),
-                to: Math.min(10000, data.W_seuils.max),
+                from: Math.min(3000, data.seuils[serie_name].max),
+                to: Math.min(10000, data.seuils[serie_name].max),
                 color: '#DF5353' // red
-            }]
-        },
+            }]*/
+        });
+        graphSeries.push({
+            name : data.series[serie_name],
+            data : [data.data[serie_name]],
+            yAxis: serie_num
+        });
+    });
 
+    return {
+        chart: {
+            renderTo: 'chart0',
+            animation: animation,
+            type: 'gauge',
+            plotBackgroundColor: null,
+            plotBackgroundImage: null,
+            plotBorderWidth: 0,
+            plotShadow: false,
+            events: {
+                load: function (chart) {
+                    this.setTitle(null, {
+                        text: 'Construit en ' + (new Date() - start) + 'ms'
+                    });
+                    if ($('#chart0_legende').length) {
+                        if (data.subtitle.length > 0) $('#chart0_legende').show();
+                        $("#chart0_legende").html(data.subtitle);
+                    }
+                    this.debut = data.debut;
+                    init_chart0_navigation();
+                }
+            },
+            borderColor: '#EBBA95',
+            borderWidth: 2,
+            borderRadius: 10
+        },
+        title: {
+            text: data.title // 'Puissance instantanée'
+        },
+        credits: {
+            enabled: false
+        },
         tooltip: {
             formatter: function () {
                 var tooltip;
                 //puissance=data.W_data;
                 //fraicheur=data.date;
-                tooltip = '<b>' + Highcharts.numberFormat(this.y, 0) + ' Watts</b><br />';
+                tooltip = '<b>' + Highcharts.numberFormat(this.y, 0) + ' ' + this.series.name + '</b><br />';
                 tooltip += 'Le ' +  Highcharts.dateFormat('%A %e %B %Y à %H:%M', data.debut) + '<br />';
                 return tooltip;
             }
         },
-
-        series: [{
-            name : data.W_name,
-            data : [data.W_data]
-            /*tooltip: {
-                valueSuffix: ' Watts'
-            }*/
-        }]
+        pane: graphPanes,
+        yAxis: graphYAxis,
+        series: graphSeries,
     };
 }
 

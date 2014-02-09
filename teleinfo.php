@@ -13,7 +13,7 @@
     $mobile = (($detect->isMobile()) || (isset($_GET['mobile']) && ($_GET['mobile']==1)));
 
     // Use template ?
-    if ($config["usetemplate"]) {
+    if ($config["useTemplate"]) {
         // Templace RainTPL
         if (!is_dir('cache')) { mkdir('cache',0705); chmod('cache',0705); }
 

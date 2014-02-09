@@ -1,7 +1,7 @@
 <?php
 setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
-error_reporting(E_ERROR);
+error_reporting(E_WARNING);
 
 // Adapté du code de Domos, dont il ne doit plus rester grand chose !
 // cf . http://vesta.homelinux.net/wiki/teleinfo_papp_jpgraph.html
@@ -97,8 +97,8 @@ function instantly () {
         $demain = $row["DEMAIN"];
         $date_deb = $row["TIMESTAMP"];
         $Isousc = floatval(str_replace(",", ".", $row["ISOUSC"]));
-        $valP = floatval(str_replace(",", ".", $row["PAPP"]));
-        $valI = floatval(str_replace(",", ".", $row["IINST1"]));
+        $val["W"] = floatval(str_replace(",", ".", $row["PAPP"]));
+        $val["I"] = floatval(str_replace(",", ".", $row["IINST1"]));
     };
     mysql_free_result($result);
 
@@ -108,17 +108,29 @@ function instantly () {
     $nbenreg = mysql_num_rows($result);
     if ($nbenreg > 0) {
         $row = mysql_fetch_array($result);
-        $maxP = max($valP, $row["PAPP"]);
-        $maxI = max($valI, $row["IINST1"]);
+        $max["W"] = max($val["W"], $row["PAPP"]);
+        $max["I"] = max($val["I"], $row["IINST1"]);
     };
     mysql_free_result($result);
 
-    $datetext = strftime("%c",$date_deb);
+    //$datetext = strftime("%c",$date_deb);
+    $datetext = date("d/m G:i", $date_deb);
 
-    $seuilsP = array (
+    $seuils["W"] = array (
         'min' => 0,
-        'max' => ceil($maxP / 500) * 500, // Arrondi à 500 "au dessus"
+        'max' => ceil($max["W"] / 500) * 500, // Arrondi à 500 "au dessus"
     );
+
+    $seuils["I"] = array (
+        'min' => 0,
+        'max' => ceil($max["I"] / 5) * 5, // Arrondi à 5 "au dessus"
+    );
+
+    $series["W"] = "Watts";
+    if ($config["doubleGauge"]) {
+        // Ajoute la série Intensité
+        $series["I"] = "Ampères";
+    }
 
     // Subtitle pour la période courante
     $subtitle = "Option tarifaire : <b>".$optarifStr." (".$Isousc." A)</b><br />";
@@ -130,10 +142,8 @@ function instantly () {
         default :
             break;
     }
-    $subtitle .= "Puissance Max : <b>".intval($maxP)." W</b><br />";
-    $subtitle .= "Intensité Max : <b>".intval($maxI)." A</b><br />";
-    // Puissance / Max
-    // Intensité / Max
+    $subtitle .= "Puissance Max : <b>".intval($max["W"])." W</b><br />";
+    $subtitle .= "Intensité Max : <b>".intval($max["I"])." A</b><br />";
 
     $instantly = array(
         'title' => "Consommation du $datetext",
@@ -142,9 +152,10 @@ function instantly () {
         'ptec' => array($ptec => $ptecStr),
         'demain' => $demain,
         'debut' => $date_deb*1000, // $date_deb_UTC,
-        'W_name' => "Watts",
-        'W_data'=> $valP,
-        'W_seuils' => $seuilsP,
+        'series' => $series,
+        'data'=> $val,
+        'seuils' => $seuils,
+        'bands' => $teleinfo["BANDS"],
         'refresh_auto' => $config["refreshAuto"],
         'refresh_delay' => $config["refreshDelay"]
     );

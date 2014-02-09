@@ -29,6 +29,9 @@
     - change : Ajout d'icônes pour illustrer les boutons de navigation. (BmdOnline)
 
 * Graphiques
+    - change : Affichage de double gauge (puissance & intensité). (energy01 & BmdOnline)
+        * Une option permet de n'afficher que la puissance.
+    - change : Paramétrage des seuils limites des gauges dans le fichier "config.php". (BmdOnline)
     - change : L'échelle de la gauge instantanée s'ajuste automatiquement. (energy01 & BmdOnline)
     - change : Affiche toutes les périodes tarifaires, et pas seulement "Base" ou "HP/HC". (BmdOnline)
     - change : Revue de l'affichage de la légende des graphiques quotidien et historique. (BmdOnline)
@@ -128,6 +131,26 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://pen
 ###Version 1
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.anthony.free.fr/?p=111)
 
+###Gauge instantanée
+#### Donnée à afficher
+Il est possible d'afficher une ou deux gauges.
+Dans le cas d'une seule gauge affichée, c'est la puissance qui est sélectionnée.
+Dans le cas de deux gauges, l'intensité s'affichera à côté.
+
+L'option se situe dans le fichier "config.php" :
+```php
+$config["doubleGauge"]           = true;  // true : affiche intensité en plus de la puissance
+```
+
+#### Rafraichissement automatique
+Il est possible d'activer ou désactiver le rafraichissement automatique des gauges.
+
+L'option se situe dans le fichier "config.php" :
+```php
+$config["refreshAuto"]           = true;  // active le rafraichissement automatique
+$config["refreshDelay"]          = 120;   // relancé toutes les 120 secondes
+```
+
 ###Templates
 Actuellement, 2 modèles de mise en page sont proposés pour chacun des affichages (desktop & mobile).
 Par défaut, les templates ne sont pas activés. L'affichage utilise des fichiers HTML préparés.
@@ -135,16 +158,12 @@ Par défaut, les templates ne sont pas activés. L'affichage utilise des fichier
 #### Gestion par fichiers HTML
 Des fichiers sont proposés pour chacun des modes d'affichage.
 
-Pour changer de modèle, il faut adapter le fichier "teleinfo.php" :
+Pour changer de modèle, il faut adapter le fichier "config.php" :
 ```php
-    } else {
-        header("Vary: User-Agent");
-        if ($mobile) {
-            readfile("tpl/teleinfo.tabs.mobile.html");
-        } else {
-            readfile("tpl/teleinfo.tabs.html");
-        }
-    }
+$config["useTemplate"]           = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
+(...)
+$config["notemplate"]["desktop"] = "tpl/teleinfo.tabs.html";
+$config["notemplate"]["mobile"]  = "tpl/teleinfo.tabs.mobile.html";
 ```
 
 * Pour la vesion desktop, les fichiers :
@@ -157,7 +176,15 @@ Pour changer de modèle, il faut adapter le fichier "teleinfo.php" :
 #### Gestion par templates
 Le moteur de template utilisé est RainTPL. Il est possible de modifier les pages en utilisant la syntaxe adéquate.
 
-Pour changer de modèle, il faut remplacer le contenu du répertoire "tpl/files"...
+Pour changer de modèle, il faut adapter le fichier "config.php" :
+```php
+$config["useTemplate"]           = true; // utilise les templates pour afficher les page HTML (utilise RainTPL)
+$config["template"]["desktop"]   = "teleinfo";
+$config["template"]["mobile"]    = "teleinfo.mobile";
+(...)
+```
+
+Il faut également remplacer le contenu du répertoire "tpl/files"...
 * Pour la vesion desktop, depuis :
     - tpl/files/desktop - lineaire
     - tpl/files/desktop - onglets
@@ -174,7 +201,56 @@ Remarque :
 Pour le bon fonctionnement du programme, il faut choisir un template desktop ET un template mobile.
 Par défaut, le programme est réglé sur les templates avec onglets.
 
-###Thèmes
+###Apparence
+####Couleur des graphiques
+Chaque donnée affiché en graphique a une couleur paramétrable.
+
+Pour changer les couleurs, il faut adapter le fichier "config.php" :
+```php
+// couleurs de chacune des séries des graphiques
+$teleinfo["COULEURS"] = array(
+    "MIN"  => "green",   // Seuil de consommation minimale sur la période
+    "MAX"  => "red",     // Seuil de consommation maximale sur la période
+    "PREC" => "#DB843D", // Période précédente
+    "BASE" => "#2f7ed8",
+    "HP"   => "#c42525",
+    "HC"   => "#2f7ed8",
+    "HPJB" => "#2f7ed8",
+    "HPJW" => "#8bbc21",
+    "HPJR" => "#910000",
+    "HCJB" => "#77a1e5",
+    "HCJW" => "#a6c96a",
+    "HCJR" => "#c42525",
+    "HN"   => "#2f7ed8",
+    "HPM"  => "#c42525",
+    "I"    => "blue"     // Intensité
+);
+```
+
+####Aspect des gauges
+Les différents seuils des gauges sont paramétrables ainsi que les couleurs associées.
+
+Pour régler ces seuils, il faut adapter le fichier "config.php" :
+```php
+// couleurs des bandes des gauges
+$teleinfo["BANDS"] = array(
+    "W" => array(
+        300   => "#55BF3B", // de 0 à 300
+        1000  => "#DDDF0D", // de 300 à 1000
+        3000  => "#FFA500", // de 1000 à 3000
+        10000 => "#DF5353"  // supérieur à 3000
+    ),
+    "I" => array(
+        5   => "#55BF3B", // de 0 à 5
+        10  => "#DDDF0D", // de 5 à 10
+        20  => "#FFA500", // de 10 à 20
+        100 => "#DF5353"  // supérieur à 20
+    )
+);
+```
+
+
+####Thèmes
 Actuellement, 3 thèmes sont proposés (classique, clair & sombre).
 Pour en changer, il faut modifier le fichier "tpl/inc.lib.html", en spécifiant respectivement :
 ```php

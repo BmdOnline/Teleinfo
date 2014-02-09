@@ -2,10 +2,12 @@
 /*********************************/
 /*    Paramètres du programme    */
 /*********************************/
-$config["refreshAuto"]           = true; // active le rafraichissement automatique
-$config["refreshDelay"]          = 120;  // relancé toutes les 120 secondes
+$config["refreshAuto"]           = true;  // active le rafraichissement automatique
+$config["refreshDelay"]          = 120;   // relancé toutes les 120 secondes
+$config["doubleGauge"]           = true;  // true : affiche intensité en plus de la puissance
 
-$config["usetemplate"]           = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
+
+$config["useTemplate"]           = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
 $config["template"]["desktop"]   = "teleinfo";
 $config["template"]["mobile"]    = "teleinfo.mobile";
 $config["notemplate"]["desktop"] = "tpl/teleinfo.tabs.html";
@@ -141,6 +143,22 @@ $teleinfo["COULEURS"] = array(
     "HN"   => "#2f7ed8",
     "HPM"  => "#c42525",
     "I"    => "blue"     // Intensité
+);
+
+// couleurs des bandes des gauges
+$teleinfo["BANDS"] = array(
+    "W" => array(
+        300   => "#55BF3B", // de 0 à 300
+        1000  => "#DDDF0D", // de 300 à 1000
+        3000  => "#FFA500", // de 1000 à 3000
+        10000 => "#DF5353"  // supérieur à 3000
+    ),
+    "I" => array(
+        5   => "#55BF3B", // de 0 à 5
+        10  => "#DDDF0D", // de 5 à 10
+        20  => "#FFA500", // de 10 à 20
+        100 => "#DF5353"  // supérieur à 20
+    )
 );
 
 /*********************/
