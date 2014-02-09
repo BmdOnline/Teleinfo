@@ -58,6 +58,10 @@ html.busy, html.busy * {
 
 
 /* JQuery UI */
+
+/* Icônes des onglets de navigation */
+.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px; margin-top: 5px}
+
 .ui-tooltip {
     font-size:0.8em;
     padding: 5px 20px;
