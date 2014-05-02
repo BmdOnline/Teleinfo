@@ -1,95 +1,237 @@
-/* Style pour avoir le sablier durant les rafraichissements */
-html.busy, html.busy * {  
-  cursor: wait !important;  
+/* Graphiques */
+#chart0 {
+    /*float: left; */
+    width: 100%; /*400px;*/
+    height: 600px;
 }
 
-/*button[class="button_chart1"],
-button[class="button_chart2"],*/
-.ui-button
-{
-  width:125px;
-  height:30px;
-  margin-left:20px;
-  font-size:1em;
-  font-weight:bold;
-  border:none;
-  color:#cecece;
-  text-shadow:0px -1px 0px #000;
-  background:#1f2026;
-  background:-moz-linear-gradient(top,#1f2026,#15161a);
-  background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));
-  -webkit-border-radius:5px;
-     -moz-border-radius:5px;
-          border-radius:5px;
-  -webkit-box-shadow:0px 0px 1px #000;
-     -moz-box-shadow:0px 0px 1px #000;
-          box-shadow:0px 0px 1px #000;
+#chart1 {
+    width: 100%; /*800px;*/
+    height: 500px;
 }
 
-/*button[class="button_chart1"]:hover,
-button[class="button_chart2"]:hover,*/
-.ui-button:hover
-{
-  background:#343640;
-  background:-moz-linear-gradient(top,#343640,#15161a);
-  background:-webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));
+#chart2 {
+    width: 100%; /*800px;*/
+    height: 400px;
 }
 
-/* Styles associ�s aux liste selectmenu : select_chart2 */
-select[class="select_chart2"]
-{
-  width:200px;
+@media ( min-width: 900px ) {
+    /* for devices with high resolution */
+    #chart0 {
+        width: 500px;
+        height: 300px;
+    }
+    #chart1 {
+        width: 800px;
+    }
+    #chart2 {
+        width: 800px;
+    }
 }
 
-.ui-selectmenu-button a
-{
-  width:125px;
-  height:30px;
-  margin-left:20px;
-  font-size:1em;
-  font-weight:bold;
-  border:none;
-  color:#cecece;
-  text-shadow:0px -1px 0px #000;
-  background:#1f2026;
-  background:-moz-linear-gradient(top,#1f2026,#15161a);
-  background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));
-  -webkit-border-radius:5px;
-     -moz-border-radius:5px;
-          border-radius:5px;
-  -webkit-box-shadow:0px 0px 1px #000;
-     -moz-box-shadow:0px 0px 1px #000;
-          box-shadow:0px 0px 1px #000;
+#chart0_legende {
+    display: none;
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
 }
 
-/*.ui-selectmenu-menu ul */
-.ui-selectmenu-open ul
-{
-  border:none;
-  background:#1f2026;
-  background:-moz-linear-gradient(top,#1f2026,#15161a);
-  background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));
-  -webkit-border-radius:5px;
-     -moz-border-radius:5px;
-          border-radius:5px;
-  -webkit-box-shadow:0px 0px 1px #000;
-     -moz-box-shadow:0px 0px 1px #000;
-          box-shadow:0px 0px 1px #000;
+#chart1_legende {
+    display: none;
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
 }
 
-.ui-selectmenu-open a
-{
-  font-size: 62.5%;
-  color:#cecece;
-  text-shadow:0px -1px 0px #000;
+#chart2_legende {
+    display: none;
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
 }
 
-.ui-selectmenu-button a:hover
-{
-  background:#343640;
-  background:-moz-linear-gradient(top,#343640,#15161a);
-  background:-webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));
+.chart {
+    margin: 0 auto;
+    margin-bottom: 20px !important;
 }
 
-/*.ui-selectmenu-menu ul */
-.overflow { height: 200px; }
+
+/* JQuery UI */
+
+/* Display waiting animation while loading data */
+/* http://www.ajaxload.info */
+/* http://preloaders.net/ */
+/* loading icon */
+.ui-icon-loading {
+    background:url("images/ajax-loader.png") no-repeat center !important;
+    height: 128px !important; width: 128px !important;
+    position: fixed !important; left: 50% !important; top: 50% !important;
+    margin: -64px 0 0 -64px  !important;
+}
+
+/* Icônes des onglets de navigation */
+.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px; margin-top: 5px}
+
+.ui-tooltip {
+    font-size:0.8em;
+    padding: 5px 20px;
+}
+
+.ui-button-text {
+    font-size:0.8em;
+}
+
+.ui-button {
+    text-align: center !important;
+    width:125px !important;
+    /*height:30px !important;*/
+    margin-left:20px;
+    margin-bottom:20px;
+    border:none;
+    /*color:#cecece;
+    text-shadow:0px -1px 0px #000;
+    background:#1f2026;
+    background:-moz-linear-gradient(top,#1f2026,#15161a);
+    background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));*/
+    -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+            border-radius:5px;
+    -webkit-box-shadow:0px 0px 1px #000;
+        -moz-box-shadow:0px 0px 1px #000;
+            box-shadow:0px 0px 1px #000;
+}
+
+.ui-button:hover {
+    /*background:#343640;
+    background:-moz-linear-gradient(top,#343640,#15161a);
+    background:-webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));*/
+}
+
+select[class="select_chart2"] {
+    width:200px;
+}
+
+.ui-selectmenu-text {
+    font-size:0.8em;
+    text-align: center !important;
+    padding: 0.2em 0.2em 0.2em 0.2em !important;
+}
+
+.ui-selectmenu-button {
+    width:125px !important;
+    /*height:30px !important;*/
+    margin-left:20px;
+    margin-bottom:10px;
+    font-size:1em;
+    font-weight:bold;
+    border:none;
+    /*color:#cecece;
+    text-shadow:0px -1px 0px #000;
+    background:#1f2026;
+    background:-moz-linear-gradient(top,#1f2026,#15161a);
+    background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));*/
+    -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+            border-radius:5px;
+    -webkit-box-shadow:0px 0px 1px #000;
+         -moz-box-shadow:0px 0px 1px #000;
+  box-shadow:0px 0px 1px #000;
+}
+
+.ui-selectmenu-open ul {
+    border:none;
+    /*background:#1f2026;
+    background:-moz-linear-gradient(top,#1f2026,#15161a);
+    background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));*/
+    -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+            border-radius:5px;
+    -webkit-box-shadow:0px 0px 1px #000;
+        -moz-box-shadow:0px 0px 1px #000;
+            box-shadow:0px 0px 1px #000;
+}
+
+.ui-selectmenu-open li {
+    font-size:0.9em;
+    color:#cecece;
+}
+
+.ui-selectmenu-open .ui-state-focus {
+    color:#cecece;
+    font-weight:bold;
+    /*background:#343640;
+    background:-moz-linear-gradient(top,#343640,#15161a);
+    background:-webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));*/
+}
+
+.ui-selectmenu-overflow {
+    height: 200px;
+}
+
+/* Hide datepicked input (keep only button) */
+.hasDatepicker,
+.ui-datepicker-trigger {
+    display: none !important;
+}
+
+/* Si on utilise le bouton standard datepicker
+voci une implémentation de l'image en mode "sprite"
+
+.ui-datepicker-trigger {
+    width:32px !important;
+    margin-left:20px;
+    background-image:url("images/tango icons/X-office-calendar-ui-darkness.png");
+    background-repeat:no-repeat;
+    background-position:0px 0px;
+}
+
+.ui-datepicker-trigger:hover {
+    background-position:-32px 0px;
+}*/
+
+
+/* Habillage de la page */
+.button_group {
+    text-align: center;
+}
+
+#Menu {
+    width:860px;
+    margin-left:20px;
+    text-align: center;
+    font-size:2em;
+    font-weight:bold;
+    border:none;
+    color:#FFFFFF;
+    text-shadow:0px -1px 0px #000000;
+    background:#CECECE;
+    background:-moz-linear-gradient(top,#CECECE,#15161a);
+    background:-webkit-gradient(linear,left top,left bottom,from(#CECECE),to(#15161a));
+    -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+            border-radius:5px;
+    -webkit-box-shadow:0px 0px 1px #000;
+        -moz-box-shadow:0px 0px 1px #000;
+            box-shadow:0px 0px 1px #000;
+}
+
+#daily, #history {
+    padding: 5px;
+    margin-top:10px;
+    font-size:1em;
+    border: 1px solid #000000;
+    color:#cecece;
+    text-shadow:0px -1px 0px #FFFFFF;
+    background:#CECECE;
+    background:-moz-linear-gradient(top,#CECECE,#15161a);
+    background:-webkit-gradient(linear,left top,left bottom,from(#CECECE),to(#15161a));
+    -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+            border-radius:5px;
+    -webkit-box-shadow:0px 0px 1px #000;
+        -moz-box-shadow:0px 0px 1px #000;
+            box-shadow:0px 0px 1px #000;
+}
+#daily > div , #history > div {
+    position : relative
+}

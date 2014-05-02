@@ -1,0 +1,24 @@
+# La version git précompilée (http://codeorigin.jquery.com/ui/)
+#   n'intègre pas le widget selectmenu
+# Il faut télécharger et réassembler les modules depuis les sources github
+#
+# Pour les fichiers CSS de chaque template,
+#   il faut comparer les fichiers manuellement et appliquer les différences sur chacun des thèmes
+#
+
+# Install the Grunt CLI
+npm install -g grunt-cli
+
+# Clone the jQuery UI git repo
+git clone git://github.com/jquery/jquery-ui.git
+cd jquery-ui
+
+# Install the node module dependencies
+npm install
+
+# Run the concat task to concatenate files
+grunt concat
+
+# There are many other tasks that can be run through Grunt.
+# For a list of all tasks:
+grunt --help

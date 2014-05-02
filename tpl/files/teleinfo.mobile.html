@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+{include="head.mobile"}
+    </head>
+
+    <body>
+        <div id="page0" data-theme="a" data-role="page" data-quicklinks="true">
+{include="header.mobile"}
+
+            <div class="ui-content"> <!-- Chart0 -->
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <button class="button_chart0" id="chart0_refresh" value="now" title="R&eacute;actualiser" data-icon="refresh" data-iconpos="left">Rafra&icirc;chir</button>
+                </div>
+                <div id="chart0_legende">...</div>
+                <div class="chart" id="chart0"></div>
+            </div>
+
+{include="footer.mobile"}
+        </div> <!-- /page -->
+
+
+        <div id="page1" data-theme="a" data-role="page" data-quicklinks="true">
+{include="header.mobile"}
+
+            <div class="ui-content"> <!-- Chart1 -->
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <input type="hidden" class="datepicker" id="chart1_date" data-role="datepicker" />
+                    <button class="button_chart1" id="chart1_date_prec" value="1prec" title="Jour pr&eacute;c&eacute;dent" data-icon="arrow-l" data-iconpos="left">- 24h</button>
+                    <button class="button_chart1" id="chart1_date_select" value="date" title="S&eacute;lectionner un jour" data-icon="grid" data-iconpos="left">Jour</button>
+                    <button class="button_chart1" id="chart1_date_suiv" value="1suiv" title="Jour suivant" data-icon="arrow-r" data-iconpos="right">+ 24h</button>
+                </div>
+                <div id="chart1_legende">...</div>
+                <div class="chart" id="chart1"></div>
+            </div>
+
+{include="footer.mobile"}
+        </div> <!-- /page -->
+
+        <div id="page2" data-theme="a" data-role="page" data-quicklinks="true">
+{include="header.mobile"}
+
+            <div class="ui-content"> <!-- Chart2 -->
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <select class="select_chart2" id="duree">
+                        <option value="1">1</option>
+                        <option value="8">8</option>
+                        <option value="14">14</option>
+                    </select>
+                    <select class="select_chart2" id="periode">
+                        <option value="jours">Jour(s)</option>
+                        <option value="semaines">Semaine(s)</option>
+                        <option value="mois">Mois(s)</option>
+                        <option value="ans">An(s)</option>
+                    </select>
+                </div>
+                <div class="button_group" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <input type="hidden" class="datepicker" id="chart2_date" data-role="datepicker" />
+                    <button class="button_chart2" id="chart2_date_prec" value="1prec" title="Reculer" data-icon="arrow-l" data-iconpos="left">-1 jour</button>
+                    <button class="button_chart2" id="chart2_date_now" value="now" title="Aujourd'hui" data-icon="grid" data-iconpos="left">Aujourd'hui</button>
+                    <!--<button class="button_chart2" id="chart2_date_select" value="date" title="S&eacute;lectionner une date" data-icon="grid" data-iconpos="left">Date</button>-->
+                    <button class="button_chart2" id="chart2_date_suiv" value="1suiv" title="Avancer" data-icon="arrow-r" data-iconpos="left">+1 jour</button>
+                </div>
+                <div id="chart2_legende">Coût sur la période ...</div>
+                <div class="chart" id="chart2"></div>
+            </div>
+
+{include="footer.mobile"}
+        </div> <!-- /page -->
+    </body>
+</html>
