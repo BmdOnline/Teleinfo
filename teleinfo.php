@@ -18,7 +18,9 @@
         if (!is_dir('cache')) { mkdir('cache',0705); chmod('cache',0705); }
 
         Tpl::configure( array(
-            "tpl_dir"       => array("tpl/files/", "tpl/files/"), // !!! due to a bug, need to repeat twice !!!
+            "tpl_dir"       => array(
+                $config["template"]["tpl_dir"],
+                $config["template"]["tpl_dir"]), // !!! due to a bug, need to repeat twice !!!
             "cache_dir"     => "cache/",
             "debug"         => false, // set to false to improve the speed
         ) );

@@ -1,7 +1,7 @@
 <?php
 setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
-error_reporting(E_WARNING);
+error_reporting(E_ERROR); // E_WARNING
 
 // Adapté du code de Domos, dont il ne doit plus rester grand chose !
 // cf . http://vesta.homelinux.net/wiki/teleinfo_papp_jpgraph.html
@@ -64,12 +64,20 @@ function getMaxDate() {
     return $date;
 }
 
+function Tomorrow($date) {
+    //return $date;
+    return mktime(0, 0, 0, date("m", $date), date("d", $date)+1, date("Y", $date));
+}
+
+
 /****************************************/
 /*    Graph consommation instantanée    */
 /****************************************/
 function instantly () {
     global $teleinfo;
     global $config;
+
+    $graphConf = $config["graphiques"]["instantly"];
 
     $date = isset($_GET['date'])?$_GET['date']:null;
 
@@ -91,7 +99,8 @@ function instantly () {
     if ($nbenreg > 0) {
         $row = mysql_fetch_array($result);
         $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
-        $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
+        //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
+        $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
         $ptec = $teleinfo["PTEC"][$row["PTEC"]];
         $ptecStr = $teleinfo["LIBELLES"]["PTEC"][$ptec];
         $demain = $row["DEMAIN"];
@@ -120,17 +129,8 @@ function instantly () {
         'min' => 0,
         'max' => ceil($max["W"] / 500) * 500, // Arrondi à 500 "au dessus"
     );
-
-    $seuils["I"] = array (
-        'min' => 0,
-        'max' => ceil($max["I"] / 5) * 5, // Arrondi à 5 "au dessus"
-    );
-
     $series["W"] = "Watts";
-    if ($config["doubleGauge"]) {
-        // Ajoute la série Intensité
-        $series["I"] = "Ampères";
-    }
+    $bands["W"] = $graphConf["bands"]["W"];
 
     // Subtitle pour la période courante
     $subtitle = "Option tarifaire : <b>".$optarifStr." (".$Isousc." A)</b><br />";
@@ -143,7 +143,20 @@ function instantly () {
             break;
     }
     $subtitle .= "Puissance Max : <b>".intval($max["W"])." W</b><br />";
-    $subtitle .= "Intensité Max : <b>".intval($max["I"])." A</b><br />";
+
+
+    // Double Gauge ?
+    if (($graphConf["doubleGauge"]) && ($max["I"]!=0)) {
+        // Ajoute la série Intensité
+        $seuils["I"] = array (
+            'min' => 0,
+            'max' => ceil($max["I"] / 5) * 5, // Arrondi à 5 "au dessus"
+        );
+        $series["I"] = "Ampères";
+        $bands["I"] = $graphConf["bands"]["I"];
+
+        $subtitle .= "Intensité Max : <b>".intval($max["I"])." A</b><br />";
+    }
 
     $instantly = array(
         'title' => "Consommation du $datetext",
@@ -155,9 +168,9 @@ function instantly () {
         'series' => $series,
         'data'=> $val,
         'seuils' => $seuils,
-        'bands' => $teleinfo["BANDS"],
-        'refresh_auto' => $config["refreshAuto"],
-        'refresh_delay' => $config["refreshDelay"]
+        'bands' => $bands,
+        'refresh_auto' => $graphConf["refreshAuto"],
+        'refresh_delay' => $graphConf["refreshDelay"]
     );
 
     return $instantly;
@@ -168,22 +181,33 @@ function instantly () {
 /****************************************************************************************/
 function daily () {
     global $teleinfo;
+    global $config;
 
-    $date = isset($_GET['date'])?$_GET['date']:null;
+    $graphConf = $config["graphiques"]["daily"];
+
+    //$date = isset($_GET['date'])?$_GET['date']:null;
+    $date = isset($_GET['date'])?$_GET['date']:getMaxDate();
 
     $heurecourante = date('H');              // Heure courante.
     $timestampheure = mktime($heurecourante+1,0,0,date("m"),date("d"),date("Y"));  // Timestamp courant à heure fixe (mn et s à 0)
 
     // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
     $date = ($date)?min($date, $timestampheure):$timestampheure;
-    //$date = min($date, getMaxDate());
 
     $periodesecondes = 24*3600;                            // 24h.
     $timestampfin = $date;
     $timestampdebut2 = $date - $periodesecondes;           // Recule d'une période
     $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule d'une période
 
-    $query = queryDaily($timestampdebut, $timestampfin);
+    if ($config["recalculPuissance"])
+    {
+        $tab_optarif = getOPTARIF(true);
+        $optarif = $tab_optarif["OPTARIF"];
+    } else {
+        $optarif = null;
+    }
+
+    $query = queryDaily($timestampdebut, $timestampfin, $optarif);
     $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
     $nbenreg = mysql_num_rows($result);
     if ($nbenreg > 0) {
@@ -193,7 +217,8 @@ function daily () {
 
     $row = mysql_fetch_array($result);
     $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
-    $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
+    //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
+    $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
     $ptec = $teleinfo["PTEC"][$row["PTEC"]];
     $ptecStr = $teleinfo["LIBELLES"]["PTEC"][$ptec];
 
@@ -224,17 +249,39 @@ function daily () {
     $navigator = array();
 
     $row = mysql_data_seek($result, 0); // Revient au début (car on a déjà lu un enreg)
+    $prevptec = null;
+    $prevts = null;
+    $previdx = array();
     while ($row = mysql_fetch_array($result))
     {
         $ts = intval($row["TIMESTAMP"]);
+        $curptec = $teleinfo["PTEC"][$row["PTEC"]];
+
         if ($ts < $timestampdebut2) {
             // Période précédente
             $ts = ( $ts + $periodesecondes ) * 1000; // Avance d'une période
+            $deltats = ($ts - $prevts) / 1000 / 60; // en minutes
 
+            // On utilise la puissance apparente
             $val = floatval(str_replace(",", ".", $row["PAPP"]));
+
+            if ($config["recalculPuissance"])
+            {
+                // On recalcule la puissance active, basée sur les relevés d'index
+                $curidx = floatval(str_replace(",", ".", $row[$curptec]));
+                $deltaidx = $curidx-$previdx[$curptec];
+                // On utilise la puisse recalculée (sauf pour le premier index, car on n'a pas de "delta")
+                if ($previdx[$curptec]!==null) {
+                    $val =  $deltaidx / $deltats * 60;
+                }
+                $previdx[$curptec] = $curidx;
+            }
+
             $array["PREC"][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
             if ($courbe_max["PREC"] < $val) {$courbe_max["PREC"] = $val; $courbe_maxdate["PREC"] = $ts;};
             if ($courbe_min["PREC"] > $val) {$courbe_min["PREC"] = $val; $courbe_mindate["PREC"] = $ts;};
+
+            $prevts = $ts;
         }
         else {
             // Période courante
@@ -242,14 +289,33 @@ function daily () {
                 $date_deb = $row["TIMESTAMP"];
             }
             $ts = $ts * 1000;
+            $deltats = ($ts - $prevts) / 1000 / 60; // en minutes
 
+            // On utilise la puissance apparente
             $val = floatval(str_replace(",", ".", $row["PAPP"]));
-            $curptec = $teleinfo["PTEC"][$row["PTEC"]];
+
+            if ($config["recalculPuissance"])
+            {
+                // On recalcule la puissance active, basée sur les relevés d'index
+                $curidx = floatval(str_replace(",", ".", $row[$curptec]));
+                $deltaidx = $curidx-$previdx[$curptec];
+                if ($previdx[$curptec]!==null) {
+                    $val =  $deltaidx / $deltats * 60;
+                }
+                $previdx[$curptec] = $curidx;
+            }
+
             // Affecte la consommation selon la période tarifaire
             foreach($teleinfo["PERIODES"][$optarif] as $ptec){
+
                 if ($curptec == $ptec) {
+                    // Période tarifaire courante
                     $array[$ptec][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
+                } elseif ($prevptec == $ptec) {
+                    // Changement de periode tarifaire
+                    $array[$ptec][] = array($ts, $val); // On reporte la valeur pour lisser le graphique
                 } else {
+                    // Toutes les autres périodes tarifaires
                     $array[$ptec][] = array($ts, null);
                 }
             }
@@ -266,7 +332,10 @@ function daily () {
             $array["I"][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
             if ($courbe_max["I"] < $val) {$courbe_max["I"] = $val; $courbe_maxdate["I"] = $ts;};
             if ($courbe_min["I"] > $val) {$courbe_min["I"] = $val; $courbe_mindate["I"] = $ts;};
+
         }
+        $prevts = $ts;
+        $prevptec = $curptec;
     }
     mysql_free_result($result);
 
@@ -314,10 +383,14 @@ function daily () {
 /*************************************************************/
 function history() {
     global $teleinfo;
+    global $config;
+
+    $graphConf = $config["graphiques"]["history"];
 
     $duree = isset($_GET['duree'])?$_GET['duree']:8;
     $periode = isset($_GET['periode'])?$_GET['periode']:"jours";
-    $date = isset($_GET['date'])?$_GET['date']:null;
+    //$date = isset($_GET['date'])?$_GET['date']:null;
+    $date = isset($_GET['date'])?$_GET['date']:Tomorrow(getMaxDate());
 
     switch ($periode) {
         case "jours":
@@ -327,7 +400,6 @@ function history() {
 
             // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
-            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
 
             // Périodes
             $periodesecondes = $duree*24*3600;                               // Periode en secondes
@@ -346,7 +418,6 @@ function history() {
 
             // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
-            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
 
             // Avance d'un jour tant que celui-ci n'est pas un lundi
             while ( date("w", $date) != 1 )
@@ -369,7 +440,6 @@ function history() {
 
             // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
-            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
 
             // Avance d'un jour tant qu'on n'est pas le premier du mois
             while ( date("d", $date) != 1 )
@@ -393,7 +463,6 @@ function history() {
 
             // Meilleure date entre celle donnée en paramètre, celle calculée et la dernière date en base
             $date = ($date)?min($date, $timestampheure):$timestampheure;
-            //$date = min($date, getMaxDate()); // Attention, il faudra prendre maxDate à 0h
 
             $date = mktime(0,0,0,1,1,date("Y", $date)+1);                          // Année suivante, 0h
 
@@ -416,7 +485,7 @@ function history() {
     $optarif = $tab_optarif["OPTARIF"];
     $isousc = $tab_optarif["ISOUSC"];
 
-    $query = queryHistory($optarif, $timestampdebut, $dateformatsql, $timestampfin);
+    $query = queryHistory($timestampdebut, $timestampfin, $dateformatsql, $optarif);
 
     $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
 
@@ -427,7 +496,8 @@ function history() {
 
     $row = mysql_fetch_array($result);
     $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
-    $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
+    //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
+    $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
     $ptec = $teleinfo["PTEC"][$row["PTEC"]];
     $ptecStr = $teleinfo["LIBELLES"]["PTEC"][$ptec];
 
@@ -654,6 +724,7 @@ function history() {
     $series = array_intersect_key($teleinfo["LIBELLES"]["PTEC"], array_flip($teleinfo["PERIODES"][$optarif]));
 
     $history = array(
+        'show3D' => $graphConf["show3D"],
         'title' => "Consomation sur $xlabel",
         'subtitle' => $subtitle,
         'optarif' => array($optarif => $optarifStr),
@@ -670,13 +741,15 @@ function history() {
         'PREC_color' => $teleinfo["COULEURS"]["PREC"],
         'PREC_name' => 'Période Précédente',
         'PREC_data' => $kwhprec,
-        'PREC_data_detail' => $kwhp
+        'PREC_data_detail' => $kwhp,
+        'PREC_type' => $graphConf["typePrec"]
     );
 
     // Ajoute les séries
     foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
         $history[$ptec."_color"] = $teleinfo["COULEURS"][$ptec];
         $history[$ptec."_data"] = $kwh[$ptec];
+        $history[$ptec."_type"] = $graphConf["typeSerie"];
     }
 
     return $history;

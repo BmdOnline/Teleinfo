@@ -1,8 +1,3 @@
-/* Style pour avoir le sablier durant les rafraichissements */
-html.busy, html.busy * {
-    cursor: wait !important;
-}
-
 /* Graphiques */
 #chart0 {
     /*float: left; */
@@ -62,6 +57,17 @@ html.busy, html.busy * {
 
 
 /* JQuery UI */
+
+/* Display waiting animation while loading data */
+/* http://www.ajaxload.info */
+/* http://preloaders.net/ */
+/* loading icon */
+.ui-icon-loading {
+    background:url("images/ajax-loader.png") no-repeat center !important;
+    height: 128px !important; width: 128px !important;
+    position: fixed !important; left: 50% !important; top: 50% !important;
+    margin: -64px 0 0 -64px  !important;
+}
 
 /* Icônes des onglets de navigation */
 .ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px; margin-top: 5px}

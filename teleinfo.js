@@ -4,14 +4,220 @@
 
 var start = {}; // = new Date();
 
-var animation = true;
-
 var chart_elec0;
 var chart_elec1;
 var chart_elec2;
 
 var timerID;
 var chart_elec0_delay = 60; // secondes
+
+var hcTheme = {
+    global: {
+        useUTC: false
+    },
+    lang: {
+        months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+            'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+        shortMonths: [ 'Jan' , 'Fév' , 'Mar' , 'Avr' , 'Mai' , 'Juin' ,
+            'Juil' , 'Août' , 'Sep' , 'Oct' , 'Nov' , 'Déc'],
+        weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+        decimalPoint: ',',
+        thousandsSep: '.',
+        rangeSelectorFrom: 'Du',
+        rangeSelectorTo: 'au'
+    },
+    credits: {
+        enabled: false
+    },
+    /*colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572',
+             '#FF9655', '#FFF263', '#6AF9C4'], */
+    chart: {
+        animation: true,
+        /*animation: {
+            duration: 800,
+            easing: 'swing'
+        },*/
+        borderColor: '#EBBA95',
+        borderWidth: 2,
+        borderRadius: 10
+        /*backgroundColor: {
+            linearGradient: [0, 0, 500, 500],
+            stops: [
+                [0, 'rgb(255, 255, 255)'],
+                [1, 'rgb(240, 240, 255)']
+            ]
+        },*/
+    },
+    title: {
+        style: {
+            color: '#333333',
+            font: 'bold 16px Verdana, sans-serif'
+            //font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+        }
+    },
+    subtitle: {
+        style: {
+            color: '#666666',
+            font: 'bold 12px Verdana, sans-serif'
+            //font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+        }
+    },
+    plotOptions: {
+        column: {
+            dataLabels: {
+                enabled: false,
+                overflow: 'crop',
+                crop: true,
+                color: '#FFFFFF',
+                formatter: function () {
+                    if (this.y === 0) {
+                        return "";
+                    }
+                    return this.y;
+                }
+                /*style: {
+                    font: 'normal 13px Verdana, sans-serif'
+                }*/
+            }
+        },
+        gauge: {
+            dataLabels: {
+                color: '#666666',
+                backgroundColor: '#FDFFD5',
+            },
+        }
+    },
+    xAxis: {
+        dateTimeLabelFormats: {
+            /*millisecond: '%H:%M:%S.%L',
+            second: '%H:%M:%S',
+            minute: '%H:%M',
+            hour: '%H:%M',
+            day: '%e. %b',
+            week: '%e. %b',
+            month: '%b \'%y',
+            year: '%Y'*/
+            hour: '%H:%M',
+            //day: '%H:%M',
+            week: '%H:%M',
+            month: '%H:%M'
+        }
+    },
+    yAxis: {
+        lineWidth: 2,
+        showLastLabel: true,
+        min: 0,
+        maxPadding: 0.1,
+        alternateGridColor: '#FDFFD5',
+        minorGridLineWidth: 0,
+        labels: {
+            //rotation: -90,
+            align: 'left',
+            x: 5
+        },
+    },
+    legend: {
+        enabled: false,
+        borderColor: 'black',
+        borderWidth: 1,
+        shadow: true
+        /*itemStyle: {
+            font: '9pt Trebuchet MS, Verdana, sans-serif',
+            color: 'black'
+        },
+        itemHoverStyle:{
+            color: 'gray'
+        },*/
+    },
+    rangeSelector : {
+        buttons : [{
+            type : 'hour',
+            count : 1,
+            text : '1h'
+        }, {
+            type : 'hour',
+            count : 3,
+            text : '3h'
+        }, {
+            type : 'hour',
+            count : 6,
+            text : '6h'
+        }, {
+            type : 'hour',
+            count : 9,
+            text : '9h'
+        }, {
+            type : 'hour',
+            count : 12,
+            text : '12h'
+        }, {
+            type : 'all',
+            count : 1,
+            text : 'All'
+        }],
+        selected : 5,
+        inputEnabled : false
+    },
+    /*scrollbar: { // scrollbar "stylée" grise
+        barBackgroundColor: 'gray',
+        barBorderRadius: 7,
+        barBorderWidth: 0,
+        buttonBackgroundColor: 'gray',
+        buttonBorderWidth: 0,
+        buttonBorderRadius: 7,
+        trackBackgroundColor: 'none',
+        trackBorderWidth: 1,
+        trackBorderRadius: 8,
+        trackBorderColor: '#CCC'
+    },*/
+    navigator: {
+        //top: 360,
+        menuItemStyle: {
+            fontSize: '10px'
+        },
+        series: {
+            color: '#4572A7',
+            fillOpacity: 0.55
+        }
+    },
+    navigation: {
+        menuItemStyle: {
+            fontSize: '10px'
+        }
+    },
+    pane: { // Gauge
+        startAngle: -150,
+        endAngle: 150,
+        background: [{
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, '#FFF'],
+                    [1, '#333']
+                ]
+            },
+            borderWidth: 0,
+            outerRadius: '109%'
+        }, {
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, '#333'],
+                    [1, '#FFF']
+                ]
+            },
+            borderWidth: 1,
+            outerRadius: '107%'
+        }, {
+            // default background
+        }, {
+            backgroundColor: '#DDD',
+            borderWidth: 0,
+            outerRadius: '105%',
+            innerRadius: '103%'
+        }]
+    }
+};
 
 function enable_timer(func, delay) {
     "use strict";
@@ -30,23 +236,9 @@ function disable_timer() {
 jQuery(function ($) {
     "use strict";
 
-    Highcharts.setOptions({
-        lang: {
-            months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-            weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-            decimalPoint: ',',
-            thousandsSep: '.',
-            rangeSelectorFrom: 'Du',
-            rangeSelectorTo: 'au'
-        },
-        legend: {
-            enabled: false
-        },
-        global: {
-            useUTC: false
-        }
-    });
+    // Apply the theme
+    //Highcharts.setOptions(Highcharts.theme);
+    Highcharts.setOptions(hcTheme);
 });
 
 function init_chart0_navigation() {
@@ -81,21 +273,25 @@ function init_chart0(data, serie) {
     var gPos;
     var gStep = 100 / serieNames.length;
     var centerPos = [];
+    var paneSize;
     var band_min;
     $.each(serieNames, function (serie_num, serie_name) {
+        // Position de chacune des gauges (horizontalement ou verticalement)
         gPos = (gStep / 2) + (gStep * serie_num);
         if ($("#chart0").height() <= $("#chart0").width()) {
             centerPos = [ // Horizontal
-	            Highcharts.numberFormat(gPos, 0) + '%',
-	            '50%'
-	        ];
-	    } else {
+                Highcharts.numberFormat(gPos, 0) + '%',
+                '50%'
+            ];
+            paneSize = Math.min($("#chart0").width() / 2 * 0.8, $("#chart0").height() * 0.75);
+        } else {
             centerPos = [ // Vertical
-	            '50%',
-	            Highcharts.numberFormat(gPos, 0) + '%',
-	        ];
-	    }
-
+                '50%',
+                Highcharts.numberFormat(gPos, 0) + '%'
+            ];
+            paneSize = Math.min($("#chart0").width() * 0.8, $("#chart0").height() / 2 * 0.75);
+        }
+        // Seuils des gauges
         band_min = 0;
         plotBands = []; // RAZ
         $.each(data.bands[serie_name], function (band_max, band_color) {
@@ -107,45 +303,16 @@ function init_chart0(data, serie) {
             band_min = band_max;
         });
 
-        graphPanes.push({
-	        center: centerPos,
-	        //size: '70%', // A prévoir
-            startAngle: -150,
-            endAngle: 150,
-            background: [{
-                backgroundColor: {
-                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-                    stops: [
-                        [0, '#FFF'],
-                        [1, '#333']
-                    ]
-                },
-                borderWidth: 0,
-                outerRadius: '109%'
-            }, {
-                backgroundColor: {
-                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-                    stops: [
-                        [0, '#333'],
-                        [1, '#FFF']
-                    ]
-                },
-                borderWidth: 1,
-                outerRadius: '107%'
-            }, {
-                // default background
-            }, {
-                backgroundColor: '#DDD',
-                borderWidth: 0,
-                outerRadius: '105%',
-                innerRadius: '103%'
-            }]
-        });
+        // Default Options doesn't works for pane. So we merge them manually
+        graphPanes.push(Highcharts.merge(hcTheme.pane, {
+                center: centerPos,
+                size: paneSize
+        }));
+
         graphYAxis.push({
             min: data.seuils[serie_name].min,
             max: data.seuils[serie_name].max,
             pane: serie_num,
-
             minorTickInterval: 'auto',
             minorTickWidth: 1,
             minorTickLength: 10,
@@ -164,35 +331,22 @@ function init_chart0(data, serie) {
             title: {
                 text: data.series[serie_name] // 'Watts'
             },
-            plotBands: plotBands,/*[{
-                from: Math.min(0, data.seuils[serie_name].max),
-                to: Math.min(300, data.seuils[serie_name].max),
-                color: '#55BF3B' // green
-            }, {
-                from: Math.min(300, data.seuils[serie_name].max),
-                to: Math.min(1000, data.seuils[serie_name].max),
-                color: '#DDDF0D' // yellow
-            }, {
-                from: Math.min(1000, data.seuils[serie_name].max),
-                to: Math.min(3000, data.seuils[serie_name].max),
-                color: '#FFA500' // orange
-            }, {
-                from: Math.min(3000, data.seuils[serie_name].max),
-                to: Math.min(10000, data.seuils[serie_name].max),
-                color: '#DF5353' // red
-            }]*/
+            plotBands: plotBands
         });
         graphSeries.push({
+            dataLabels: {
+                enabled: true
+            },
             name : data.series[serie_name],
             data : [data.data[serie_name]],
             yAxis: serie_num
         });
     });
 
+    Highcharts.setOptions(hcTheme);
     return {
         chart: {
             renderTo: 'chart0',
-            animation: animation,
             type: 'gauge',
             plotBackgroundColor: null,
             plotBackgroundImage: null,
@@ -204,22 +358,25 @@ function init_chart0(data, serie) {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
                     });
                     if ($('#chart0_legende').length) {
-                        if (data.subtitle.length > 0) $('#chart0_legende').show();
+                        if (data.subtitle.length > 0) { $('#chart0_legende').show(); }
                         $("#chart0_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
                     init_chart0_navigation();
+                },
+                resize: function () {
+                    /*var plotWidth = this.plotSizeX; // this.width - this.marginLeft - this.marginRight;
+                    var plotHeight = this.plotSizeY; // this.height - this.marginTop - this.marginBottom;
+                    console.log ("plot area : " + plotWidth + "x" + plotHeight);*/
+                    refresh_chart0();
                 }
-            },
-            borderColor: '#EBBA95',
-            borderWidth: 2,
-            borderRadius: 10
+            }
         },
         title: {
             text: data.title // 'Puissance instantanée'
         },
-        credits: {
-            enabled: false
+        subtitle: {
+            text: 'Construit en...'
         },
         tooltip: {
             formatter: function () {
@@ -233,7 +390,7 @@ function init_chart0(data, serie) {
         },
         pane: graphPanes,
         yAxis: graphYAxis,
-        series: graphSeries,
+        series: graphSeries
     };
 }
 
@@ -267,8 +424,8 @@ function init_chart1(data) {
                 valueDecimals: 0
             },
             yAxis: 0,
-            visible: (data[serie_name + "_data"].reduce(function(a, b) { return a + b[1]; }, 0) !== 0),
-            showInLegend: (data[serie_name + "_data"].reduce(function(a, b) { return a + b[1]; }, 0) !== 0)
+            visible: (data[serie_name + "_data"].reduce(function (a, b) { return a + b[1]; }, 0) !== 0),
+            showInLegend: (data[serie_name + "_data"].reduce(function (a, b) { return a + b[1]; }, 0) !== 0)
         });
     });
 
@@ -294,34 +451,28 @@ function init_chart1(data) {
             yDecimals : 0,
             valueDecimals: 0
         },
-        visible: (data.PREC_data.reduce(function(a, b) { return a + b[1]; }, 0) !== 0),
-        showInLegend: (data.PREC_data.reduce(function(a, b) { return a + b[1]; }, 0) !== 0)
+        visible: (data.PREC_data.reduce(function (a, b) { return a + b[1]; }, 0) !== 0),
+        showInLegend: (data.PREC_data.reduce(function (a, b) { return a + b[1]; }, 0) !== 0)
     });
 
+    Highcharts.setOptions(hcTheme);
     return {
         chart: {
             renderTo: 'chart1',
-            animation: animation,
             events: {
                 load: function (chart) {
                     this.setTitle(null, {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
                     });
                     if ($('#chart1_legende').length) {
-                        if (data.subtitle.length > 0) $('#chart1_legende').show();
+                        if (data.subtitle.length > 0) { $('#chart1_legende').show(); }
                         $("#chart1_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
                     init_chart1_navigation(data.duree, data.periode);
                 }
             },
-            borderColor: '#EBBA95',
-            borderWidth: 2,
-            borderRadius: 10,
             ignoreHiddenSeries: false
-        },
-        credits: {
-            enabled: false
         },
         title: {
             text : data.title
@@ -329,45 +480,11 @@ function init_chart1(data) {
         subtitle: {
             text: 'Construit en...'
         },
-        rangeSelector : {
-            buttons : [{
-                type : 'hour',
-                count : 1,
-                text : '1h'
-            }, {
-                type : 'hour',
-                count : 3,
-                text : '3h'
-            }, {
-                type : 'hour',
-                count : 6,
-                text : '6h'
-            }, {
-                type : 'hour',
-                count : 9,
-                text : '9h'
-            }, {
-                type : 'hour',
-                count : 12,
-                text : '12h'
-            }, {
-                type : 'all',
-                count : 1,
-                text : 'All'
-            }],
-            selected : 5,
-            inputEnabled : false
-        },
         xAxis: {
-            type: 'datetime',
-            dateTimeLabelFormats: {
-                hour: '%H:%M',
-                day: '%H:%M',
-                week: '%H:%M',
-                month: '%H:%M'
-            }
+            type: 'datetime'
         },
         yAxis: [{ // Primary yAxis
+            opposite: false,
             title: {
                 text: 'Watt'
             },
@@ -376,11 +493,6 @@ function init_chart1(data) {
                     return this.value; // + ' w';
                 }
             },
-            lineWidth: 2,
-            showLastLabel: true,
-            min: 0,
-            alternateGridColor: '#FDFFD5',
-            minorGridLineWidth: 0,
             plotLines : [{ // lignes min et max
                 value : data.seuils.min,
                 color : data.MIN_color,
@@ -389,9 +501,9 @@ function init_chart1(data) {
                 label : {
                     align : 'right',
                     style : {
-                        color : data.MIN_color,
+                        color : data.MIN_color
                     },
-                    text : 'minimum ' + data.seuils.min + 'w'
+                    text : 'min. ' + data.seuils.min + 'w'
                 }
             }, {
                 value : data.seuils.max,
@@ -403,7 +515,7 @@ function init_chart1(data) {
                     style : {
                         color : data.MAX_color
                     },
-                    text : 'maximum ' + data.seuils.max + 'w'
+                    text : 'max. ' + data.seuils.max + 'w'
                 }
             }]
         /*}, { // Secondary yAxis
@@ -424,36 +536,19 @@ function init_chart1(data) {
                 }
             }*/
         }],
-
+        tooltip: {
+            crosshairs: true
+        },
         series : graphSeries,
         legend: {
-            enabled: true,
-            borderColor: 'black',
-            borderWidth: 1,
-            shadow: true
+            enabled: true
         },
         navigator: {
-            baseSeries: 2,
-            top: 390,
-            menuItemStyle: {
-                fontSize: '10px'
-            },
             series: {
                 name: 'navigator',
+                type: 'areaspline',
                 data: data.navigator
             }
-        },
-        scrollbar: { // scrollbar "stylée" grise
-            barBackgroundColor: 'gray',
-            barBorderRadius: 7,
-            barBorderWidth: 0,
-            buttonBackgroundColor: 'gray',
-            buttonBorderWidth: 0,
-            buttonBorderRadius: 7,
-            trackBackgroundColor: 'none',
-            trackBorderWidth: 1,
-            trackBorderRadius: 8,
-            trackBorderColor: '#CCC'
         }
     };
 }
@@ -519,13 +614,13 @@ function init_chart2_navigation(duree, periode) {
     // Libelles des boutons //ui-button-text
     var btn = {};
     btn = $("#chart2_date_prec").find('span.ui-button-text');
-    if (btn.length == 0) { // jQuery Mobile n'utilise pas de <span>
+    if (btn.length === 0) { // jQuery Mobile n'utilise pas de <span>
         btn = btn.prevObject;
     }
     btn.html("- " + txtdecalage);
 
     btn = $("#chart2_date_suiv").find('span.ui-button-text');
-    if (btn.length == 0) { // jQuery Mobile n'utilise pas de <span>
+    if (btn.length === 0) { // jQuery Mobile n'utilise pas de <span>
         btn = btn.prevObject;
     }
     btn.html("+ " + txtdecalage);
@@ -549,37 +644,21 @@ function init_chart2(data) {
             name : serie_title,
             data : data[serie_name + "_data"],
             color : data[serie_name + "_color"],
-            stack : 'histo',
-            events: {
+            type: data[serie_name + "_type"], // 'column',
+            stack : 0, // 'histo',
+            /*events: {
                 click: function (e) {
-                    //console.log (e.point.series.name);
-                    //console.log (e.point.category);
-                    //console.log (e.point.x);
-                    //console.log (Highcharts.dateFormat('%A, %b %e, %Y', data.debut));
-                    //console.log (data.debut);
                     var newdate = new Date();
                     newdate.setTime(data.debut);
                     newdate.setDate(newdate.getDate() + e.point.x);
                     console.log(newdate);
                 }
-            },
+            },*/
             dataLabels: {
-                enabled: true,
-                color: '#FFFFFF',
-                y: 13,
-                formatter: function () {
-                    if (this.y !== 0) {
-                        return this.y;
-                    }
-                    return "";
-                },
-                style: {
-                    font: 'normal 13px Verdana, sans-serif'
-                }
+                enabled: true
             },
-            type: 'column',
-            visible: (data[serie_name + "_data"].reduce(function(a, b) { return a + b; }, 0) !== 0),
-            showInLegend: (data[serie_name + "_data"].reduce(function(a, b) { return a + b; }, 0) !== 0)
+            visible: (data[serie_name + "_data"].reduce(function (a, b) { return a + b; }, 0) !== 0),
+            showInLegend: (data[serie_name + "_data"].reduce(function (a, b) { return a + b; }, 0) !== 0)
         });
     });
 
@@ -588,45 +667,38 @@ function init_chart2(data) {
         name : data.PREC_name,
         data : data.PREC_data,
         color : data.PREC_color,
-        /*stack : 'prec',*/
-        type: 'spline',
-        /*type: 'scatter',
-        width : 1,
-        color : 'red',
-        threshold : null,
-        tooltip : {
-            yDecimals : 0
-        }*/
-        visible: (data.PREC_data.reduce(function(a, b) { return a + b; }, 0) !== 0),
-        showInLegend: (data.PREC_data.reduce(function(a, b) { return a + b; }, 0) !== 0)
+        type: data.PREC_type, // 'spline',
+        stack: 1, // 'previous',
+        visible: (data.PREC_data.reduce(function (a, b) { return a + b; }, 0) !== 0),
+        showInLegend: (data.PREC_data.reduce(function (a, b) { return a + b; }, 0) !== 0)
     });
 
+    Highcharts.setOptions(hcTheme);
     return {
         chart: {
+            type: 'column', // Used for 3D representation (look at plotOptions)
+            defaultSeriesType: 'column',
+            options3d: {
+                enabled: data.show3D,
+                alpha: 15,
+                beta: 15,
+                depth: 50
+            },
             renderTo: 'chart2',
-            animation: animation,
             events: {
                 load: function (chart) {
                     this.setTitle(null, {
                         text: 'Construit en ' + (new Date() - start) + 'ms'
-                        //text: data.subtitle
                     });
                     if ($('#chart2_legende').length) {
-                        if (data.subtitle.length > 0) $('#chart2_legende').show();
+                        if (data.subtitle.length > 0) { $('#chart2_legende').show(); }
                         $("#chart2_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
                     init_chart2_navigation(data.duree, data.periode);
                 }
             },
-            borderColor: '#EBBA95',
-            borderWidth: 2,
-            borderRadius: 10,
-            defaultSeriesType: 'column',
             ignoreHiddenSeries: false
-        },
-        credits: {
-            enabled: false
         },
         title: {
             text : data.title
@@ -634,19 +706,34 @@ function init_chart2(data) {
         subtitle: {
             text: 'Construit en...'
         },
+        plotOptions: {
+            column: {
+                stacking: true, // 'normal',
+                // When 3D and spline, don't do stacking
+                //stacking: data.show3D ? (data.PREC_type === "column") : (data.PREC_type === "spline"),
+                depth: 50,
+                grouping: false,
+                groupZPadding: 20
+            }
+            /*spline: {
+                stacking: true, // 'normal',
+                depth: 50,
+            }*/
+        },
         xAxis: [{
             labels: {
                 formatter: function () {
-                    //if (this.axis.categories[this.values] !== null) {
-                    if (this.axis.categories.indexOf(this.value) !== -1) {
-                        return this.value;
+                    //if (this.axis.categories[this.values] === null) {
+                    if (this.axis.categories.indexOf(this.value) === -1) {
+                        return "";
                     }
-                    return "";
+                    return this.value;
                 }
             },
             categories: data.categories
         }],
         yAxis: {
+            opposite: false,
             title: {
                 text: 'kWh'
             },
@@ -654,9 +741,7 @@ function init_chart2(data) {
                 formatter: function () {
                     return this.value; // + ' kWh';
                 }
-            },
-            min: 0,
-            minorGridLineWidth: 0
+            }
         },
         tooltip: {
             useHTML: true,
@@ -670,7 +755,8 @@ function init_chart2(data) {
                 if (thisSerieName !== data.PREC_name) { // Période courante
                     // Date & Consommation
                     tooltip = '<span style="color:' + this.series.color + '"><b>Détails de la période</b></span><br />';
-                    tooltip += '<b>' + this.key + ' </b> ~ <b> Total ' + data.optarif + ' : ' + Highcharts.numberFormat(this.point.stackTotal, 2) + ' kWh</b><br />';
+                    tooltip += '<span><b>' + data.optarif[Object.keys(data.optarif)[0]] + ' </b></span><br />';
+                    tooltip += '<b>' + this.key + ' </b> ~ <b> Total : ' + Highcharts.numberFormat(this.point.stackTotal, 2) + ' kWh</b><br />';
 
                     // Abonnement
                     tooltip += 'Abonnement : ' + Highcharts.numberFormat(data.prix.ABONNEMENTS[thisPtX], 2) + ' Euro<br />';
@@ -687,13 +773,13 @@ function init_chart2(data) {
                         // Ici, on est hors de porté du "this" de la fonction formatter.
                         // On utilise donc les variables nécessaire (thisPtX...)
                         if (data.prix.TARIFS[serie_name][thisPtX] !== 0) {
-                            tooltip +='<span style="color:' + data[serie_name + "_color"] + '">';
+                            tooltip += '<span style="color:' + data[serie_name + "_color"] + '">';
                             if ((serie_title === thisSerieName) && (Object.keys(data.series).length > 1)) {
                                 tooltip += "* ";
                             }
                             tooltip += serie_name + ' : ' + Highcharts.numberFormat(data.prix.TARIFS[serie_name][thisPtX], 2) + ' Euro';
                             tooltip += ' (' + data[serie_name + "_data"][thisPtX] + ' kWh)<br />';
-                            tooltip +='</span>';
+                            tooltip += '</span>';
                         }
                     });
 
@@ -702,7 +788,8 @@ function init_chart2(data) {
                 } else { // Période Précédente
                     // Date & Consommation
                     tooltip = '<span style="color:' + data.PREC_color + '"><b>Détails de la période précédente</b></span><br />';
-                    tooltip += '<b>' + this.key + ' </b> ~ <b> Total ' + data.optarif + ' : ' + Highcharts.numberFormat(this.y, 2) + ' kWh</b><br />';
+                    tooltip += '<span><b>' + data.optarif[Object.keys(data.optarif)[0]] + ' </b></span><br />';
+                    tooltip += '<b>' + this.key + ' </b> ~ <b> Total : ' + Highcharts.numberFormat(this.y, 2) + ' kWh</b><br />';
 
                     // Abonnement
                     tooltip += 'Abonnement : ' + Highcharts.numberFormat(data.PREC_prix.ABONNEMENTS[thisPtX], 2) + ' Euro<br />';
@@ -719,13 +806,13 @@ function init_chart2(data) {
                         // Ici, on est hors de porté du "this" de la fonction formatter.
                         // On utilise donc les variables nécessaire (thisPtX...)
                         if (data.PREC_prix.TARIFS[serie_name][thisPtX] !== 0) {
-                            tooltip +='<span style="color:' + data[serie_name + "_color"] + '">';
+                            tooltip += '<span style="color:' + data[serie_name + "_color"] + '">';
                             if ((serie_title === thisSerieName) && (Object.keys(data.series).length > 1)) {
                                 tooltip += "* ";
                             }
                             tooltip += serie_name + ' : ' + Highcharts.numberFormat(data.PREC_prix.TARIFS[serie_name][thisPtX], 2) + ' Euro';
                             tooltip += ' (' + data.PREC_data_detail[serie_name][thisPtX] + ' kWh)<br />';
-                            tooltip +='</span>';
+                            tooltip += '</span>';
                         }
                     });
 
@@ -735,22 +822,9 @@ function init_chart2(data) {
                 return tooltip;
             }
         },
-        plotOptions: {
-            column: {
-                stacking: 'normal'
-            }
-        },
         series: graphSeries,
         legend: {
-            enabled: true,
-            borderColor: 'black',
-            borderWidth: 1,
-            shadow: true
-        },
-        navigation: {
-            menuItemStyle: {
-                fontSize: '10px'
-            }
+            enabled: true
         }
     };
 }
@@ -1013,7 +1087,7 @@ if ($.mobile) {
                 showAnim: "blind",
                 showOn: "button",
                 //buttonImage: "images/glyphish/83-calendar.png",
-                buttonImage: "images/tango icons/X-office-calendar-alpha.png",
+                //buttonImage: "images/tango icons/X-office-calendar-alpha.png",
                 buttonText: "Sélection de la date",
                 buttonImageOnly: true,
                 showButtonPanel: true,
@@ -1033,8 +1107,6 @@ if ($.mobile) {
                 // use the built-in fadeIn/fadeOut effect
                 effect: "fade"
             });
-        } else {
-            // not
         }
 
         init_events();
@@ -1062,6 +1134,28 @@ if ($.mobile) {
         }
     });
 
+    // Sablier durant les requêtes AJAX (style CSS à définir)
+    $(document)
+        .ajaxStart(function () {
+            "use strict";
+
+            $.mobile.loading("show");
+            // Désactive les éléments de navigation
+            $('.ui-page').addClass("ui-state-disabled");
+            //$('.ui-btn').addClass("ui-state-disabled");
+            //$('.ui-select').addClass("ui-state-disabled");
+        })
+        .ajaxStop(function () {
+            "use strict";
+
+            // Supprime la classe CCS 'busy'
+            $.mobile.loading("hide");
+            // Active les éléments de navigation
+            $('.ui-page').removeClass("ui-state-disabled");
+            //$('.ui-btn').removeClass("ui-state-disabled");
+            //$('.ui-select').removeClass("ui-state-disabled");
+        });
+
 } else {
     $(document).ready(function () {
         "use strict";
@@ -1073,14 +1167,14 @@ if ($.mobile) {
 
         // Icones jQueryUI
         $('#chart0_refresh').button("option", "icons", {primary: "ui-icon-refresh"});
-        $('#chart1_date_prec').button( "option", "icons", {primary: "ui-icon-arrowthick-1-w"});
-        $('#chart1_date_select').button( "option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
-        $('#chart1_date_suiv').button( "option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
+        $('#chart1_date_prec').button("option", "icons", {primary: "ui-icon-arrowthick-1-w"});
+        $('#chart1_date_select').button("option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
+        $('#chart1_date_suiv').button("option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
 
-        $('#chart2_date_prec').button( "option", "icons", {primary: "ui-icon-arrowthick-1-w"});
-        $('#chart2_date_now').button( "option", "icons", {primary: "ui-icon-calendar"});
-        $('#chart2_date_select').button( "option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
-        $('#chart2_date_suiv').button( "option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
+        $('#chart2_date_prec').button("option", "icons", {primary: "ui-icon-arrowthick-1-w"});
+        $('#chart2_date_now').button("option", "icons", {primary: "ui-icon-calendar"});
+        $('#chart2_date_select').button("option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
+        $('#chart2_date_suiv').button("option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
 
         // Initialisation jQueryUI selectmenu
         $('.select_chart2').selectmenu({
@@ -1097,7 +1191,7 @@ if ($.mobile) {
                 showAnim: "blind",
                 showOn: "button",
                 //buttonImage: "images/glyphish/83-calendar.png",
-                buttonImage: "images/tango icons/X-office-calendar-alpha.png",
+                //buttonImage: "images/tango icons/X-office-calendar-alpha.png",
                 buttonText: "Sélection de la date",
                 buttonImageOnly: true,
                 showButtonPanel: true,
@@ -1117,8 +1211,6 @@ if ($.mobile) {
                 // use the built-in fadeIn/fadeOut effect
                 effect: "fade"
             });
-        } else {
-            // not
         }
 
         init_events();
@@ -1127,14 +1219,14 @@ if ($.mobile) {
         if ($('#tabs').length > 0) {
             $('#tabs')
                 .tabs({
-                    create: function(event, ui) {
+                    create: function (event, ui) {
                         var pageName;
                         if (typeof (ui.panel) === 'object') {
                             pageName = ui.panel.attr("id");
                             refresh_charts(pageName);
                         }
                     },
-                    activate: function(event, ui) {
+                    activate: function (event, ui) {
                         var pageName;
                         if (typeof (ui.newPanel) === 'object') {
                             pageName = ui.newPanel.attr("id");
@@ -1150,25 +1242,20 @@ if ($.mobile) {
         // Sablier durant les requêtes AJAX (style CSS à définir)
         $(document)
             .ajaxStart(function () {
-                // Ajoute la classe CCS 'busy'
-                $(this).addClass('busy');
+                //$('.wait').show();
+                $('.wait').addClass("ui-icon-loading");
                 // Désactive les éléments de navigation
-                //$('.button_chart0').button("option", "disabled", true);
-                //$('.button_chart0').button("disable");
-                //$('.button_chart0').prop("disabled", true);
-                //$('.button_chart0').addClass("ui-state-disabled");
-                //$('.button_chart1').addClass("ui-state-disabled");
-                //$('.button_chart2').addClass("ui-state-disabled");
-                //$('.select_chart2').addClass("ui-state-disabled");
+                $('.ui-tabs-panel').addClass("ui-state-disabled");
+                //$('.ui-button').addClass("ui-state-disabled");
+                //$('.ui-selectmenu-button').addClass("ui-state-disabled");
             })
             .ajaxStop(function () {
-                // Supprime la classe CCS 'busy'
-                $(this).removeClass('busy');
+                //$('.wait').hide();
+                $('.wait').removeClass("ui-icon-loading");
                 // Active les éléments de navigation
-                //$('.button_chart0').removeClass("ui-state-disabled");
-                //$('.button_chart1').removeClass("ui-state-disabled");
-                //$('.button_chart2').removeClass("ui-state-disabled");
-                //$('.select_chart2').addClass("ui-state-disabled");
+                $('.ui-tabs-panel').removeClass("ui-state-disabled");
+                //$('.ui-button').removeClass("ui-state-disabled");
+                //$('.ui-selectmenu-button').removeClass("ui-state-disabled");
             });
     });
 }

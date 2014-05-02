@@ -137,8 +137,9 @@ function queryInstantly () {
     return $query;
 }
 
-function queryDaily ($timestampdebut, $timestampfin) {
-    global $db_connect, $config_table, $variantes_sql;
+function queryDaily ($timestampdebut, $timestampfin, $optarif = null) {
+    global $db_connect, $config_table, $config, $variantes_sql;
+    global $teleinfo;
 
     $mesures = array ("OPTARIF", "PTEC", "IINST1", "PAPP");
 
@@ -150,6 +151,13 @@ function queryDaily ($timestampdebut, $timestampfin) {
     // Mesures
     foreach($mesures as $field){
         $query .= $config_table["table"][$field] . " AS " . $field . ", ";
+    }
+    // Différents index
+    if ($config["recalculPuissance"])
+    {
+        foreach($teleinfo["PERIODES"][$optarif] as $field){
+            $query .= $config_table["table"][$field] . " AS " . $field . ", ";
+        }
     }
     // Suppression de la dernière virgule
     $query = substr($query, 0, -2) . " ";
@@ -171,7 +179,7 @@ function queryDaily ($timestampdebut, $timestampfin) {
     return $query;
 }
 
-function queryHistory ($optarif, $timestampdebut, $dateformatsql, $timestampfin) {
+function queryHistory ($timestampdebut, $timestampfin, $dateformatsql, $optarif) {
     global $db_connect, $config_table, $variantes_sql;
     global $teleinfo;
 

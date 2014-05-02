@@ -2,16 +2,18 @@
 /*********************************/
 /*    Paramètres du programme    */
 /*********************************/
-$config["refreshAuto"]           = true;  // active le rafraichissement automatique
-$config["refreshDelay"]          = 120;   // relancé toutes les 120 secondes
-$config["doubleGauge"]           = true;  // true : affiche intensité en plus de la puissance
-
-
 $config["useTemplate"]           = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
+$config["template"]["tpl_dir"]   = "tpl/files/"; // Attention au / final
 $config["template"]["desktop"]   = "teleinfo";
 $config["template"]["mobile"]    = "teleinfo.mobile";
 $config["notemplate"]["desktop"] = "tpl/teleinfo.tabs.html";
 $config["notemplate"]["mobile"]  = "tpl/teleinfo.tabs.mobile.html";
+
+/*******************************/
+/*    Données EDF & Téléinfo   */
+/*******************************/
+$config["nbPhasesCompteur"]      = 1;    // 1 pour monophasé ou 3 pour triphasé (option inutile actuellement)
+$config["recalculPuissance"]     = false; // true : calcule la puissance en se basant sur le relevé d'index plutôt que PAPP
 
 /***********************/
 /*    Données MySQL    */
@@ -27,83 +29,22 @@ $db_connect = array (
 /************************/
 /*    Table TéléInfo    */
 /************************/
+// Selon la configuration de la base de données téléinfo,
+//   choisir la structure à utiliser :
+// - structure.date.php
+// - structure.timestp.php
+// - structure.ftimestp.php
+// Il est également possible de se créer une structure personnalisée
+// - structure.custom.php (par exemple)
+include_once("structure.date.php");
+//include_once("structure.timestp.php");
 
-// Quelques informations sur Teleinfo et les formules EDF :
-//   http://norm.edf.fr/pdf/HN44S812emeeditionMars2007.pdf
-//   http://www.yadnet.com/index.php?page=protocole-teleinfo
 
-// Ces données permettent au programme de fonctionner avec différentes structures de données
-$config_table = array (
-    // Quelques informations sur la configuration
-    "type_date" => "date", // "date" ou "timestamp" selon le type de stockage de la date
-    // Nom des champs de la table.
-    //   Clé    = nom interne au programme : NE PAS MODIFIER
-    //   Valeur = nom du champ dans la table téléinfo
-    // Adapter les valeurs du tableau si le nom du champ est différent
-    "table" => array (
-        "DATE"     => "DATE",      // => généralement, vaut soit "DATE", soit "TIMESTAMP"
-        "OPTARIF"  => "OPTARIF",   // option tarifaire souscrite
-        "ISOUSC"   => "ISOUSC",    // intensité souscrite
-        "BASE"     => "BASE",      // BASE
-        "HP"       => "HCHP",      // HCHP
-        "HC"       => "HCHC",      // HCHC
-        "HPJB"     => "BBRHPJB",   // BBRHPJB
-        "HPJW"     => "BBRHPJW",   // BBRHPJW
-        "HPJR"     => "BBRHPJR",   // BBRHPJR
-        "HCJB"     => "BBRHCJB",   // BBRHCJB
-        "HCJW"     => "BBRHCJW",   // BBRHCJW
-        "HCJR"     => "BBRHCJR",   // BBRHCJR
-        "HN"       => "EJPHN",     // EJPN
-        "HPM"      => "EJPHPM",    // EJPHPM
-        "PTEC"     => "PTEC",      // période tarifaire en cours
-        "DEMAIN"   => "DEMAIN",    // prévision du lendemain (formule Tempo)
-        "IINST1"   => "IINST1",    // => généralement, vaut soit "IINST1" soit "INST1"
-        "PAPP"     => "PAPP"       // puissance apparente
-    )
-);
-
-/**************************/
-/*    Données TéléInfo    */
-/**************************/
-
-// Liste des valeurs possibles pour le champ "OPTARIF"
-//   Clé    = valeur OPTARIF reçue par le signal Teleinfo
-//   Valeur = nom interne au programme : NE PAS MODIFIER
-// Adapter les clés du tableau si le contenu du champ est différent
-$teleinfo["OPTARIF"] = array(
-    "BASE" => "BASE",
-    "HC.." => "HC",
-    "BBR"  => "BBR",
-    "EJP." => "EPJ"
-);
-
-// Liste des valeurs possibles pour le champ "PTEC"
-//   Clé    = valeur PTEC reçue par le signal Teleinfo
-//   Valeur = nom interne au programme : NE PAS MODIFIER
-// Adapter les clés du tableau si le contenu du champ est différent
-$teleinfo["PTEC"] = array(
-    "TH.." => "BASE",
-    "HP.." => "HP",
-    "HC.." => "HC",
-    "HPJB" => "HPJB",
-    "HPJW" => "HPJW",
-    "HPJR" => "HPJR",
-    "HCJB" => "HCJB",
-    "HCJW" => "HCJW",
-    "HCJR" => "HCJR",
-    "HN.." => "HN",
-    "PM.." => "HPM"
-);
-
-// Liste des periodes, pour chaque option tarifaire
-$teleinfo["PERIODES"] = array(
-    "BASE" => array ("BASE"),
-    "HC"   => array ("HP", "HC"),
-    "BBR"  => array ("HPJB", "HPJW", "HPJR", "HCJB", "HCJW", "HCJR"),
-    "EJP"  => array ("HN", "HPM")
-);
-
-// Description des offres et des périodes EDF
+/***************************/
+/*    Libellés TéléInfo    */
+/***************************/
+// Libellés des offres et des périodes EDF
+// Attention à ne pas modifier les clés, mais seulement les libellés
 $teleinfo["LIBELLES"] = array(
     "OPTARIF" => array (
         "BASE" => "EDF Bleu option Base",
@@ -114,7 +55,7 @@ $teleinfo["LIBELLES"] = array(
     "PTEC" => array (
         "BASE" => "Heures de Base",
         "HP"   => "Heures Pleines",
-        "HC"   => "Heures Creuse",
+        "HC"   => "Heures Creuses",
         "HPJB" => "Heures Pleines Jours Bleus",
         "HPJW" => "Heures Pleines Jours Blancs",
         "HPJR" => "Heures Pleines Jours Rouges",
@@ -124,6 +65,40 @@ $teleinfo["LIBELLES"] = array(
         "HN"   => "Heures Normales",
         "HPM"  => "Heures de Pointe Mobile"
     )
+);
+
+/********************************/
+/*    Données des Graphiques    */
+/********************************/
+$config["graphiques"]["instantly"] = array(
+    "refreshAuto"  => true,      // active le rafraichissement automatique
+    "refreshDelay" => 120,       // relancé toutes les 120 secondes
+    "doubleGauge"  => true,      // true : affiche intensité en plus de la puissance
+    "bands" => array(            // couleurs des bandes des gauges
+        "W" => array(            // Puissance
+            300   => "#55BF3B",  // de 0 à 300
+            1000  => "#DDDF0D",  // de 300 à 1000
+            3000  => "#FFA500",  // de 1000 à 3000
+            10000 => "#DF5353"   // supérieur à 3000
+        ),
+        "I" => array(            // Intensité
+            2   => "#55BF3B",    // de 0 à 2
+            5   => "#DDDF0D",    // de 2 à 5
+            13  => "#FFA500",    // de 5 à 13
+            100 => "#DF5353"     // supérieur à 20
+        )
+    )
+);
+
+$config["graphiques"]["daily"] = array(
+);
+
+$config["graphiques"]["history"] = array(
+    "show3D"     => false,        // true : affiche le graphique en 3D
+    "typeSerie"  => "column",    // Type de graphique pour les séries de données (syntaxe HighCharts)
+    "typePrec"   => "spline",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)
+    //"typePrec"   => "column",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)
+    "detailPrec" => false,       // true : détaille les différentes périodes tarifaires pour les périodes précédentes
 );
 
 // couleurs de chacune des séries des graphiques
@@ -145,24 +120,4 @@ $teleinfo["COULEURS"] = array(
     "I"    => "blue"     // Intensité
 );
 
-// couleurs des bandes des gauges
-$teleinfo["BANDS"] = array(
-    "W" => array(
-        300   => "#55BF3B", // de 0 à 300
-        1000  => "#DDDF0D", // de 300 à 1000
-        3000  => "#FFA500", // de 1000 à 3000
-        10000 => "#DF5353"  // supérieur à 3000
-    ),
-    "I" => array(
-        5   => "#55BF3B", // de 0 à 5
-        10  => "#DDDF0D", // de 5 à 10
-        20  => "#FFA500", // de 10 à 20
-        100 => "#DF5353"  // supérieur à 20
-    )
-);
-
-/*********************/
-/*    Données EDF    */
-/*********************/
-$config["nbPhasesCompteur"] = 1;    // 1 pour monophasé ou 3 pour triphasé
 ?>
