@@ -3,34 +3,34 @@
 [![Animation](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.3/animation_small.gif)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.3/animation.gif)
 
 # Sommaire
-* [Pré-requis](#Pré-requis)
-* [Installation](#Installation)
-    * [Version actuelle] (#Version actuelle)
-    * [Version dev] (#Version dev)
-    * [Anciennes versions] (#Anciennes versions)
-* [Configuration](#Configuration)
-    * [Accès MySQL] (#Accès MySQL)
-    * [Table téléinfo] (#Table téléinfo)
-    * [Table personnalisée] (#Table personnalisée)
-* [Personnalisation](#Personnalisation)
-    * [Puissance apparente - Puissance active] (#Puissance apparente - Puissance active)
-    * [Gauge instantanée] (#Gauge instantanée)
-        * [Donnée à afficher] (#Donnée à afficher)
-        * [Rafraichissement automatique] (#Rafraichissement automatique)
-        * [Aspect des gauges] (#Aspect des gauges)
-    * [Aperçu quotidien] (#Aperçu quotidien)
-    * [Historiques] (#Historiques)
-        * [Affichage 3D] (#Affichage 3D)
-        * [Type de graphique] (#Type de graphique)
-        * [Période précédente] (#Période précédente)
-    * [Couleur des graphiques] (#Couleur des graphiques)
-* [Tarifs EDF] (#Tarifs EDF)
-* [Templates] (#Templates)
-* [Thèmes] (#Thèmes)
-    * [Gestion par fichiers HTML] (#Gestion par fichiers HTML)
-    * [Gestion par templates] (#Gestion par templates)
-* [Copies d'écran](#Copies d'écran)
-* [Changements] (#Changements)
+* [Pré-requis](#pré-requis)
+* [Installation](#installation)
+    * [Version actuelle] (#version-actuelle)
+    * [Version dev] (#version-dev)
+    * [Anciennes versions] (#anciennes-versions)
+* [Configuration](#configuration)
+    * [Accès MySQL] (#accès-mysql)
+    * [Table téléinfo] (#table téléinfo)
+    * [Table personnalisée] (#table-personnalisée)
+* [Personnalisation](#personnalisation)
+    * [Puissance apparente - Puissance active] (#puissance-apparente---puissance-active)
+    * [Gauge instantanée] (#gauge-instantanée)
+        * [Donnée à afficher] (#donnée-à-afficher)
+        * [Rafraichissement automatique] (#rafraichissement-automatique)
+        * [Aspect des gauges] (#aspect-des-gauges)
+    * [Aperçu quotidien] (#Aperçu-quotidien)
+    * [Historiques] (#historiques)
+        * [Affichage 3D] (#affichage-3d)
+        * [Type de graphique] (#type-de-graphique)
+        * [Période précédente] (#période-précédente)
+    * [Couleur des graphiques] (#couleur-des-graphiques)
+* [Tarifs EDF] (#tarifs-edf)
+* [Templates] (#templates)
+* [Thèmes] (#thèmes)
+    * [Gestion par fichiers HTML] (#gestion-par-fichiers-html)
+    * [Gestion par templates] (#gestion-par-templates)
+* [Copies d'écran](#copies-d'écran)
+* [Changements] (#changements)
 
 # Graphique Conso Electrique Téléinfo EDF avec Highcharts
 Ceci est une application WEB permettant de visualiser sous forme de graphique les relevés EDF fournis par l'interface téléinfo.
@@ -57,6 +57,7 @@ git clone git://github.com/BmdOnline/Teleinfo.git
 ```
 
 * Télécharger et décompressez l'archive zip à partir de l'interface `github` :
+
 [![GitHub Download ZIP](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/GitHub Download ZIP.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/GitHub Download ZIP.png)
 
 * Lien direct de l'archive :
@@ -76,10 +77,14 @@ git clone -b dev git://github.com/BmdOnline/Teleinfo.git
     * https://github.com/BmdOnline/Teleinfo/archive/dev.zip
     * https://github.com/BmdOnline/Teleinfo/archive/dev.tar.gz
 
-## Anciennes versions
+## Liste des versions
 
 | Version | Lien |
 | ------------- | ------------- |
+| dev | https://github.com/BmdOnline/Teleinfo/archive/dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/dev.tar.gz |
+| stable | https://github.com/BmdOnline/Teleinfo/archive/master.zip <br> https://github.com/BmdOnline/Teleinfo/archive/master.tar.gz |
+| | |
+| v4.3 | https://github.com/BmdOnline/Teleinfo/archive/v4.3.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.3.tar.gz |
 | v4.2dev | https://github.com/BmdOnline/Teleinfo/archive/v4.2dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.2dev.tar.gz |
 | v4.1dev | https://github.com/BmdOnline/Teleinfo/archive/v4.1dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.1dev.tar.gz |
 | v4.0 | https://github.com/BmdOnline/Teleinfo/archive/v4.0.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.0.tar.gz |
