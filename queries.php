@@ -62,7 +62,7 @@ function queryMaxPeriod ($timestampdebut, $timestampfin) {
         $query .= str_replace(
             array("%field%", "%mesure%"),
             array($config_table["table"][$field], $field),
-            "MAX(`%field%`) as %mesure%, ");
+            "MAX(%field%) as %mesure%, "); //"MAX(`%field%`) as %mesure%, ");
     }
     // Suppression de la dernière virgule
     $query = substr($query, 0, -2) . " ";
@@ -205,7 +205,7 @@ function queryHistory ($timestampdebut, $timestampfin, $dateformatsql, $optarif)
         $query .= str_replace(
             array("%field%", "%mesure%"),
             array($config_table["table"][$field], $field),
-            "ROUND(((MAX(`%field%`) - MIN(`%field%`)) / 1000), 1) AS %mesure%, ");
+            "ROUND(((MAX(%field%) - MIN(%field%)) / 1000), 1) AS %mesure%, "); //"ROUND(((MAX(`%field%`) - MIN(`%field%`)) / 1000), 1) AS %mesure%, ");
     }
     // Suppression de la dernière virgule
     $query = substr($query, 0, -2) . " ";
