@@ -482,6 +482,8 @@ Par défaut, le programme est réglé sur le thème _sombre_.
 
 * Moteur / PHP
     - change : Prise en compte de l'Eco-Device.
+    - bugfix : Envisage le cas où aucune donnée n'est retournée (json ne reverra rien).
+    - bugfix : Limite les requêtes (json) à la date la plus récente en base.
 
 ##Version 4.3
 * Interface
@@ -619,11 +621,11 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://pen
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.anthony.free.fr/?p=111)
 
 ##Reste à faire
-- [] Thèmes pour les graphiques.
-- [] Ajout d'un calendrier à la place du bouton "Aujourd'hui" pour l'historique.
+- [ ] Thèmes pour les graphiques.
+- [ ] Ajout d'un calendrier à la place du bouton "Aujourd'hui" pour l'historique.
     - La navigation doit dépendre du type d'historique (jour / semaine / mois)...
-- [] Revoir les seuils de la gauge instantanée.
-- [] Proposer de visualiser une période précédente ou une moyenne en surimpression de l'historique.
-- [] Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
+- [ ] Revoir les seuils de la gauge instantanée.
+- [ ] Proposer de visualiser une période précédente ou une moyenne en surimpression de l'historique.
+- [ ] Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
     - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
-- [] Fiabiliser les passages aux heures hiver/été.
+- [ ] Fiabiliser les passages aux heures hiver/été.
