@@ -176,9 +176,9 @@ function instantly () {
     return $instantly;
 }
 
-/****************************************************************************************/
-/*    Graph consomation w des 24 dernières heures + en parrallèle consomation d'Hier    */
-/****************************************************************************************/
+/******************************************************************************************/
+/*    Graph consommation w des 24 dernières heures + en parrallèle consommation d'Hier    */
+/******************************************************************************************/
 function daily () {
     global $teleinfo;
     global $config;
@@ -407,7 +407,7 @@ function history() {
             $timestampdebut2 = $timestampfin - $periodesecondes;             // Début de période active
             $timestampdebut = $timestampdebut2 - $periodesecondes;           // Début de période précédente
 
-            $xlabel = $duree  . " jours";
+            $xlabel = $duree . ($duree==1 ? " jour" : " jours");
             $dateformatsql = "%a %e";
             $divabonnement = 365;
             break;
@@ -430,7 +430,7 @@ function history() {
             $timestampdebut2 = strtotime(date("Y-m-d", $timestampfin) . " -".$duree." week");    // Début de période active
             $timestampdebut = strtotime(date("Y-m-d", $timestampdebut2) . " -".$duree." week"); // Début de période précédente
 
-            $xlabel = $duree . " semaines";
+            $xlabel = $duree . ($duree==1 ? " semaine" : " semaines");
             $dateformatsql = "sem %v (%x)";
             $divabonnement = 52;
             break;
@@ -452,7 +452,7 @@ function history() {
             $timestampdebut2 = mktime(0,0,0,date("m",$timestampfin)-$duree,1,date("Y",$timestampfin));      // Début de période active
             $timestampdebut = mktime(0,0,0,date("m",$timestampdebut2)-$duree,1,date("Y",$timestampdebut2)); // Début de période précédente
 
-            $xlabel = $duree . " mois";
+            $xlabel = $duree . ($duree==1 ? " mois" : " mois"); // Prévision pour intl
             $dateformatsql = "%b (%Y)";
             if ($duree > 6) $dateformatsql = "%b %Y";
             $divabonnement = 12;
@@ -471,7 +471,7 @@ function history() {
             $timestampdebut2 = mktime(0,0,0,1,1,date("Y",$timestampfin)-$duree);   // Début de période active
             $timestampdebut = mktime(0,0,0,1,1,date("Y",$timestampdebut2)-$duree); // Début de période précédente
 
-            $xlabel = $duree . " an";
+            $xlabel = $duree . ($duree==1 ? " an" : " ans");
             //$xlabel = "l'année ".(date("Y",$timestampdebut2)-$duree)." et ".(date("Y",$timestampfin)-$duree);
             $dateformatsql = "%b %Y";
             $divabonnement = 12;
@@ -725,7 +725,7 @@ function history() {
 
     $history = array(
         'show3D' => $graphConf["show3D"],
-        'title' => "Consomation sur $xlabel",
+            'title' => "Consommation sur $xlabel",
         'subtitle' => $subtitle,
         'optarif' => array($optarif => $optarifStr),
         'ptec' => array($ptec => $ptecStr),

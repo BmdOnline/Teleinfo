@@ -477,8 +477,12 @@ Par défaut, le programme est réglé sur le thème _sombre_.
 # Changements
 
 ##Version 4.4dev
+* Interface
+    - bugfix : Ajustements mineurs : libellés singulier/pluriel (1 jour, xx jours)...
+
 * Moteur / PHP
     - change : Prise en compte de l'Eco-Device.
+
 ##Version 4.3
 * Interface
     - change : Désactivation des éléments durant le rafraichissment des données (sablier).
