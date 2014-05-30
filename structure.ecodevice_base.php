@@ -18,7 +18,7 @@ $config_table = array (
     "table" => array (
         "DATE"     => "TIMESTP",   // => généralement, vaut soit "DATE", soit "TIMESTAMP"
         "OPTARIF"  => "'BASE'",    // option tarifaire souscrite
-        "ISOUSC"   => "null",      // intensité souscrite
+        "ISOUSC"   => "'30'",      // intensité souscrite, adapter à son abonnement
         "BASE"     => "T1_BASE",   // BASE
         "HP"       => "T1_HCHP",   // HCHP
         "HC"       => "T1_HCHC",   // HCHC
