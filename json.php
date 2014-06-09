@@ -754,6 +754,7 @@ function history() {
 
         // Ajoute les séries
         foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
+            $history[$ptec."_name"] = $series[$ptec];
             $history[$ptec."_color"] = $teleinfo["COULEURS"][$ptec];
             $history[$ptec."_data"] = $kwh[$ptec];
             $history[$ptec."_type"] = $graphConf["typeSerie"];
