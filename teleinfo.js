@@ -21,8 +21,8 @@ var hcTheme = {
         shortMonths: [ 'Jan' , 'Fév' , 'Mar' , 'Avr' , 'Mai' , 'Juin' ,
             'Juil' , 'Août' , 'Sep' , 'Oct' , 'Nov' , 'Déc'],
         weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-        decimalPoint: ',',
-        thousandsSep: '.',
+        decimalPoint: '.',
+        thousandsSep: ' ',
         rangeSelectorFrom: 'Du',
         rangeSelectorTo: 'au'
     },

@@ -36,7 +36,8 @@
         mktime(0,0,0, 8, 1,2011) => 1.196*0.0090,
         mktime(0,0,0, 7, 1,2012) => 1.196*0.0105,
         mktime(0,0,0, 1, 1,2013) => 1.196*0.0135,
-        mktime(0,0,0, 1, 1,2014) => 1.20*0.0165 // 0.016759 sur facture de février ! A vérifier
+        mktime(0,0,0, 1, 1,2014) => 1.20*0.0165, // 0.016759 sur facture de février ! A vérifier
+        mktime(0,0,0, 1, 1,2015) => 1.20*0.01737 // 0.016759 sur facture de février ! A vérifier
     );
 
     // TCFE, TVA incluse
@@ -44,7 +45,8 @@
         mktime(0,0,0, 1, 1,2001) => 1.196*0.009, // Avant 2011
         mktime(0,0,0, 1, 1,2011) => 1.196*0.009,
         mktime(0,0,0, 1, 1,2013) => 1.196*0.00905,
-        mktime(0,0,0, 1, 1,2014) => 1.20*0.00919 // Arrondi à 0.0092 sur notification EDF
+        mktime(0,0,0, 1, 1,2014) => 1.20*0.00919, // Arrondi à 0.0092 sur notification EDF
+        mktime(0,0,0, 1, 1,2015) => 1.20*0.00952
     );
 
     // CTA (depuis le 15/08/2009), TVA incluse

@@ -32,7 +32,7 @@ $config_table = array (
         "HPM"      => "EJPHPM",    // EJPHPM
         "PTEC"     => "PTEC",      // période tarifaire en cours
         "DEMAIN"   => "DEMAIN",    // prévision du lendemain (formule Tempo)
-        "IINST1"   => "IINST1",    // => généralement, vaut soit "IINST1" soit "INST1"
+        "IINST1"   => "IINST",     // => généralement, vaut soit "IINST1" soit "INST1"
         "PAPP"     => "PAPP"       // puissance apparente
     )
 );
