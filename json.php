@@ -108,8 +108,8 @@ function instantly () {
         $Isousc = floatval(str_replace(",", ".", $row["ISOUSC"]));
         $val["W"] = floatval(str_replace(",", ".", $row["PAPP"]));
         $val["I"] = floatval(str_replace(",", ".", $row["IINST1"]));
-		$hp = intval($row["HP"] / 1000);
-		$hc = intval($row["HC"] / 1000);
+        $hp = intval($row["HP"] / 1000);
+        $hc = intval($row["HC"] / 1000);
     };
     mysql_free_result($result);
 
@@ -158,7 +158,19 @@ function instantly () {
         $bands["I"] = $graphConf["bands"]["I"];
 
         $subtitle .= "&emsp;"; // tabulation horizontale
-		$subtitle .= "Intensité Max : <b>".intval($max["I"])." A</b>";
+        $subtitle .= "Intensité Max : <b>".intval($max["I"])." A</b>";
+    }
+    $subtitle .= "<br />";
+
+    // Affichage des compteurs pour faciliter le relevé EDF
+    switch ($optarif) {    
+        case "HC":
+            $subtitle .= $teleinfo["LIBELLES"]["PTEC"]["HP"]." : <b>".$hp." kWh</b>";
+            $subtitle .= "&emsp;"; // tabulation horizontale
+            $subtitle .= $teleinfo["LIBELLES"]["PTEC"]["HC"]." : <b>".$hc." kWh</b><br />";
+            break;
+		default:
+            break;
     }
 	$subtitle .= "<br />";
 
