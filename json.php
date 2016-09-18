@@ -174,15 +174,6 @@ function instantly () {
     }
 	$subtitle .= "<br />";
 
-	// Affichage des compteurs pour faciliter le relevé EDF
-	switch ($optarif) {	
-		case "HC":
-			$subtitle .= $teleinfo["LIBELLES"]["PTEC"]["HP"]." : <b>".$hp." kWh</b>";
-			$subtitle .= "&emsp;"; // tabulation horizontale
-			$subtitle .= $teleinfo["LIBELLES"]["PTEC"]["HC"]." : <b>".$hc." kWh</b><br />";
-			break;
-	}
-
     $instantly = array(
         'title' => "Consommation du $datetext",
         'subtitle' => $subtitle,
