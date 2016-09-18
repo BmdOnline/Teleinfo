@@ -6,8 +6,8 @@ $config["useTemplate"]           = false; // utilise les templates pour afficher
 $config["template"]["tpl_dir"]   = "tpl/files/"; // Attention au / final
 $config["template"]["desktop"]   = "teleinfo";
 $config["template"]["mobile"]    = "teleinfo.mobile";
-$config["notemplate"]["desktop"] = "tpl/teleinfo.tabs.html";
-$config["notemplate"]["mobile"]  = "tpl/teleinfo.tabs.mobile.html";
+$config["notemplate"]["desktop"] = "tpl/teleinfo.single.html";
+$config["notemplate"]["mobile"]  = "tpl/teleinfo.single.mobile.html";
 
 /*******************************/
 /*    Données EDF & Téléinfo   */
@@ -20,7 +20,7 @@ $config["recalculPuissance"]     = false; // true : calcule la puissance en se b
 /***********************/
 $db_connect = array (
     "serveur" => "localhost",
-    "base"    => "teleinfo",
+    "base"    => "EDF",
     "table"   => "tbTeleinfo",
     "login"   => "teleinfo",
     "pass"    => "teleinfo"
@@ -94,7 +94,7 @@ $config["graphiques"]["daily"] = array(
 );
 
 $config["graphiques"]["history"] = array(
-    "show3D"     => false,        // true : affiche le graphique en 3D
+    "show3D"     => true,        // true : affiche le graphique en 3D
     "typeSerie"  => "column",    // Type de graphique pour les séries de données (syntaxe HighCharts)
     "typePrec"   => "spline",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)
     //"typePrec"   => "column",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)

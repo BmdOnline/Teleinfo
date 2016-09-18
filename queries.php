@@ -108,7 +108,7 @@ function queryMaxDate () {
 function queryInstantly () {
     global $db_connect, $config_table, $variantes_sql;
 
-    $mesures = array ("PAPP", "IINST1", "ISOUSC", "OPTARIF", "PTEC", "DEMAIN");
+    $mesures = array ("PAPP", "IINST1", "ISOUSC", "OPTARIF", "PTEC", "DEMAIN", "HC", "HP");
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $variantes_sql["TIMESTAMP"][$tDate]);
