@@ -20,13 +20,11 @@ $config["afficheIndex"]          = true;  // true : affiche les index pour chaqu
 /*    Données MySQL    */
 /***********************/
 $db_connect = array (
-    "serveur" => "192.168.0.250",
-    "base"    => "weather",
+    "serveur" => "localhost",
+    "base"    => "teleinfo",
     "table"   => "tbTeleinfo",
-    //"table"   => "tbTeleTempo",
-    //"table"   => "tbTeleHPHC",
-    "login"   => "weather",
-    "pass"    => "weather123"
+    "login"   => "teleinfo",
+    "pass"    => "teleinfo"
 );
 
 /************************/
