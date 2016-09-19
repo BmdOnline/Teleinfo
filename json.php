@@ -12,16 +12,22 @@ include_once("tarifs.php");
 
 function getOPTARIF($full = false) {
     global $teleinfo;
+    global $mysqli;
+
     // full : Identifie le type de résultat attendu
     //   true  :  retourne un tableau avec optarif & isousc
     //   false :  retourne optarif
 
     $query = queryOPTARIF();
 
-    $result = mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
-    $nbenreg = mysql_num_rows($result);
+    $result=$mysqli->query($query);
+    if (!$result) {
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        exit();
+    }
+    $nbenreg = $result->num_rows;
     if ($nbenreg > 0) {
-        $row = mysql_fetch_array($result);
+        $row = $result->fetch_array();
         $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
         $isousc = $row["ISOUSC"];
     }
@@ -30,7 +36,7 @@ function getOPTARIF($full = false) {
       $isousc = null;
     }
 
-    mysql_free_result($result);
+    $result->free();
 
     if ($full) {
         return array (
@@ -48,18 +54,23 @@ function getOPTARIF($full = false) {
 // Le gain ne compense pas la perte de temps.
 function getMaxDate() {
     $query = queryMaxDate();
+    global $mysqli;
 
-    $result = mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
-    $nbenreg = mysql_num_rows($result);
+    $result=$mysqli->query($query);
+    if (!$result) {
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        exit();
+    }
+    $nbenreg = $result->num_rows;
     if ($nbenreg > 0) {
-        $row = mysql_fetch_array($result);
+        $row = $result->fetch_array();
         $date = $row["DATE"];
     }
     else {
       $date = null;
     }
 
-    mysql_free_result($result);
+    $result->free();
 
     return $date;
 }
@@ -76,6 +87,7 @@ function Tomorrow($date) {
 function instantly () {
     global $teleinfo;
     global $config;
+    global $mysqli;
 
     $graphConf = $config["graphiques"]["instantly"];
 
@@ -94,10 +106,14 @@ function instantly () {
 
     $query = queryInstantly();
 
-    $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
-    $nbenreg = mysql_num_rows($result);
+    $result=$mysqli->query($query);
+    if (!$result) {
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        exit();
+    }
+    $nbenreg = $result->num_rows;
     if ($nbenreg > 0) {
-        $row = mysql_fetch_array($result);
+        $row = $result->fetch_array();
         $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
         //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
         $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
@@ -111,14 +127,18 @@ function instantly () {
 
         $query = queryMaxPeriod ($timestampdebut2, $timestampfin);
 
-        $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
-        $nbenreg = mysql_num_rows($result);
+        $result=$mysqli->query($query);
+        if (!$result) {
+            printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+            exit();
+        }
+        $nbenreg = $result->num_rows;
         if ($nbenreg > 0) {
-            $row = mysql_fetch_array($result);
+            $row = $result->fetch_array();
             $max["W"] = max($val["W"], $row["PAPP"]);
             $max["I"] = max($val["I"], $row["IINST1"]);
         };
-        mysql_free_result($result);
+        $result->free();
 
         //$datetext = strftime("%c",$date_deb);
         $datetext = date("d/m G:i", $date_deb);
@@ -173,7 +193,7 @@ function instantly () {
 
         return $instantly;
     } else {
-        mysql_free_result($result);
+        $result->free();
         return null;
     }
 }
@@ -184,6 +204,7 @@ function instantly () {
 function daily () {
     global $teleinfo;
     global $config;
+    global $mysqli;
 
     $graphConf = $config["graphiques"]["daily"];
 
@@ -209,14 +230,17 @@ function daily () {
     }
 
     $query = queryDaily($timestampdebut, $timestampfin, $optarif);
-    $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
-    $nbenreg = mysql_num_rows($result);
-
+    $result=$mysqli->query($query);
+    if (!$result) {
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        exit();
+    }
+    $nbenreg = $result->num_rows;
     if ($nbenreg > 0) {
         $date_deb=0; // date du 1er enregistrement
         $date_fin=time();
 
-        $row = mysql_fetch_array($result);
+        $row = $result->fetch_array();
         $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
         //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
         $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
@@ -249,11 +273,11 @@ function daily () {
 
         $navigator = array();
 
-        $row = mysql_data_seek($result, 0); // Revient au début (car on a déjà lu un enreg)
+        $result->data_seek(0); // Revient au début (car on a déjà lu un enreg)
         $prevptec = null;
         $prevts = null;
         $previdx = array();
-        while ($row = mysql_fetch_array($result))
+        while ($row = $result->fetch_array())
         {
             $ts = intval($row["TIMESTAMP"]);
             $curptec = $teleinfo["PTEC"][$row["PTEC"]];
@@ -338,7 +362,7 @@ function daily () {
             $prevts = $ts;
             $prevptec = $curptec;
         }
-        mysql_free_result($result);
+        $result->free();
 
         $date_fin = $ts/1000;
 
@@ -378,7 +402,7 @@ function daily () {
 
         return $daily;
     } else {
-        mysql_free_result($result);
+        $result->free();
         return null;
     }
 }
@@ -389,6 +413,7 @@ function daily () {
 function history() {
     global $teleinfo;
     global $config;
+    global $mysqli;
 
     $graphConf = $config["graphiques"]["history"];
 
@@ -492,8 +517,12 @@ function history() {
 
     $query = queryHistory($timestampdebut, $timestampfin, $dateformatsql, $optarif);
 
-    $result=mysql_query($query) or die ("<b>Erreur</b> dans la requète <b>" . $query . "</b> : "  . mysql_error() . " !<br>");
-    $nbenreg = mysql_num_rows($result);
+    $result=$mysqli->query($query);
+    if (!$result) {
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        exit();
+    }
+    $nbenreg = $result->num_rows;
 
     if ($nbenreg > 0) {
         $kwhprec = array();
@@ -501,7 +530,7 @@ function history() {
         $date_deb=0; // date du 1er enregistrement
         $date_fin=time();
 
-        $row = mysql_fetch_array($result);
+        $row = $result->fetch_array();
         $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
         //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
         $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
@@ -519,8 +548,8 @@ function history() {
         $timestpp = array();
 
         // Calcul des consommations
-        $row = mysql_data_seek($result, 0); // Revient au début (car on a déjà lu un enreg)
-        while ($row = mysql_fetch_array($result))
+        $result->data_seek(0); // Revient au début (car on a déjà lu un enreg)
+        while ($row = $result->fetch_array())
         {
             $ts = intval($row["TIMESTAMP"]);
             if ($ts < $timestampdebut2) {
@@ -569,7 +598,7 @@ function history() {
                 $current = array_pad ($current, -count(reset($kwh)), null);
             }
         }
-        mysql_free_result($result);
+        $result->free();
 
         $date_deb_UTC=$date_deb*1000;
         $datetext = date("d/m G:i", $date_deb);
@@ -762,21 +791,28 @@ function history() {
 
         return $history;
     } else {
-        mysql_free_result($result);
+        $result->free();
         return null;
     }
 }
 
 function main() {
     global $db_connect;
+    global $mysqli;
 
     $query = isset($_GET['query'])?$_GET['query']:"daily";
 
     if (isset($query)) {
-        mysql_connect($db_connect['serveur'], $db_connect['login'], $db_connect['pass']) or die("Erreur de connexion au serveur MySql");
-        mysql_select_db($db_connect['base']) or die("Erreur de connexion a la base de donnees $base");
-        mysql_query("SET NAMES 'utf8'");
-        mysql_query("SET lc_time_names = 'fr_FR'");  // Pour afficher date en français dans MySql.
+        $mysqli = new mysqli($db_connect['serveur'], $db_connect['login'], $db_connect['pass'], $db_connect['base']);
+        if (mysqli_connect_errno()) {
+            printf("Erreur de connexion au serveur MySql : %s\n", mysqli_connect_error());
+            exit();
+        }
+        if (!$mysqli->set_charset("utf8")) {
+            printf("Erreur lors du chargement du jeu de caractères utf8 : %s\n", $mysqli->error);
+            exit();
+        }
+        $mysqli->query("SET lc_time_names = 'fr_FR'");  // Pour afficher date en français dans MySql.
 
         switch ($query) {
             case "instantly":
@@ -791,7 +827,7 @@ function main() {
             default:
                 break;
         };
-        mysql_close();
+        $mysqli->close();
 
         if ($data !== null) {
             echo json_encode($data);

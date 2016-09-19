@@ -44,8 +44,8 @@ Cet aspect technique ne sera pas évoqué et aucun support ne sera fourni ici.
 
 # Pré-requis
 * Serveur Web (testé avec Apache, serveurs type Nginx… non testés)
-* PHP (testé avec versions 5.4.3 et 5.5.9)
-* MySQL (testé avec versions 5.0.10 et 5.5.35)
+* PHP (testé avec versions 5.4, 5.5, 5.6 et 7.0.4)
+* MySQL / MariaDB (testé avec versions 5.0 et 5.5 et 5.7.1)
 * Enfin, un compteur EDF avec l'option téléinfo et les relevés correspondants.
 
 # Installation
@@ -476,11 +476,12 @@ Par défaut, le programme est réglé sur le thème _sombre_.
 
 # Changements
 
-##Version 4.4dev
+##Version 4.4 (dev)
 * Interface
     - bugfix : Ajustements mineurs : libellés singulier/pluriel (1 jour, xx jours)...
 
 * Moteur / PHP
+    - change : Compatibilité avec PHP 7.
     - change : Prise en compte de l'Eco-Device.
     - bugfix : Envisage le cas où aucune donnée n'est retournée (json ne reverra rien).
     - bugfix : Limite les requêtes (json) à la date la plus récente en base.
