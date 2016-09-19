@@ -34,14 +34,23 @@ function queryOPTARIF() {
     // From
     $query .= "FROM " . $db_connect['table'] . " ";
     // Where
-    $query .= str_replace(
+    /*$query .= str_replace(
         array("%date%", "%table%"),
         array($config_table["table"]["DATE"], $db_connect['table']),
-        "WHERE %date%=(SELECT MAX(%date%) FROM %table%)");
+        "WHERE %date%=(SELECT MAX(%date%) FROM %table%)");*/
+    $query .= "ORDER BY DATE DESC LIMIT 1;";
 
+    // Variante 1
     // SELECT OPTARIF AS OPTARIF, ISOUSC AS ISOUSC
     // FROM tbTeleinfo
     // WHERE DATE=(SELECT MAX(DATE) FROM tbTeleinfo)
+
+    // Variante 2
+    // SELECT OPTARIF AS OPTARIF, ISOUSC AS ISOUSC
+    // FROM tbTeleinfo
+    // ORDER BY DATE DESC
+    // LIMIT 1
+
     return $query;
 }
 
@@ -105,8 +114,9 @@ function queryMaxDate () {
     return $query;
 }
 
-function queryInstantly () {
-    global $db_connect, $config_table, $variantes_sql;
+function queryInstantly ($optarif = null) {
+    global $db_connect, $config_table, $config, $variantes_sql;
+    global $teleinfo;
 
     $mesures = array ("PAPP", "IINST1", "ISOUSC", "OPTARIF", "PTEC", "DEMAIN");
 
@@ -118,6 +128,13 @@ function queryInstantly () {
     // Mesures
     foreach($mesures as $field){
         $query .= $config_table["table"][$field] . " AS " . $field . ", ";
+    }
+    // Différents index
+    if ($config["afficheIndex"])
+    {
+        foreach($teleinfo["PERIODES"][$optarif] as $field){
+            $query .= $config_table["table"][$field] . " AS " . $field . ", ";
+        }
     }
     // Suppression de la dernière virgule
     $query = substr($query, 0, -2) . " ";

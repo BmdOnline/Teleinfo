@@ -12,18 +12,21 @@ $config["notemplate"]["mobile"]  = "tpl/teleinfo.tabs.mobile.html";
 /*******************************/
 /*    Données EDF & Téléinfo   */
 /*******************************/
-$config["nbPhasesCompteur"]      = 1;    // 1 pour monophasé ou 3 pour triphasé (option inutile actuellement)
+$config["nbPhasesCompteur"]      = 1;     // 1 pour monophasé ou 3 pour triphasé (option inutile actuellement)
 $config["recalculPuissance"]     = false; // true : calcule la puissance en se basant sur le relevé d'index plutôt que PAPP
+$config["afficheIndex"]          = true;  // true : affiche les index pour chaque période tarifaire (relevé de compteur EDF)
 
 /***********************/
 /*    Données MySQL    */
 /***********************/
 $db_connect = array (
-    "serveur" => "localhost",
-    "base"    => "teleinfo",
+    "serveur" => "192.168.0.250",
+    "base"    => "weather",
     "table"   => "tbTeleinfo",
-    "login"   => "teleinfo",
-    "pass"    => "teleinfo"
+    //"table"   => "tbTeleTempo",
+    //"table"   => "tbTeleHPHC",
+    "login"   => "weather",
+    "pass"    => "weather123"
 );
 
 /************************/
@@ -94,7 +97,7 @@ $config["graphiques"]["daily"] = array(
 );
 
 $config["graphiques"]["history"] = array(
-    "show3D"     => false,        // true : affiche le graphique en 3D
+    "show3D"     => true,       // true : affiche le graphique en 3D
     "typeSerie"  => "column",    // Type de graphique pour les séries de données (syntaxe HighCharts)
     "typePrec"   => "spline",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)
     //"typePrec"   => "column",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)

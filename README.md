@@ -479,10 +479,12 @@ Par défaut, le programme est réglé sur le thème _sombre_.
 ##Version 4.4 (dev)
 * Interface
     - bugfix : Ajustements mineurs : libellés singulier/pluriel (1 jour, xx jours)...
+    - change : Affichage de l'index du compteur pour faciliter les relevés EDF.
 
 * Moteur / PHP
     - change : Compatibilité avec PHP 7.
     - change : Prise en compte de l'Eco-Device.
+    - change : Ajout d'une option "afficheIndex" pour activer l'affichage de l'index du compteur.
     - bugfix : Envisage le cas où aucune donnée n'est retournée (json ne reverra rien).
     - bugfix : Limite les requêtes (json) à la date la plus récente en base.
 

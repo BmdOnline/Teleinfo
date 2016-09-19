@@ -22,7 +22,7 @@ function getOPTARIF($full = false) {
 
     $result=$mysqli->query($query);
     if (!$result) {
-        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
         exit();
     }
     $nbenreg = $result->num_rows;
@@ -58,7 +58,7 @@ function getMaxDate() {
 
     $result=$mysqli->query($query);
     if (!$result) {
-        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
         exit();
     }
     $nbenreg = $result->num_rows;
@@ -104,11 +104,18 @@ function instantly () {
     $timestampdebut2 = $date - $periodesecondes;           // Recule de 24h.
     $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule de 24h.
 
-    $query = queryInstantly();
+    if ($config["afficheIndex"])
+    {
+        $tab_optarif = getOPTARIF(true);
+        $optarif = $tab_optarif["OPTARIF"];
+    } else {
+        $optarif = null;
+    }
 
+    $query = queryInstantly($optarif);
     $result=$mysqli->query($query);
     if (!$result) {
-        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
         exit();
     }
     $nbenreg = $result->num_rows;
@@ -124,12 +131,25 @@ function instantly () {
         $Isousc = floatval(str_replace(",", ".", $row["ISOUSC"]));
         $val["W"] = floatval(str_replace(",", ".", $row["PAPP"]));
         $val["I"] = floatval(str_replace(",", ".", $row["IINST1"]));
+        $series["W"] = "Watts";
+        $series["I"] = "Ampères";
+
+        // Différents index
+        if ($config["afficheIndex"])
+        {
+            foreach($teleinfo["PERIODES"][$optarif] as $field){
+                $index[$field] = array (
+                    "title" => $teleinfo["LIBELLES"]["PTEC"][$field],
+                    "value" => $row[$field],
+                );
+            }
+        }
 
         $query = queryMaxPeriod ($timestampdebut2, $timestampfin);
 
         $result=$mysqli->query($query);
         if (!$result) {
-            printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+            printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
             exit();
         }
         $nbenreg = $result->num_rows;
@@ -147,7 +167,6 @@ function instantly () {
             'min' => 0,
             'max' => ceil($max["W"] / 500) * 500, // Arrondi à 500 "au dessus"
         );
-        $series["W"] = "Watts";
         $bands["W"] = $graphConf["bands"]["W"];
 
         // Subtitle pour la période courante
@@ -170,16 +189,25 @@ function instantly () {
                 'min' => 0,
                 'max' => ceil($max["I"] / 5) * 5, // Arrondi à 5 "au dessus"
             );
-            $series["I"] = "Ampères";
             $bands["I"] = $graphConf["bands"]["I"];
 
             $subtitle .= "Intensité Max : <b>".intval($max["I"])." A</b><br />";
+        }
+
+        // Différents index
+        if ($config["afficheIndex"])
+        {
+            foreach($teleinfo["PERIODES"][$optarif] as $field){
+                //$subtitle .= "Index " . $index[$field]["title"] . " : " . $index[$field]["value"] . "<br />";
+                $subtitle .= "Index " . $field . " : <b>" . $index[$field]["value"]/1000 . " KWh</b><br />"; // Le compteur affiche la valeur / 1000
+            }
         }
 
         $instantly = array(
             'title' => "Consommation du $datetext",
             'subtitle' => $subtitle,
             'optarif' => array($optarif => $optarifStr),
+            'index' => $index,
             'ptec' => array($ptec => $ptecStr),
             'demain' => $demain,
             'debut' => $date_deb*1000, // $date_deb_UTC,
@@ -232,7 +260,7 @@ function daily () {
     $query = queryDaily($timestampdebut, $timestampfin, $optarif);
     $result=$mysqli->query($query);
     if (!$result) {
-        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
         exit();
     }
     $nbenreg = $result->num_rows;
@@ -519,7 +547,7 @@ function history() {
 
     $result=$mysqli->query($query);
     if (!$result) {
-        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error() . " !<br>");
+        printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
         exit();
     }
     $nbenreg = $result->num_rows;
