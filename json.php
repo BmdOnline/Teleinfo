@@ -92,6 +92,7 @@ function instantly () {
     $graphConf = $config["graphiques"]["instantly"];
 
     $date = isset($_GET['date'])?$_GET['date']:null;
+    $optarif = isset($_GET['optarif'])?$_GET['optarif']:null;
 
     $heurecourante = date('H');              // Heure courante.
     $timestampheure = mktime($heurecourante+1,0,0,date("m"),date("d"),date("Y"));  // Timestamp courant à heure fixe (mn et s à 0).
@@ -104,9 +105,9 @@ function instantly () {
     $timestampdebut2 = $date - $periodesecondes;           // Recule de 24h.
     $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule de 24h.
 
-    if ($config["afficheIndex"])
+    if ($config["afficheIndex"] && !$optarif)
     {
-        $tab_optarif = getOPTARIF(true);
+        $tab_optarif = getOPTARIF(false);
         $optarif = $tab_optarif["OPTARIF"];
     } else {
         $optarif = null;

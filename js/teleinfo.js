@@ -241,7 +241,7 @@ jQuery(function ($) {
     Highcharts.setOptions(hcTheme);
 });
 
-function init_chart0_navigation() {
+function init_chart0_navigation(data) {
     "use strict";
 
     // Date du calendrier
@@ -249,7 +249,6 @@ function init_chart0_navigation() {
     curDate.setTime($("#chart0").highcharts().debut);
     curDate.setDate(curDate.getDate() - 1); // -1 Jour
     $("#chart0_date").val(curDate.getTime());
-
 }
 
 function init_chart0(data, serie) {
@@ -362,7 +361,8 @@ function init_chart0(data, serie) {
                         $("#chart0_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
-                    init_chart0_navigation();
+                    this.optarif = data.optarif;
+                    init_chart0_navigation(data);
                 },
                 resize: function () {
                     /*var plotWidth = this.plotSizeX; // this.width - this.marginLeft - this.marginRight;
@@ -394,7 +394,7 @@ function init_chart0(data, serie) {
     };
 }
 
-function init_chart1_navigation() {
+function init_chart1_navigation(data) {
     "use strict";
 
     // Date du calendrier
@@ -469,7 +469,7 @@ function init_chart1(data) {
                         $("#chart1_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
-                    init_chart1_navigation(data.duree, data.periode);
+                    init_chart1_navigation(data);
                 }
             },
             ignoreHiddenSeries: false
@@ -553,14 +553,14 @@ function init_chart1(data) {
     };
 }
 
-function init_chart2_navigation(duree, periode) {
+function init_chart2_navigation(data) {
     "use strict";
 
     var arrayDuree = [];
     var i;
     var txtdecalage;
 
-    switch (periode) {
+    switch (data.periode) {
     case ("jours"):
         for (i = 1; i <= 31; i += 1) {
             arrayDuree[i] = i;
@@ -604,10 +604,10 @@ function init_chart2_navigation(duree, periode) {
     });
 
     // Valeurs par défaut
-    $(".select_chart2#duree").val(duree);
+    $(".select_chart2#duree").val(data.duree);
     $('.select_chart2#duree').selectmenu('refresh', true);
     //$(".select_chart2#duree").refresh;
-    $(".select_chart2#periode").val(periode);
+    $(".select_chart2#periode").val(data.periode);
     $('.select_chart2#periode').selectmenu('refresh', true);
     //$(".select_chart2#periode").refresh;
 
@@ -695,7 +695,7 @@ function init_chart2(data) {
                         $("#chart2_legende").html(data.subtitle);
                     }
                     this.debut = data.debut;
-                    init_chart2_navigation(data.duree, data.periode);
+                    init_chart2_navigation(data);
                 }
             },
             ignoreHiddenSeries: false
@@ -829,7 +829,7 @@ function init_chart2(data) {
     };
 }
 
-function refresh_chart0(date) {
+function refresh_chart0(optarif, date) {
     "use strict";
 
     // Remise à zéro du chronomètre
@@ -839,7 +839,8 @@ function refresh_chart0(date) {
     disable_timer();
 
     // Lancement de la requête instantly
-    $.getJSON('json.php?query=instantly', function (data) {
+    var parameters = (optarif ? "&optarif=" + Object.keys(optarif)[0] : "");
+    $.getJSON('json.php?query=instantly' + parameters, function (data) {
         // Création / Remplacement du graphique
         chart_elec0 = new Highcharts.Chart(init_chart0(data));
 
@@ -882,7 +883,9 @@ function refresh_chart2(duree, periode, date) {
 function process_chart0_button(object) {
     "use strict";
 
-    refresh_chart0();
+    var optarif = $("#chart0").highcharts().optarif;
+
+    refresh_chart0(optarif, null);
 }
 
 function process_chart1_button(object) {
@@ -949,7 +952,7 @@ function process_chart2_button(object) {
     }
 
     // Calcul du décalage de date
-    if (newdate) {
+    if ((newdate) && (coefdate!==0)) {
         switch (periode) {
         case ("jours"):
             // décalage d'un jour
@@ -976,24 +979,6 @@ function process_chart2_button(object) {
     if (newdate !== undefined) {
         refresh_chart2(duree, periode, newdate);
     }
-}
-
-function process_chart2_select(object) {
-    "use strict";
-
-    var periode = $(".select_chart2#periode").val();
-    var duree = $(".select_chart2#duree").val();
-    var curdate = $("#chart2").highcharts().debut;
-    var newdate = new Date();
-    newdate.setTime(curdate);
-
-    /* // Teste si on doit changer de période
-    if (this.id === "periode") {
-        periode = object.item.value;
-    } else if (this.id === "duree") {
-        duree = object.item.value;
-    }*/
-    refresh_chart2(duree, periode, newdate);
 }
 
 function refresh_charts(pageName) {
@@ -1060,11 +1045,11 @@ function init_events() {
     // Evénement selectmenu (change)
     if ($.mobile) {
         $('.select_chart2').unbind('change').change(
-            function (e, object) {process_chart2_select(object); }
+            function (e, object) {process_chart2_button(object); }
         );
     } else {
         $('.select_chart2').selectmenu({
-            change: function (e, object) {process_chart2_select(object); }
+            change: function (e, object) {process_chart2_button(object); }
         });
     }
     // Evénement datepicker (select)

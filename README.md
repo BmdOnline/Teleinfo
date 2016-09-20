@@ -84,6 +84,8 @@ git clone -b dev git://github.com/BmdOnline/Teleinfo.git
 | dev | https://github.com/BmdOnline/Teleinfo/archive/dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/dev.tar.gz |
 | stable | https://github.com/BmdOnline/Teleinfo/archive/master.zip <br> https://github.com/BmdOnline/Teleinfo/archive/master.tar.gz |
 | | |
+| v4.5 | https://github.com/BmdOnline/Teleinfo/archive/v4.5.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.5.tar.gz |
+| v4.4dev | https://github.com/BmdOnline/Teleinfo/archive/v4.4dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.4dev.tar.gz |
 | v4.3 | https://github.com/BmdOnline/Teleinfo/archive/v4.3.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.3.tar.gz |
 | v4.2dev | https://github.com/BmdOnline/Teleinfo/archive/v4.2dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.2dev.tar.gz |
 | v4.1dev | https://github.com/BmdOnline/Teleinfo/archive/v4.1dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.1dev.tar.gz |
@@ -476,13 +478,20 @@ Par défaut, le programme est réglé sur le thème _sombre_.
 
 # Changements
 
-##Version 4.4 (dev)
+##Version 4.5
 * Interface
-    - bugfix : Ajustements mineurs : libellés singulier/pluriel (1 jour, xx jours)...
     - change : Affichage de l'index du compteur pour faciliter les relevés EDF.
 
 * Moteur / PHP
     - change : Compatibilité avec PHP 7.
+    - change : Quelques adaptations du code javascript.
+
+
+##Version 4.4 (dev)
+* Interface
+    - bugfix : Ajustements mineurs : libellés singulier/pluriel (1 jour, xx jours)...
+
+* Moteur / PHP
     - change : Prise en compte de l'Eco-Device.
     - change : Ajout d'une option "afficheIndex" pour activer l'affichage de l'index du compteur.
     - bugfix : Envisage le cas où aucune donnée n'est retournée (json ne reverra rien).
