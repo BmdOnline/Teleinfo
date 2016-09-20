@@ -107,10 +107,7 @@ function instantly () {
 
     if ($config["afficheIndex"] && !$optarif)
     {
-        $tab_optarif = getOPTARIF(false);
-        $optarif = $tab_optarif["OPTARIF"];
-    } else {
-        $optarif = null;
+        $optarif = getOPTARIF(false);
     }
 
     $query = queryInstantly($optarif);
