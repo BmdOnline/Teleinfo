@@ -38,7 +38,7 @@ function queryOPTARIF() {
         array("%date%", "%table%"),
         array($config_table["table"]["DATE"], $db_connect['table']),
         "WHERE %date%=(SELECT MAX(%date%) FROM %table%)");*/
-    $query .= "ORDER BY DATE DESC LIMIT 1;";
+    $query .= "ORDER BY ".$config_table["table"]["DATE"]." DESC LIMIT 1;";
 
     // Variante 1
     // SELECT OPTARIF AS OPTARIF, ISOUSC AS ISOUSC
