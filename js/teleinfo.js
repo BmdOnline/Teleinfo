@@ -829,7 +829,7 @@ function init_chart2(data) {
     };
 }
 
-function refresh_chart0(optarif, date) {
+function refresh_chart0(date) {
     "use strict";
 
     // Remise à zéro du chronomètre
@@ -839,7 +839,7 @@ function refresh_chart0(optarif, date) {
     disable_timer();
 
     // Lancement de la requête instantly
-    var parameters = (optarif ? "&optarif=" + Object.keys(optarif)[0] : "");
+    var parameters = "";
     $.getJSON('json.php?query=instantly' + parameters, function (data) {
         // Création / Remplacement du graphique
         chart_elec0 = new Highcharts.Chart(init_chart0(data));

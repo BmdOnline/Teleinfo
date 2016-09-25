@@ -105,12 +105,7 @@ function instantly () {
     $timestampdebut2 = $date - $periodesecondes;           // Recule de 24h.
     $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule de 24h.
 
-    if ($config["afficheIndex"] && !$optarif)
-    {
-        $optarif = getOPTARIF(false);
-    }
-
-    $query = queryInstantly($optarif);
+    $query = queryInstantly();
     $result=$mysqli->query($query);
     if (!$result) {
         printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
@@ -132,19 +127,7 @@ function instantly () {
         $series["W"] = "Watts";
         $series["I"] = "Ampères";
 
-        // Différents index
-        if ($config["afficheIndex"])
-        {
-            foreach($teleinfo["PERIODES"][$optarif] as $field){
-                $index[$field] = array (
-                    "title" => $teleinfo["LIBELLES"]["PTEC"][$field],
-                    "value" => $row[$field],
-                );
-            }
-        }
-
-        $query = queryMaxPeriod ($timestampdebut2, $timestampfin);
-
+        $query = queryMaxPeriod ($timestampdebut2, $timestampfin, $optarif);
         $result=$mysqli->query($query);
         if (!$result) {
             printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
@@ -155,6 +138,16 @@ function instantly () {
             $row = $result->fetch_array();
             $max["W"] = max($val["W"], $row["PAPP"]);
             $max["I"] = max($val["I"], $row["IINST1"]);
+
+            // Différents index
+            if ($config["afficheIndex"]) {
+                foreach($teleinfo["PERIODES"][$optarif] as $field) {
+                    $index[$field] = array (
+                        "title" => $teleinfo["LIBELLES"]["PTEC"][$field],
+                        "value" => $row[$field],
+                    );
+                }
+            }
         };
         $result->free();
 
@@ -193,9 +186,8 @@ function instantly () {
         }
 
         // Différents index
-        if ($config["afficheIndex"])
-        {
-            foreach($teleinfo["PERIODES"][$optarif] as $field){
+        if ($config["afficheIndex"]) {
+            foreach($teleinfo["PERIODES"][$optarif] as $field) {
                 //$subtitle .= "Index " . $index[$field]["title"] . " : " . $index[$field]["value"] . "<br />";
                 $subtitle .= "Index " . $field . " : <b>" . $index[$field]["value"]/1000 . " KWh</b><br />"; // Le compteur affiche la valeur / 1000
             }
@@ -247,8 +239,7 @@ function daily () {
     $timestampdebut2 = $date - $periodesecondes;           // Recule d'une période
     $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule d'une période
 
-    if ($config["recalculPuissance"])
-    {
+    if ($config["recalculPuissance"]) {
         $tab_optarif = getOPTARIF(true);
         $optarif = $tab_optarif["OPTARIF"];
     } else {
@@ -274,7 +265,7 @@ function daily () {
         $ptecStr = $teleinfo["LIBELLES"]["PTEC"][$ptec];
 
         // Initialisation des courbes qui seront affichées
-        foreach($teleinfo["PERIODES"][$optarif] as $ptec){
+        foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
             $courbe_titre[$ptec]=$teleinfo["LIBELLES"]["PTEC"][$ptec];
             $courbe_min[$ptec]=5000;
             $courbe_max[$ptec]=0;
@@ -303,8 +294,7 @@ function daily () {
         $prevptec = null;
         $prevts = null;
         $previdx = array();
-        while ($row = $result->fetch_array())
-        {
+        while ($row = $result->fetch_array()) {
             $ts = intval($row["TIMESTAMP"]);
             $curptec = $teleinfo["PTEC"][$row["PTEC"]];
 
@@ -316,8 +306,7 @@ function daily () {
                 // On utilise la puissance apparente
                 $val = floatval(str_replace(",", ".", $row["PAPP"]));
 
-                if ($config["recalculPuissance"])
-                {
+                if ($config["recalculPuissance"]) {
                     // On recalcule la puissance active, basée sur les relevés d'index
                     $curidx = floatval(str_replace(",", ".", $row[$curptec]));
                     $deltaidx = $curidx-$previdx[$curptec];
@@ -345,8 +334,7 @@ function daily () {
                 // On utilise la puissance apparente
                 $val = floatval(str_replace(",", ".", $row["PAPP"]));
 
-                if ($config["recalculPuissance"])
-                {
+                if ($config["recalculPuissance"]) {
                     // On recalcule la puissance active, basée sur les relevés d'index
                     $curidx = floatval(str_replace(",", ".", $row[$curptec]));
                     $deltaidx = $curidx-$previdx[$curptec];
@@ -357,7 +345,7 @@ function daily () {
                 }
 
                 // Affecte la consommation selon la période tarifaire
-                foreach($teleinfo["PERIODES"][$optarif] as $ptec){
+                foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
 
                     if ($curptec == $ptec) {
                         // Période tarifaire courante
@@ -476,8 +464,7 @@ function history() {
             $date = ($date)?min($date, $timestampheure):$timestampheure;
 
             // Avance d'un jour tant que celui-ci n'est pas un lundi
-            while ( date("w", $date) != 1 )
-            {
+            while ( date("w", $date) != 1 ) {
                 $date += 24*3600;
             }
 
@@ -498,8 +485,7 @@ function history() {
             $date = ($date)?min($date, $timestampheure):$timestampheure;
 
             // Avance d'un jour tant qu'on n'est pas le premier du mois
-            while ( date("d", $date) != 1 )
-            {
+            while ( date("d", $date) != 1 ) {
                 $date += 24*3600;
             }
 
@@ -565,7 +551,7 @@ function history() {
 
         // On initialise à vide
         // Cas si les périodes sont "nulles", on n'aura pas d'initialisation des tableaux
-        foreach($teleinfo["PERIODES"][$optarif] as $ptec){
+        foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
             $kwh[$ptec] = array();
             $kwhp[$ptec] = array();
         }
@@ -575,14 +561,13 @@ function history() {
 
         // Calcul des consommations
         $result->data_seek(0); // Revient au début (car on a déjà lu un enreg)
-        while ($row = $result->fetch_array())
-        {
+        while ($row = $result->fetch_array()) {
             $ts = intval($row["TIMESTAMP"]);
             if ($ts < $timestampdebut2) {
                 // Période précédente
                 $cumul = null; // reset (sinon on cumule à chaque étape de la boucle)
                 $timestpp[] = $row["TIMESTAMP"];
-                foreach($teleinfo["PERIODES"][$optarif] as $ptec){
+                foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
                     // On conserve le détail (qui sera affiché en infobulle)
                     $kwhp[$ptec][] = floatval(isset($row[$ptec]) ? $row[$ptec] : 0);
                     // On calcule le total consommé (qui sera affiché en courbe)
@@ -599,7 +584,7 @@ function history() {
                 // Ajout les éléments actuels à chaque tableau
                 $categories[] = $row["PERIODE"];
                 $timestp[] = $row["TIMESTAMP"];
-                foreach($teleinfo["PERIODES"][$optarif] as $ptec){
+                foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
                     $kwh[$ptec][] = floatval(isset($row[$ptec]) ? $row[$ptec] : 0);
                 }
             }
@@ -610,7 +595,7 @@ function history() {
             // pad avec une valeur négative, pour ajouter en début de tableau
             $timestp = array_pad ($timestp, -$duree, null);
             $categories = array_pad ($categories, -$duree, null);
-            foreach($kwh as &$current){
+            foreach($kwh as &$current) {
                 $current = array_pad ($current, -$duree, null);
             }
         }
@@ -620,7 +605,7 @@ function history() {
             // pad avec une valeur négative, pour ajouter en début de tableau
             $timestpp = array_pad ($timestpp, -count(reset($kwh)), null);
             $kwhprec = array_pad ($kwhprec, -count(reset($kwh)), null);
-            foreach($kwhp as &$current){
+            foreach($kwhp as &$current) {
                 $current = array_pad ($current, -count(reset($kwh)), null);
             }
         }

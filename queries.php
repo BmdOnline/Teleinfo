@@ -26,7 +26,7 @@ function queryOPTARIF() {
     // Select
     $query = "SELECT ";
     // Mesures
-    foreach($mesures as $field){
+    foreach($mesures as $field) {
         $query .= $config_table["table"][$field] . " AS " . $field . ", ";
     }
     // Suppression de la dernière virgule
@@ -34,18 +34,18 @@ function queryOPTARIF() {
     // From
     $query .= "FROM " . $db_connect['table'] . " ";
     // Where
-    /*$query .= str_replace(
+    $query .= str_replace(
         array("%date%", "%table%"),
         array($config_table["table"]["DATE"], $db_connect['table']),
-        "WHERE %date%=(SELECT MAX(%date%) FROM %table%)");*/
-    $query .= "ORDER BY ".$config_table["table"]["DATE"]." DESC LIMIT 1;";
+        "WHERE %date%=(SELECT MAX(%date%) FROM %table%)");
+    // $query .= "ORDER BY ".$config_table["table"]["DATE"]." DESC LIMIT 1;";
 
     // Variante 1
     // SELECT OPTARIF AS OPTARIF, ISOUSC AS ISOUSC
     // FROM tbTeleinfo
     // WHERE DATE=(SELECT MAX(DATE) FROM tbTeleinfo)
 
-    // Variante 2
+    // Variante 2 (spécifique MySQL)
     // SELECT OPTARIF AS OPTARIF, ISOUSC AS ISOUSC
     // FROM tbTeleinfo
     // ORDER BY DATE DESC
@@ -55,8 +55,9 @@ function queryOPTARIF() {
 }
 
 // Retourne l'intensité et la puissance maximales pour la période donnée
-function queryMaxPeriod ($timestampdebut, $timestampfin) {
+function queryMaxPeriod ($timestampdebut, $timestampfin, $optarif = null) {
     global $db_connect, $config_table, $variantes_sql;
+    global $teleinfo;
 
     $mesures = array ("PAPP", "IINST1");
 
@@ -67,11 +68,20 @@ function queryMaxPeriod ($timestampdebut, $timestampfin) {
     // Select
     $query = "SELECT ";
     // Mesures
-    foreach($mesures as $field){
+    foreach($mesures as $field) {
         $query .= str_replace(
             array("%field%", "%mesure%"),
             array($config_table["table"][$field], $field),
             "MAX(%field%) as %mesure%, "); //"MAX(`%field%`) as %mesure%, ");
+    }
+    // Différents index
+    if ($optarif) {
+        foreach($teleinfo["PERIODES"][$optarif] as $field) {
+            $query .= str_replace(
+                array("%field%", "%mesure%"),
+                array($config_table["table"][$field], $field),
+                "MAX(%field%) as %mesure%, "); //"MAX(`%field%`) as %mesure%, ");
+        }
     }
     // Suppression de la dernière virgule
     $query = substr($query, 0, -2) . " ";
@@ -114,9 +124,8 @@ function queryMaxDate () {
     return $query;
 }
 
-function queryInstantly ($optarif = null) {
+function queryInstantly () {
     global $db_connect, $config_table, $config, $variantes_sql;
-    global $teleinfo;
 
     $mesures = array ("PAPP", "IINST1", "ISOUSC", "OPTARIF", "PTEC", "DEMAIN");
 
@@ -126,15 +135,8 @@ function queryInstantly ($optarif = null) {
     // Select Timestamp
     $query = "SELECT " . $timestamp . " AS TIMESTAMP, ";
     // Mesures
-    foreach($mesures as $field){
+    foreach($mesures as $field) {
         $query .= $config_table["table"][$field] . " AS " . $field . ", ";
-    }
-    // Différents index
-    if ($config["afficheIndex"])
-    {
-        foreach($teleinfo["PERIODES"][$optarif] as $field){
-            $query .= $config_table["table"][$field] . " AS " . $field . ", ";
-        }
     }
     // Suppression de la dernière virgule
     $query = substr($query, 0, -2) . " ";
@@ -166,12 +168,11 @@ function queryDaily ($timestampdebut, $timestampfin, $optarif = null) {
     // Select Timestamp
     $query = "SELECT " . $timestamp . " AS TIMESTAMP, ";
     // Mesures
-    foreach($mesures as $field){
+    foreach($mesures as $field) {
         $query .= $config_table["table"][$field] . " AS " . $field . ", ";
     }
     // Différents index
-    if ($config["recalculPuissance"])
-    {
+    if ($optarif) { // if ($config["recalculPuissance"]) {
         foreach($teleinfo["PERIODES"][$optarif] as $field){
             $query .= $config_table["table"][$field] . " AS " . $field . ", ";
         }
@@ -214,11 +215,11 @@ function queryHistory ($timestampdebut, $timestampfin, $dateformatsql, $optarif)
         array($date, $dateformatsql),
         "DATE_FORMAT(%field%, '%format%') AS PERIODE, ");
     // Mesures
-    foreach($mesures as $field){
+    foreach($mesures as $field) {
         $query .= $config_table["table"][$field] . " AS " . $field . ", ";
     }
     // Max-Min
-    foreach($teleinfo["PERIODES"][$optarif] as $field){
+    foreach($teleinfo["PERIODES"][$optarif] as $field) {
         $query .= str_replace(
             array("%field%", "%mesure%"),
             array($config_table["table"][$field], $field),
