@@ -1,6 +1,6 @@
 # Graphique Conso Electrique Téléinfo EDF avec Highcharts
 
-[![Animation](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/animation_small.gif)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/animation.gif)
+[![Animation](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/animation_small.gif)](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/animation.gif)
 
 # Sommaire
 * [Pré-requis](#pré-requis)
@@ -440,49 +440,49 @@ Par défaut, le programme est réglé sur le thème _sombre_.
 
 * Onglet _Puissance Instantanée_
 
-[![Puissance Instantanée](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_inst_small.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_inst.png)
+[![Puissance Instantanée](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_inst_small.png)](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_inst.png)
 
 * Onglet _Consommation Actuelle_
 
-[![Dernières 24h](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_day_small.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_day.png)
+[![Dernières 24h](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_day_small.png)](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_day.png)
 
 * Onglet _Données Historiques_ (2D)
 
-[![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_hist_small.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_hist.png)
+[![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_hist_small.png)](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_hist.png)
 
 * Onglet _Données Historiques_ (3D)
 
-[![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_hist_3D_small.png)](https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_hist_3D.png)
+[![Consommation sur 8 jours](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_hist_3D_small.png)](https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_hist_3D.png)
 
 * Formule de base
-    * [Affichage simple] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/base_single.png)
-    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/base_tab_inst.png)
-    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/base_tab_day.png)
-    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/base_tab_hist.png)
-    * [Onglet _Historique_ (3D)] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/base_tab_hist_3D.png)
+    * [Affichage simple] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/base_single.png)
+    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/base_tab_inst.png)
+    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/base_tab_day.png)
+    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/base_tab_hist.png)
+    * [Onglet _Historique_ (3D)] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/base_tab_hist_3D.png)
 
 * Formule HP/HC
-    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_inst.png)
-    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_day.png)
-    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_hist.png)
-    * [Onglet _Historique_ (3D)] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/hphc_tab_hist_3D.png)
+    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_inst.png)
+    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_day.png)
+    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_hist.png)
+    * [Onglet _Historique_ (3D)] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/hphc_tab_hist_3D.png)
 
 * Formule Tempo
-    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/tempo_tab_inst.png)
-    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/tempo_tab_day.png)
-    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/tempo_tab_hist.png)
-    * [Onglet _Historique_ (3D)] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/tempo_tab_hist_3D.png)
+    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/tempo_tab_inst.png)
+    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/tempo_tab_day.png)
+    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/tempo_tab_hist.png)
+    * [Onglet _Historique_ (3D)] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/tempo_tab_hist_3D.png)
 
 * Version Mobile
-    * [Affichage simple] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/mobile_single.png)
-    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/mobile_tab_inst.png)
-    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/mobile_tab_day.png)
-    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/mobile_tab_hist.png)
+    * [Affichage simple] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/mobile_single.png)
+    * [Onglet _Instantané_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/mobile_tab_inst.png)
+    * [Onglet _24h_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/mobile_tab_day.png)
+    * [Onglet _Historique_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/mobile_tab_hist.png)
 
 * Thèmes
-    * [Thème _ui-darkhness_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/theme_ui-darkness.png)
-    * [Thème _ui-lightness_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/theme_ui-lightness.png)
-    * [Thème _smoothness_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5/theme_smoothness.png)
+    * [Thème _ui-darkhness_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/theme_ui-darkness.png)
+    * [Thème _ui-lightness_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/theme_ui-lightness.png)
+    * [Thème _smoothness_] (https://github.com/BmdOnline/Teleinfo/raw/dev/screenshots/v4.5/theme_smoothness.png)
 
 # Changements
 
