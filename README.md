@@ -486,3 +486,4 @@ Par défaut, le programme est réglé sur le thème _sombre_.
     * [Thème _smoothness_] (https://github.com/BmdOnline/Teleinfo/raw/master/screenshots/v4.5.1/theme_smoothness.png)
 
 # Changements
+Voir le fichier [`CHANGELOG.md`](CHANGELOG.md) pour une liste détaillée des nouveautés, corrections de bugs...

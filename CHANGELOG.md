@@ -6,7 +6,7 @@
 - added : Mise en place de la licence GPL v3
 - changed : Mise à jour de captures d'écran
 
-## [4.5.1] (2016-09-25)
+## [4.5.1] - 2016-09-25
 ### Interface
 
 ### Moteur / PHP
@@ -17,7 +17,7 @@
 ### Dépot
 - Mise à jour de captures d'écran
 
-## [4.5] (2016-09-21)
+## [4.5] - 2016-09-21
 ### Interface
 - added : Affichage de l'index du compteur pour faciliter les relevés EDF.
 
@@ -25,7 +25,7 @@
 - changed : Compatibilité avec PHP 7.
 - changed : Quelques adaptations du code javascript.
 
-## [4.4dev] (2014-06-09)
+## [4.4dev] - 2014-06-09
 ### Interface
 - fixed : Ajustements mineurs : libellés singulier/pluriel (1 jour, xx jours)...
 
@@ -35,7 +35,7 @@
 - fixed : Envisage le cas où aucune donnée n'est retournée (json ne reverra rien).
 - fixed : Limite les requêtes (json) à la date la plus récente en base.
 
-## [4.3] (2014-05-02)
+## [4.3] - 2014-05-02
 ### Interface
 - changed : Désactivation des éléments durant le rafraichissment des données (sablier).
 
@@ -57,7 +57,7 @@
 - changed : JQueryUI 1.11.0-pre (2014-04-27)
 - changed : JQueryMobile 1.4.2
 
-## [4.2dev] (2014-02-09)
+## [4.2dev] - 2014-02-09
 ### Interface
 - added : Ajout d'un calendrier pour sélectionner la période dans la vue "Aperçu 24h". (@BmdOnline)
 - added : Affichage des données concernant l'abonnement et la consommation courante dans la vue "Instantané". (@BmdOnline)
@@ -99,7 +99,7 @@
 - changed : L'utilisation de templates pour générer les pages est désactivé par défaut. (@BmdOnline)
 - fixed : Meilleure gestion des périodes vides dans le graphique historique. (@BmdOnline)
 
-## [4.1dev] (2013-12-06)
+## [4.1dev] - 2013-12-06
 ### Interface
 - added : Gestion des appareils mobiles (Smartphones & Tablettes) (@BmdOnline)
 - added : Mise en place de templates d'affichage. (@BmdOnline)
@@ -134,7 +134,7 @@
 - changed : JQueryUI 1.11.0pre (2013-12-03)
 - changed : JQueryMobile 1.4.0-rc1
 
-## [4.0] (2013-10-18)
+## [4.0] - 2013-10-18
 ### Graphiques
 - added : Ajout de la gauge de consommation instantanée.
 - added : Ajout des boutons de navigation dans l'histogramme :
@@ -145,7 +145,7 @@
 ### Misa à jour des librairies
 - changed : Remplacement de JQuery et Highcharts par les versions plus récentes.
 
-## [3.0] (2012-07-04)
+## [3.0] - 2012-07-04
 ### Interface
 - added : Ajout des boutons "-24h / Aujourd'hui / +24h" pour faire "défiler" le premier graphique.
 
@@ -166,10 +166,10 @@
 
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v3)](http://penhard.anthony.free.fr/?p=283)
 
-## [2.0] (2012-02-10)
+## [2.0] - 2012-02-10
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://penhard.anthony.free.fr/?p=207)
 
-## [1.0] (2011-03-02)
+## [1.0] - 2011-03-02
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.anthony.free.fr/?p=111)
 
 ##Reste à faire
