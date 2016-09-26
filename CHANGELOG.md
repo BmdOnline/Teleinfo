@@ -169,7 +169,7 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v3)](http://pen
 ## [2.0] - 2012-02-10
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v2)](http://penhard.anthony.free.fr/?p=207)
 
-## [1.0] - 2011-03-02
+## 1.0 - 2011-03-02
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.anthony.free.fr/?p=111)
 
 ##Reste à faire
@@ -181,3 +181,14 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.
 - [ ] Optimiser l'utilisation de HighCharts avec le chargement asynchrone :
     - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
 - [ ] Fiabiliser les passages aux heures hiver/été.
+
+[Unreleased]: https://github.com/BmdOnline/Teleinfo/compare/v4.5.1...dev
+[4.5.1]: https://github.com/BmdOnline/Teleinfo/compare/v4.5...v4.5.1
+[4.5]: https://github.com/BmdOnline/Teleinfo/compare/v4.4dev...v4.5
+[4.4dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.3...v4.4dev
+[4.3]: https://github.com/BmdOnline/Teleinfo/compare/v4.2dev...v4.3
+[4.2dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.1dev...v4.2dev
+[4.1dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.0...v4.1dev
+[4.0]: https://github.com/BmdOnline/Teleinfo/compare/v3.0...v4.0
+[3.0]: https://github.com/BmdOnline/Teleinfo/compare/v2.0...v3.0
+[2.0]: https://github.com/BmdOnline/Teleinfo/compare/v1.0...v2.0
