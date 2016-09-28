@@ -1,10 +1,10 @@
 # Changements
 
-## [Unreleased]
+## [dev]
 ### Dépot
 - added : Création du fichier CHANGELOG.md
 - added : Mise en place de la licence GPL v3
-- changed : Mise à jour de captures d'écran
+- changed : Mise à jour des captures d'écran
 
 ## [4.5.1] - 2016-09-25
 ### Interface
@@ -15,7 +15,7 @@
 - fixed : Ajustements divers.
 
 ### Dépot
-- Mise à jour de captures d'écran
+- Mise à jour des captures d'écran
 
 ## [4.5] - 2016-09-21
 ### Interface
@@ -182,7 +182,7 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.
     - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
 - [ ] Fiabiliser les passages aux heures hiver/été.
 
-[Unreleased]: https://github.com/BmdOnline/Teleinfo/compare/v4.5.1...dev
+[dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.5.1...dev
 [4.5.1]: https://github.com/BmdOnline/Teleinfo/compare/v4.5...v4.5.1
 [4.5]: https://github.com/BmdOnline/Teleinfo/compare/v4.4dev...v4.5
 [4.4dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.3...v4.4dev
