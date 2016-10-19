@@ -97,77 +97,6 @@ class Parser {
     }
 
     /**
-     * Check if the template exist and compile it if necessary
-     *
-     * @param string $template: name of the file of the template
-     *
-     * @throw \Rain\Tpl\NotFoundException the file doesn't exists
-     * @return string: full filepath that php must use to include
-     */
-    protected function checkTemplate($template) {
-        // set filename
-        $templateName = basename($template);
-        $templateBasedir = strpos($template, DIRECTORY_SEPARATOR) ? dirname($template) . DIRECTORY_SEPARATOR : null;
-        $templateDirectory = null;
-        $templateFilepath = null;
-        $parsedTemplateFilepath = null;
-
-        // Make directories to array for multiple template directory
-        $templateDirectories = $this->config['tpl_dir'];
-        if (!is_array($templateDirectories)) {
-            $templateDirectories = array($templateDirectories);
-        }
-
-        $isFileNotExist = true;
-        foreach($templateDirectories as $templateDirectory) {
-            $templateDirectory .= $templateBasedir;
-            $templateFilepath = $templateDirectory . $templateName . '.' . $this->config['tpl_ext'];
-            $parsedTemplateFilepath = $this->config['cache_dir'] . $templateName . "." . md5($templateDirectory . serialize($this->config['checksum'])) . '.rtpl.php';
-
-            // For check templates are exists
-            if (file_exists($templateFilepath)) {
-                $isFileNotExist = false;
-                break;
-            }
-        }
-
-        // if the template doesn't exsist throw an error
-        if ($isFileNotExist === true) {
-            $e = new NotFoundException('Template ' . $templateName . ' not found!');
-            throw $e->templateFile($templateFilepath);
-        }
-
-        // Compile the template if the original has been updated
-        if ($this->config['debug'] || !file_exists($parsedTemplateFilepath) || ( filemtime($parsedTemplateFilepath) < filemtime($templateFilepath) ))
-            $this->compileFile($templateName, $templateBasedir, $templateDirectory, $templateFilepath, $parsedTemplateFilepath);
-
-        return $parsedTemplateFilepath;
-    }
-
-    /**
-     * Compile a string if necessary
-     *
-     * @param string $string: RainTpl template string to compile
-     *
-     * @return string: full filepath that php must use to include
-     */
-    protected function checkString($string) {
-
-        // set filename
-        $templateName = md5($string . implode($this->config['checksum']));
-        $parsedTemplateFilepath = $this->config['cache_dir'] . $templateName . '.s.rtpl.php';
-        $templateFilepath = '';
-        $templateBasedir = '';
-
-
-        // Compile the template if the original has been updated
-        if ($this->config['debug'] || !file_exists($parsedTemplateFilepath))
-            $this->compileString($templateName, $templateBasedir, $templateFilepath, $parsedTemplateFilepath, $string);
-
-        return $parsedTemplateFilepath;
-    }
-
-    /**
      * Compile the file and save it in the cache
      *
      * @param string $templateName: name of the template
@@ -373,9 +302,8 @@ class Parser {
                             }
                         }
                     } elseif (substr($actualFolder, 0, strlen($this->config['tpl_dir'])) == $this->config['tpl_dir']) {
-                            $actualFolder = substr($actualFolder, strlen($this->config['tpl_dir']));
+                        $actualFolder = substr($actualFolder, strlen($this->config['tpl_dir']));
                     }
-
 
                     //get the included template
                     if (strpos($matches[1], '$') !== false) {
@@ -390,6 +318,7 @@ class Parser {
                     if (strpos($matches[1], '$') !== false) {
                         //dynamic include
                         $parsedCode .= '<?php require $this->checkTemplate(' . $includeTemplate . ');?>';
+
                     } else {
                         //dynamic include
                         $parsedCode .= '<?php require $this->checkTemplate("' . $includeTemplate . '");?>';
@@ -678,11 +607,12 @@ class Parser {
 
         $this->blackList($html);
         if (strpos($html,'|') !== false && substr($html,strpos($html,'|')+1,1) != "|") {
-            preg_match('/([\$a-z_A-Z0-9\(\),\[\]"->]+)\|([\$a-z_A-Z0-9\(\):,\[\]"->]+)/i', $html,$result);
+            preg_match('/([\$a-z_A-Z0-9\(\),\[\]"->]+)\|([\$a-z_A-Z0-9\(\):,\[\]"->\s]+)/i', $html,$result);
 
             $function_params = $result[1];
+            $result[2] = str_replace("::", "@double_dot@", $result[2] );
             $explode = explode(":",$result[2]);
-            $function = $explode[0];
+            $function = str_replace('@double_dot@', '::', $explode[0]);
             $params = isset($explode[1]) ? "," . $explode[1] : null;
 
             $html = str_replace($result[0],$function . "(" . $function_params . "$params)",$html);
@@ -728,11 +658,9 @@ class Parser {
         $path = preg_replace( "#(/+)#", "/", $path );
         $path = preg_replace( "#(/\./+)#", "/", $path );
         $path = str_replace( "@not_replace@", "://", $path );
-
-        while( preg_match( '#\.\./#', $path ) ){
+        while( preg_match('#\w+\.\./#', $path) ) {
             $path = preg_replace('#\w+/\.\./#', '', $path );
         }
-        $path = str_replace("/", DIRECTORY_SEPARATOR, $path);
 
         return $path;
     }

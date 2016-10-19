@@ -6,6 +6,10 @@
 - added : Mise en place de la licence GPL v3
 - changed : Mise à jour des captures d'écran
 
+### Misa à jour des librairies
+- changed : RainTPL 3.1.0
+- changed : Mobile Detect 2.8.22
+
 ## [4.5.1] - 2016-09-25
 ### Interface
 
