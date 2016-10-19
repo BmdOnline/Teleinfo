@@ -788,7 +788,7 @@ function history() {
             'PREC_color' => $teleinfo["COULEURS"]["PREC"],
             'PREC_name' => 'Période Précédente',
             'PREC_data' => $kwhprec,
-            'PREC_data_detail' => $kwhp,
+            //'PREC_data_detail' => $kwhp,
             'PREC_type' => $graphConf["typePrec"]
         );
 
@@ -798,6 +798,8 @@ function history() {
             $history[$ptec."_color"] = $teleinfo["COULEURS"][$ptec];
             $history[$ptec."_data"] = $kwh[$ptec];
             $history[$ptec."_type"] = $graphConf["typeSerie"];
+            $history["PREC_detail"][$ptec."_data"] = $kwhp[$ptec];
+            //'PREC_data_detail' => $kwhp,
         }
 
         return $history;

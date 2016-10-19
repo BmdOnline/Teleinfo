@@ -1,6 +1,12 @@
 # Changements
 
 ## [dev]
+### Moteur / PHP
+- changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
+
+### Moteur / JavaScript
+- changed : Distinction du code "teleinfo.js" et "module_highcharts.js" spécifique aux graphiques.
+
 ### Dépot
 - added : Création du fichier CHANGELOG.md
 - added : Mise en place de la licence GPL v3
@@ -9,6 +15,7 @@
 ### Misa à jour des librairies
 - changed : RainTPL 3.1.0
 - changed : Mobile Detect 2.8.22
+- changed : Highcharts 5.0.0 & Highstock 5.0.0
 
 ## [4.5.1] - 2016-09-25
 ### Interface
