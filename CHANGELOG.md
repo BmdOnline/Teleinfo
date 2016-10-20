@@ -5,17 +5,19 @@
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
 
 ### Moteur / JavaScript
-- changed : Distinction du code "teleinfo.js" et "module_highcharts.js" spécifique aux graphiques.
+- changed : Distinction du code `teleinfo.js` et `module_highcharts.js` spécifique aux graphiques.
+- fixed : Sélection de la période pour l'historique en version mobile.
 
 ### Dépot
 - added : Création du fichier CHANGELOG.md
 - added : Mise en place de la licence GPL v3
 - changed : Mise à jour des captures d'écran
 
-### Misa à jour des librairies
+### Mise à jour des librairies
 - changed : RainTPL 3.1.0
 - changed : Mobile Detect 2.8.22
 - changed : Highcharts 5.0.0 & Highstock 5.0.0
+- changed : JQueryMobile 1.4.5
 
 ## [4.5.1] - 2016-09-25
 ### Interface
@@ -62,7 +64,7 @@
     * Il suffit maintenant de modifier un paramètre pour choisir les modèles de structure SQL proposés.
     * Regroupement des options pour chacun des graphiques.
 
-### Misa à jour des librairies
+### Mise à jour des librairies
 - changed : Highcharts 4.0.1 & Highstock 2.0.1 (apport des graphiques 3D)
 - changed : JQuery 2.1.0 (incompatible IE 6/7/8) & JQuery 1.11.0 (à activer manuellement en cas d'anciens navigateurs)
 - changed : JQueryUI 1.11.0-pre (2014-04-27)
@@ -137,9 +139,9 @@
 - changed : Prise en charge de différents formats de base de données (date ou timestamp notamment). (@energy01 & @BmdOnline)
 
 ### Moteur / JavaScript
-- changed : Validation JSLint de "teleinfo.js". (@BmdOnline)
+- changed : Validation JSLint de `teleinfo.js`. (@BmdOnline)
 
-### Misa à jour des librairies (@BmdOnline)
+### Mise à jour des librairies (@BmdOnline)
 - changed : Highcharts 3.0.7 & Highstock 1.3.7
 - changed : JQuery 2.1.0-pre (incompatible IE 6/7/8) & JQuery 1.10.2 (à activer manuellement en cas d'anciens navigateurs)
 - changed : JQueryUI 1.11.0pre (2013-12-03)
@@ -153,7 +155,7 @@
     * Choix de la période : 1-7 jour / 1-52 semaines / 1-12 mois / 1-4 ans.
 - added : Ajout d'une courbe représentant la période précédente dans l'histogramme.
 
-### Misa à jour des librairies
+### Mise à jour des librairies
 - changed : Remplacement de JQuery et Highcharts par les versions plus récentes.
 
 ## [3.0] - 2012-07-04
@@ -172,7 +174,7 @@
     * La page HTML qui utilise tout ça, très épurée.
 - fixed : Résolution de problèmes de mémoire : chaque rafraîchissement augmentait significativement la mémoire du navigateur.
 
-### Misa à jour des librairies
+### Mise à jour des librairies
 - Remplacement de JQuery et Highcharts par les versions plus récentes.
 
 Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts (v3)](http://penhard.anthony.free.fr/?p=283)

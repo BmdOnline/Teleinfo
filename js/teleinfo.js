@@ -519,23 +519,23 @@ function init_events() {
     "use strict";
 
     // Evénements boutons (click)
-    $('.button_chart0').unbind('click').click(
+    $('.button_chart0').off('click').click(
         function () {process_chart0_button(this); }
     );
-    $('.button_chart1').unbind('click').click(
+    $('.button_chart1').off('click').click(
         function () {process_chart1_button(this); }
     );
-    $('.button_chart2').unbind('click').click(
+    $('.button_chart2').off('click').click(
         function () {process_chart2_button(this); }
     );
     // Evénement selectmenu (change)
     if ($.mobile) {
-        $('.select_chart2').unbind('change').change(
-            function (e, object) {process_chart2_button(object); }
+        $('.select_chart2').off('change').change(
+            function () {process_chart2_button(this); }
         );
     } else {
         $('.select_chart2').selectmenu({
-            change: function (e, object) {process_chart2_button(object); }
+            change: function () {process_chart2_button(this); }
         });
     }
     // Evénement datepicker (select)
