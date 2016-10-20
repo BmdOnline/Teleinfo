@@ -6,6 +6,7 @@
 
 ### Moteur / JavaScript
 - changed : Distinction du code `teleinfo.js` et `module_highcharts.js` spécifique aux graphiques.
+- changed : Suppression des appels `unbind()` (déprécié), remplacés par `off()`.
 - fixed : Sélection de la période pour l'historique en version mobile.
 
 ### Dépot
