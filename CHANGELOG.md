@@ -5,6 +5,9 @@
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
 
 ### Moteur / JavaScript
+- added : Précision de la langue `lang=fr`dans les fichiers HTML.
+- added : Infobulles sur les listes de type `selectmenu` dans les fichiers HTML.
+- changed : Ajustement des indentations dans les fichiers HTML.
 - changed : Distinction du code `teleinfo.js` et `module_highcharts.js` spécifique aux graphiques.
 - changed : Suppression des appels `unbind()` (déprécié), remplacés par `off()`.
 - fixed : Sélection de la période pour l'historique en version mobile.
