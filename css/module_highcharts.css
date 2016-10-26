@@ -1,0 +1,92 @@
+/******************************************************************************
+            HighCharts
+******************************************************************************/
+/* http://www.highcharts.com/docs/chart-design-and-style/style-by-css
+   http://www.highcharts.com/docs/chart-design-and-style/design-and-style
+*/
+
+/* Titre */
+.highcharts-title {
+    fill: #333333 !important;
+    font: bold 16px Verdana, sans-serif !important;
+}
+
+/* Sous-Titre */
+.highcharts-subtitle {
+    fill: #666666 !important;
+    font: bold italic 12px Verdana, sans-serif !important;
+}
+
+/* Légendes */
+.highcharts-legend-item > text {
+    fill: #000000 !important;
+    font: normal 12px Verdana, sans-serif !important;
+}
+
+.highcharts-legend-item > text:hover {
+    fill: #666666 !important;
+}
+
+.highcharts-legend-box {
+	stroke: #000000;
+	stroke-width: 1px;
+}
+
+/* Tooltip */
+/*.highcharts-tooltip > path:last-child {*/
+.highcharts-tooltip-box {
+    fill: #C0C0C0;
+	fill-opacity: 0.25;
+	stroke-width: 2;
+}
+
+
+/* Menu Export / Ipression */
+.highcharts-menu-item {
+    font-size: 10px !important;
+}
+
+/* Barre de Zoom / Navigation */
+.highcharts-navigator-mask-inside {
+    fill: rgba(102, 133, 194, 0.3);
+}
+
+
+/* Graduations sur l'axe Y (sur les Gauges) */
+.highcharts-yaxis > .highcharts-tick {
+	stroke: #666666;
+
+}
+
+.highcharts-yaxis > .highcharts-minor-tick {
+	stroke: #999999;
+}
+
+/*** Spécifique pour les Gauges ***/
+
+/* Fond du label */
+.highcharts-gauge-series > .highcharts-data-label > .highcharts-data-label-box {
+/*.highcharts-gauge-series .highcharts-data-label-box {*/
+    fill: rgba(253, 255, 213, 0.75); /* #FDFFD5; */
+}
+
+/* Label */
+/*.highcharts-gauge-series text {*/
+.highcharts-gauge-series > .highcharts-data-label > text {
+    fill: #666666 !important;
+    font: bold 11px Verdana, sans-serif !important;
+}
+
+/*** Spécifique pour les Histogrammes ***/
+
+/* Label*/
+/*.highcharts-column-series text {*/
+.highcharts-column-series > .highcharts-data-label > text {
+    fill: #FFFFFF !important;
+    font: normal 11px Verdana, sans-serif !important;
+}
+
+/* Couleur de fond des bandes alternées (sauf chart0 : gauge)*/
+.chart:not(#chart0) .highcharts-plot-band {
+    fill: rgba(253, 255, 213, 0.75);
+}

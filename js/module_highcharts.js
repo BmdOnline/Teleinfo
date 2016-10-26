@@ -45,38 +45,13 @@ var hcTheme = {
     credits: {
         enabled: false
     },
-    /*colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572',
-             '#FF9655', '#FFF263', '#6AF9C4'], */
     chart: {
         animation: true,
         /*animation: {
             duration: 800,
             easing: 'swing'
         },*/
-        borderColor: '#EBBA95',
-        borderWidth: 2,
-        borderRadius: 10
-        /*backgroundColor: {
-            linearGradient: [0, 0, 500, 500],
-            stops: [
-                [0, 'rgb(255, 255, 255)'],
-                [1, 'rgb(240, 240, 255)']
-            ]
-        },*/
-    },
-    title: {
-        style: {
-            color: '#333333',
-            font: 'bold 16px Verdana, sans-serif'
-            //font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
-        }
-    },
-    subtitle: {
-        style: {
-            color: '#666666',
-            font: 'bold 12px Verdana, sans-serif'
-            //font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
-        }
+        backgroundColor: null // Défini en CSS fond blanc détouré orange. null pour ne pas créer de fond, même vide.
     },
     plotOptions: {
         column: {
@@ -84,24 +59,11 @@ var hcTheme = {
                 enabled: false,
                 overflow: 'crop',
                 crop: true,
-                color: '#FFFFFF',
                 formatter: function () {
                     "use strict";
 
-                    if (this.y === 0) {
-                        return "";
-                    }
-                    return this.y;
+                    return (this.y === 0) ? "" : this.y;
                 }
-                /*style: {
-                    font: 'normal 13px Verdana, sans-serif'
-                }*/
-            }
-        },
-        gauge: {
-            dataLabels: {
-                color: '#666666',
-                backgroundColor: '#FDFFD5'
             }
         }
     },
@@ -126,7 +88,7 @@ var hcTheme = {
         showLastLabel: true,
         min: 0,
         maxPadding: 0.1,
-        alternateGridColor: '#FDFFD5',
+        alternateGridColor: 'rgba(0, 0, 0, 0)', // Défini en CSS .highcharts-plot-band. 'rgba(0, 0, 0, 0)' pour forcer la création des bandes
         minorGridLineWidth: 0,
         labels: {
             //rotation: -90,
@@ -136,16 +98,9 @@ var hcTheme = {
     },
     legend: {
         enabled: false,
-        borderColor: 'black',
+        //borderColor: rgba(0, 0, 0, 0), // Défini en CSS .highcharts-legend-item et .highcharts-legend-box
         borderWidth: 1,
         shadow: true
-        /*itemStyle: {
-            font: '9pt Trebuchet MS, Verdana, sans-serif',
-            color: 'black'
-        },
-        itemHoverStyle:{
-            color: 'gray'
-        },*/
     },
     rangeSelector : {
         buttons : [{
@@ -176,63 +131,42 @@ var hcTheme = {
         selected : 5,
         inputEnabled : false
     },
-    /*scrollbar: { // scrollbar "stylée" grise
-        barBackgroundColor: 'gray',
-        barBorderRadius: 7,
-        barBorderWidth: 0,
-        buttonBackgroundColor: 'gray',
-        buttonBorderWidth: 0,
-        buttonBorderRadius: 7,
-        trackBackgroundColor: 'none',
-        trackBorderWidth: 1,
-        trackBorderRadius: 8,
-        trackBorderColor: '#CCC'
-    },*/
     navigator: {
-        //top: 360,
-        menuItemStyle: {
-            fontSize: '10px'
-        },
         series: {
-            color: '#4572A7',
+            lineWidth: 2,
             fillOpacity: 0.55
-        }
-    },
-    navigation: {
-        menuItemStyle: {
-            fontSize: '10px'
         }
     },
     pane: { // Gauge
         startAngle: -150,
         endAngle: 150,
         background: [{
+            borderWidth: 0,
+            outerRadius: '109%',
             backgroundColor: {
                 linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
                 stops: [
                     [0, '#FFF'],
                     [1, '#333']
                 ]
-            },
-            borderWidth: 0,
-            outerRadius: '109%'
+            }
         }, {
+            borderWidth: 1,
+            outerRadius: '107%',
             backgroundColor: {
                 linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
                 stops: [
                     [0, '#333'],
                     [1, '#FFF']
                 ]
-            },
-            borderWidth: 1,
-            outerRadius: '107%'
+            }
         }, {
             // default background
         }, {
-            backgroundColor: '#DDD',
             borderWidth: 0,
             outerRadius: '105%',
-            innerRadius: '103%'
+            innerRadius: '103%',
+            backgroundColor: '#DDD'
         }]
     }
 };
@@ -241,7 +175,6 @@ jQuery(function ($) {
     "use strict";
 
     // Apply the theme
-    //Highcharts.setOptions(Highcharts.theme);
     Highcharts.setOptions(hcTheme);
 });
 
@@ -276,6 +209,9 @@ function init_chart0(data, serie) {
     var centerPos = [];
     var paneSize;
     var band_min;
+    var bandMaxValue;
+    var plotValColor = [];
+
     $.each(serieNames, function (serie_num, serie_name) {
         // Position de chacune des gauges (horizontalement ou verticalement)
         gPos = (gStep / 2) + (gStep * serie_num);
@@ -296,6 +232,13 @@ function init_chart0(data, serie) {
         band_min = 0;
         plotBands = []; // RAZ
         $.each(data.bands[serie_name], function (band_max, band_color) {
+            bandMaxValue = Math.min(band_max, data.seuils[serie_name].max);
+
+            if ((band_min < data.data[serie_name]) && (bandMaxValue >= data.data[serie_name])) {
+                // Série à afficher
+                plotValColor[serie_name] = band_color;
+            }
+
             plotBands.push({
                 from: Math.min(band_min, data.seuils[serie_name].max),
                 to: Math.min(band_max, data.seuils[serie_name].max),
@@ -318,13 +261,10 @@ function init_chart0(data, serie) {
             minorTickWidth: 1,
             minorTickLength: 10,
             minorTickPosition: 'inside',
-            minorTickColor: '#999',
-
             tickInterval: data.seuils[serie_name].max / 10, // 10 graduations au total
             tickWidth: 2,
             tickLength: 15,
             tickPosition: 'inside',
-            tickColor: '#666',
             labels: {
                 step: 2,
                 rotation: 'auto'
@@ -340,6 +280,7 @@ function init_chart0(data, serie) {
             },
             name : data.series[serie_name],
             data : [data.data[serie_name]],
+            color : plotValColor[serie_name],
             yAxis: serie_num
         });
     });
@@ -555,8 +496,6 @@ function init_chart2(data) {
                 enabled: true,
                 align: data.show3D ? 'left' : 'center',
                 style: {
-                    //color: '#FFFFFF',
-                    fontWeight: 'normal',
                     textShadow: 'none'
                 }
             },
@@ -652,6 +591,14 @@ function init_chart2(data) {
             }
         },
         tooltip: {
+            /*backgroundColor: {
+                linearGradient: [0, 0, 0, 60],
+                stops: [
+                    [0, '#FFFFFF'],
+                    [1, '#E0E0E0']
+                ]
+            },*/
+
             useHTML: true,
             formatter: function () {
                 return tooltip_chart2(this.series.index, this.point.x);

@@ -1,6 +1,10 @@
 # Changements
 
 ## [dev]
+### Interface
+- changed : Distinction du code `teleinfo.css` et `module_highcharts.css` spécifique aux graphiques.
+- changed : Nettoyage du CSS restant dans `teleinfo.css`.
+
 ### Moteur / PHP
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
 
@@ -10,6 +14,7 @@
 - changed : Ajustement des indentations dans les fichiers HTML.
 - changed : Distinction du code `teleinfo.js` et `module_highcharts.js` spécifique aux graphiques.
 - changed : Suppression des appels `unbind()` (déprécié), remplacés par `off()`.
+- changed : Suppression d'éléments liés aux styles dans `module_highcharts.js`. Utilisation de `module_highcharts.css`.
 - fixed : Sélection de la période pour l'historique en version mobile.
 
 ### Dépot
@@ -24,8 +29,6 @@
 - changed : JQueryMobile 1.4.5
 
 ## [4.5.1] - 2016-09-25
-### Interface
-
 ### Moteur / PHP
 - added : Ajout du fichier de config Ecodevice Tempo.
 - changed : Optimisation du temps d'exécution pour l'affichage de l'index du compteur.

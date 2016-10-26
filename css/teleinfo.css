@@ -1,167 +1,115 @@
-/* Graphiques */
-#chart0 {
-    /*float: left; */
-    width: 100%; /*400px;*/
-    height: 600px;
-}
+/******************************************************************************
+            Surcharge des styles JQuery UI
+******************************************************************************/
+/* @import url("module_highcharts.css") */
 
-#chart1 {
-    width: 100%; /*800px;*/
-    height: 500px;
-}
+/* Ordre des données "padding"
+   top right bottom left;
+   top right+left bottom;
+   top+bottom right+left;
+*/
 
-#chart2 {
-    width: 100%; /*800px;*/
-    height: 400px;
-}
+/* Convention de nommage des couleurs
+   https://drafts.csswg.org/css-color/
+   http://jsperf.com/css-color-names-vs-hex-codes/25
+*/
 
-@media ( min-width: 900px ) {
-    /* for devices with high resolution */
-    #chart0 {
-        width: 500px;
-        height: 300px;
-    }
-    #chart1 {
-        width: 800px;
-    }
-    #chart2 {
-        width: 800px;
-    }
-}
+/* Display waiting animation while loading data
+   http://www.ajaxload.info
+   http://preloaders.net
+*/
 
-#chart0_legende {
-    display: none;
-    text-align: center;
-    font-size: 0.8em;
-    margin-bottom: 10px;
-}
-
-#chart1_legende {
-    display: none;
-    text-align: center;
-    font-size: 0.8em;
-    margin-bottom: 10px;
-}
-
-#chart2_legende {
-    display: none;
-    text-align: center;
-    font-size: 0.8em;
-    margin-bottom: 10px;
-}
-
-.chart {
-    margin: 0 auto;
-    margin-bottom: 20px !important;
-}
-
-
-/* JQuery UI */
-
-/* Display waiting animation while loading data */
-/* http://www.ajaxload.info */
-/* http://preloaders.net/ */
-/* loading icon */
+/* Ajax loading icon */
 .ui-icon-loading {
-    background:url("../images/ajax-loader.png") no-repeat center !important;
-    height: 128px !important; width: 128px !important;
-    position: fixed !important; left: 50% !important; top: 50% !important;
+    background: url("../images/ajax-loader.png") no-repeat center !important;
+    height: 128px !important;
+    width: 128px !important;
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
     margin: -64px 0 0 -64px  !important;
 }
 
-/* Icônes des onglets de navigation */
-.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px; margin-top: 5px}
+/* Remplace la couleur de base (bleu) par un noir détouré de bleu */
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-button:hover,
+.ui-button:focus {
+    background: #343640;
+    background: -moz-linear-gradient(top,#343640,#15161a);
+    background: -webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));
+}
 
+/* Remplace la couleur de base (orange) par un noir détouré de orange */
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+    background: #343640;
+    background: -moz-linear-gradient(top,#343640,#15161a);
+    background: -webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));
+}
+
+/* Tabs : Pour avoir l'icône toujours visible, on affiche les icones clairs et pas sombres */
+.ui-state-active .ui-icon {
+	background-image: url("jquery/ui-darkness/images/ui-icons_ffffff_256x240.png");
+}
+
+/* Icônes des onglets de navigation */
+.ui-tabs-nav .ui-icon {
+    margin-right: 5px;
+    display: inline-block;
+}
+
+/* Infobulle */
 .ui-tooltip {
-    font-size:0.8em;
+    font-size: 0.8em;
     padding: 5px 20px;
 }
 
-.ui-button-text {
-    font-size:0.8em;
+/* Taille des objets (Button, SelectMenu) */
+.ui-widget .ui-widget {
+	font-size: 0.8em;
 }
 
+/* Boutons & SelectMenu */
+.ui-selectmenu-button,
 .ui-button {
-    text-align: center !important;
-    width:125px !important;
-    /*height:30px !important;*/
-    margin-left:20px;
-    margin-bottom:20px;
-    border:none;
-    /*color:#cecece;
-    text-shadow:0px -1px 0px #000;
-    background:#1f2026;
-    background:-moz-linear-gradient(top,#1f2026,#15161a);
-    background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));*/
-    -webkit-border-radius:5px;
-        -moz-border-radius:5px;
-            border-radius:5px;
-    -webkit-box-shadow:0px 0px 1px #000;
-        -moz-box-shadow:0px 0px 1px #000;
-            box-shadow:0px 0px 1px #000;
+    /*text-align: center !important;*/
+    width: 125px !important;
+    /*height: 30px !important;*/
+    margin-left: 20px;
+    margin-bottom: 15px;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0px 0px 1px #000;
+       -moz-box-shadow: 0px 0px 1px #000;
+            box-shadow: 0px 0px 1px #000;
 }
 
-.ui-button:hover {
-    /*background:#343640;
-    background:-moz-linear-gradient(top,#343640,#15161a);
-    background:-webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));*/
-}
-
-select[class="select_chart2"] {
-    width:200px;
-}
-
+/* Alignement interne du SelectMenu */
 .ui-selectmenu-text {
-    font-size:0.8em;
+    padding:0.4em 1.5em 0.4em 1.6em !important;
     text-align: center !important;
-    padding: 0.2em 0.2em 0.2em 0.2em !important;
+    line-height: 1.4em !important;
 }
 
-.ui-selectmenu-button {
-    width:125px !important;
-    /*height:30px !important;*/
-    margin-left:20px;
-    margin-bottom:10px;
-    font-size:1em;
-    font-weight:bold;
-    border:none;
-    /*color:#cecece;
-    text-shadow:0px -1px 0px #000;
-    background:#1f2026;
-    background:-moz-linear-gradient(top,#1f2026,#15161a);
-    background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));*/
-    -webkit-border-radius:5px;
-        -moz-border-radius:5px;
-            border-radius:5px;
-    -webkit-box-shadow:0px 0px 1px #000;
-         -moz-box-shadow:0px 0px 1px #000;
-  box-shadow:0px 0px 1px #000;
-}
-
-.ui-selectmenu-open ul {
-    border:none;
-    /*background:#1f2026;
-    background:-moz-linear-gradient(top,#1f2026,#15161a);
-    background:-webkit-gradient(linear,left top,left bottom,from(#1f2026),to(#15161a));*/
-    -webkit-border-radius:5px;
-        -moz-border-radius:5px;
-            border-radius:5px;
-    -webkit-box-shadow:0px 0px 1px #000;
-        -moz-box-shadow:0px 0px 1px #000;
-            box-shadow:0px 0px 1px #000;
-}
-
+/* Liste déroulante du SelectMenu */
 .ui-selectmenu-open li {
-    font-size:0.9em;
-    color:#cecece;
+    font-size: 0.9em;
+    color: #cecece;
 }
 
 .ui-selectmenu-open .ui-state-focus {
-    color:#cecece;
-    font-weight:bold;
-    /*background:#343640;
-    background:-moz-linear-gradient(top,#343640,#15161a);
-    background:-webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));*/
+    color: #cecece;
+    font-weight: bold;
 }
 
 .ui-selectmenu-overflow {
@@ -189,49 +137,87 @@ voci une implémentation de l'image en mode "sprite"
     background-position:-32px 0px;
 }*/
 
+/******************************************************************************
+            Styles de la page (hors JQueryUI et hors Charts)
+******************************************************************************/
 
-/* Habillage de la page */
+/* Alignement des boutons (au sein d'un button_group) */
 .button_group {
-    text-align: center;
+    text-align: center !important;
 }
 
-#Menu {
-    width:860px;
-    margin-left:20px;
+/******************************************************************************
+            Styles communs aux graphiques
+******************************************************************************/
+
+/* Légende du graphique (complément d'information */
+.chart_legende {
+    display: none;
     text-align: center;
-    font-size:2em;
-    font-weight:bold;
-    border:none;
-    color:#FFFFFF;
-    text-shadow:0px -1px 0px #000000;
-    background:#CECECE;
-    background:-moz-linear-gradient(top,#CECECE,#15161a);
-    background:-webkit-gradient(linear,left top,left bottom,from(#CECECE),to(#15161a));
-    -webkit-border-radius:5px;
-        -moz-border-radius:5px;
-            border-radius:5px;
-    -webkit-box-shadow:0px 0px 1px #000;
-        -moz-box-shadow:0px 0px 1px #000;
-            box-shadow:0px 0px 1px #000;
+    font-size: 0.8em;
+    margin-bottom: 10px;
 }
 
-#daily, #history {
-    padding: 5px;
-    margin-top:10px;
-    font-size:1em;
-    border: 1px solid #000000;
-    color:#cecece;
-    text-shadow:0px -1px 0px #FFFFFF;
-    background:#CECECE;
-    background:-moz-linear-gradient(top,#CECECE,#15161a);
-    background:-webkit-gradient(linear,left top,left bottom,from(#CECECE),to(#15161a));
-    -webkit-border-radius:5px;
-        -moz-border-radius:5px;
-            border-radius:5px;
-    -webkit-box-shadow:0px 0px 1px #000;
-        -moz-box-shadow:0px 0px 1px #000;
-            box-shadow:0px 0px 1px #000;
+/* Apparence globale de tous les graphiques */
+.chart {
+    /* Centre le graphique sur la page */
+    margin: 0 auto;
+    margin-bottom: 20px !important;
+    /* Fond blanc */
+    background: rgb(255, 255, 255);
+    /* Bords arrondis */
+    border: 2px solid #EBBA95;
+    -webkit-border-radius: 10px;
+       -moz-border-radius: 10px;
+            border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 1px #000;
+       -moz-box-shadow: 0px 0px 1px #000;
+            box-shadow: 0px 0px 1px #000;
 }
-#daily > div , #history > div {
-    position : relative
+
+/******************************************************************************
+            Styles spécifiques à chaque graphique
+******************************************************************************/
+
+/* Résolutions jusqu'à 560px */
+@media (max-width: 560px) {
+    #chart0 {
+        width: 100%;
+        height: 600px;
+    }
+    #chart1 {
+        width: 100%;
+    }
+    #chart2 {
+        width: 100%;
+    }
 }
+
+/* Résolutions à partir de 560px et jusqu'à 900px */
+@media (min-width: 560px) and (max-width: 880px) {
+    #chart0 {
+        width: 500px;
+        height: 300px;
+    }
+    #chart1 {
+        width: 100%;
+    }
+    #chart2 {
+        width: 100%;
+    }
+}
+
+/* Résolutions à partir de 900px */
+@media (min-width: 880px) {
+    #chart0 {
+        width: 500px;
+        height: 300px;
+    }
+    #chart1 {
+        width: 800px;
+    }
+    #chart2 {
+        width: 800px;
+    }
+}
+
