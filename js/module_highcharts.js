@@ -186,6 +186,42 @@ function chart_subtitle(targetId, subTitle) {
     });
 }
 
+function chart_position(nbPanes) {
+    "use strict";
+
+    var gPos;
+    var gStep = 100 / nbPanes;
+    var centerPos = [];
+    var paneSize;
+    var paneInfos = [];
+    var pane_num;
+
+    for (pane_num = 0; pane_num < nbPanes; pane_num += 1) {
+        // Position de chacune des gauges (horizontalement ou verticalement)
+        gPos = (gStep / 2) + (gStep * pane_num);
+        if ($("#chart0").height() <= $("#chart0").width()) {
+            centerPos = [ // Horizontal
+                gPos + '%',
+                '50%'
+            ];
+            paneSize = Math.min($("#chart0").width() / 2 * 0.8, $("#chart0").height() * 0.75);
+        } else {
+            centerPos = [ // Vertical
+                '50%',
+                gPos + '%'
+            ];
+            paneSize = Math.min($("#chart0").width() * 0.8, $("#chart0").height() / 2 * 0.75);
+        }
+
+        paneInfos.push({
+            center: centerPos,
+            size: paneSize
+        });
+    }
+
+    return paneInfos;
+}
+
 function init_chart0(data, serie) {
     "use strict";
 
@@ -204,30 +240,13 @@ function init_chart0(data, serie) {
     var plotBands = [];
     var graphYAxis = [];
     var graphSeries = [];
-    var gPos;
-    var gStep = 100 / serieNames.length;
-    var centerPos = [];
-    var paneSize;
     var band_min;
     var bandMaxValue;
     var plotValColor = [];
 
+    var paneInfos = chart_position(Object.keys(data.series).length);
+
     $.each(serieNames, function (serie_num, serie_name) {
-        // Position de chacune des gauges (horizontalement ou verticalement)
-        gPos = (gStep / 2) + (gStep * serie_num);
-        if ($("#chart0").height() <= $("#chart0").width()) {
-            centerPos = [ // Horizontal
-                gPos + '%',
-                '50%'
-            ];
-            paneSize = Math.min($("#chart0").width() / 2 * 0.8, $("#chart0").height() * 0.75);
-        } else {
-            centerPos = [ // Vertical
-                '50%',
-                gPos + '%'
-            ];
-            paneSize = Math.min($("#chart0").width() * 0.8, $("#chart0").height() / 2 * 0.75);
-        }
         // Seuils des gauges
         band_min = 0;
         plotBands = []; // RAZ
@@ -249,8 +268,8 @@ function init_chart0(data, serie) {
 
         // Default Options doesn't works for pane. So we merge them manually
         graphPanes.push(Highcharts.merge(hcTheme.pane, {
-            center: centerPos,
-            size: paneSize
+            center: paneInfos[serie_num].center,
+            size: paneInfos[serie_num].size
         }));
 
         graphYAxis.push({
@@ -298,10 +317,13 @@ function init_chart0(data, serie) {
             events: {
                 load: function () {chart_loaded('#' + this.renderTo.id, data.subtitle, chart_subtitle); },
                 resize: function () {
-                    /*var plotWidth = this.plotSizeX; // this.width - this.marginLeft - this.marginRight;
-                    var plotHeight = this.plotSizeY; // this.height - this.marginTop - this.marginBottom;
-                    console.log ("plot area : " + plotWidth + "x" + plotHeight);*/
-                    refresh_chart0();
+                    var pane_num;
+                    paneInfos = chart_position(this.series.length);
+                    for (pane_num = 0; pane_num < this.series.length; pane_num += 1) {
+                        this.panes[pane_num].options.center = paneInfos[pane_num].center;
+                        this.panes[pane_num].options.size = paneInfos[pane_num].size;
+                    }
+                    this.redraw();
                 }
             }
         },

@@ -16,6 +16,7 @@
 - changed : Suppression des appels `unbind()` (déprécié), remplacés par `off()`.
 - changed : Suppression d'éléments liés aux styles dans `module_highcharts.js`. Utilisation de `module_highcharts.css`.
 - fixed : Sélection de la période pour l'historique en version mobile.
+- fixed : Meilleure gestion du redimensionnement lorsque la gauge est affichée. Ne recalcule plus tout.
 
 ### Dépot
 - added : Création du fichier CHANGELOG.md
