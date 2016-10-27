@@ -31,7 +31,7 @@
 }
 
 /* Remplace la couleur de base (bleu) par un noir détouré de bleu */
-.ui-state-hover,
+/*.ui-state-hover,
 .ui-widget-content .ui-state-hover,
 .ui-widget-header .ui-state-hover,
 .ui-state-focus,
@@ -42,10 +42,10 @@
     background: #343640;
     background: -moz-linear-gradient(top,#343640,#15161a);
     background: -webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));
-}
+}*/
 
 /* Remplace la couleur de base (orange) par un noir détouré de orange */
-.ui-state-active,
+/*.ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active,
 a.ui-button:active,
@@ -54,12 +54,12 @@ a.ui-button:active,
     background: #343640;
     background: -moz-linear-gradient(top,#343640,#15161a);
     background: -webkit-gradient(linear,left top,left bottom,from(#343640),to(#15161a));
-}
+}*/
 
 /* Tabs : Pour avoir l'icône toujours visible, on affiche les icones clairs et pas sombres */
-.ui-state-active .ui-icon {
+/*.ui-state-active .ui-icon {
 	background-image: url("jquery/ui-darkness/images/ui-icons_ffffff_256x240.png");
-}
+}*/
 
 /* Icônes des onglets de navigation */
 .ui-tabs-nav .ui-icon {
@@ -73,17 +73,24 @@ a.ui-button:active,
     padding: 5px 20px;
 }
 
-/* Taille des objets (Button, SelectMenu) */
+/* Ombre des widgets (Infobulles) */
+.ui-widget-shadow {
+	-webkit-box-shadow: 0px 0px 8px #cccccc;
+	box-shadow: 0px 0px 8px #cccccc;
+}
+
+/* Taille des widgets (Button, SelectMenu) */
 .ui-widget .ui-widget {
 	font-size: 0.8em;
 }
 
 /* Boutons & SelectMenu */
-.ui-selectmenu-button,
+/*.ui-selectmenu-button,*/
 .ui-button {
     /*text-align: center !important;*/
     width: 125px !important;
     /*height: 30px !important;*/
+    padding: .4em 0.4em !important;
     margin-left: 20px;
     margin-bottom: 15px;
     -webkit-border-radius: 5px;
@@ -96,7 +103,7 @@ a.ui-button:active,
 
 /* Alignement interne du SelectMenu */
 .ui-selectmenu-text {
-    padding:0.4em 1.5em 0.4em 1.6em !important;
+    /*padding:0.4em 1.5em 0.4em 1.6em !important;*/
     text-align: center !important;
     line-height: 1.4em !important;
 }
@@ -143,7 +150,8 @@ voci une implémentation de l'image en mode "sprite"
 
 /* Alignement des boutons (au sein d'un button_group) */
 .button_group {
-    text-align: center !important;
+    text-align: center;
+    display: block; /* Sinon la version mobile n'est plus centrée */
 }
 
 /******************************************************************************

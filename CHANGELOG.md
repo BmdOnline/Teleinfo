@@ -4,6 +4,8 @@
 ### Interface
 - changed : Distinction du code `teleinfo.css` et `module_highcharts.css` spécifique aux graphiques.
 - changed : Nettoyage du CSS restant dans `teleinfo.css`.
+- changed : Remplacment du thème `smoothness` par le thème `base`.
+- changed : Thème `base` utilisé en version mobile au lieu de `ui-darkness` (tooltip & datepicker clairs).
 
 ### Moteur / PHP
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
@@ -28,6 +30,7 @@
 - changed : Mobile Detect 2.8.22
 - changed : Highcharts 5.0.0 & Highstock 5.0.0
 - changed : JQueryMobile 1.4.5
+- changed : JQueryUI 1.2.1
 
 ## [4.5.1] - 2016-09-25
 ### Moteur / PHP
@@ -52,7 +55,7 @@
 
 ### Moteur / PHP
 - added : Prise en compte de l'Eco-Device.
-- added : Ajout d'une option "afficheIndex" pour activer l'affichage de l'index du compteur.
+- added : Ajout d'une option `afficheIndex` pour activer l'affichage de l'index du compteur.
 - fixed : Envisage le cas où aucune donnée n'est retournée (json ne reverra rien).
 - fixed : Limite les requêtes (json) à la date la plus récente en base.
 
@@ -67,7 +70,7 @@
 
 ### Moteur / PHP
 - added : Possibilité de recalculer la puissance active et ne pas utiliser le relevé "Puissance Apparente (PAPP)".
-    * Création de l'option "$config["recalculPuissance"]".
+    * Création de l'option `$config["recalculPuissance"]`.
 - changed : Encore une refonte de la partie configuration.
     * Il suffit maintenant de modifier un paramètre pour choisir les modèles de structure SQL proposés.
     * Regroupement des options pour chacun des graphiques.
@@ -91,8 +94,8 @@
 ### Graphiques
 - added : Affichage de double gauge (puissance & intensité). (@energy01 & @BmdOnline)
     * Une option permet de n'afficher que la puissance.
-- added : Paramétrage des seuils limites des gauges dans le fichier "config.php". (@BmdOnline)
-- added : La couleur des séries est configurable dans le fichier "config.php". (@BmdOnline)
+- added : Paramétrage des seuils limites des gauges dans le fichier `config.php`. (@BmdOnline)
+- added : La couleur des séries est configurable dans le fichier `config.php`. (@BmdOnline)
     * Chaque période tarifaire a la même couleur dans tous les graphiques.
 - changed : L'échelle de la gauge instantanée s'ajuste automatiquement. (@energy01 & @BmdOnline)
 - changed : Affiche toutes les périodes tarifaires, et pas seulement "Base" ou "HP/HC". (@BmdOnline)
@@ -107,7 +110,7 @@
 
 ### Moteur / PHP
 - changed : Refonte complète de la gestion des requêtes MySQL. (@BmdOnline)
-    * Gestion des requêtes MySQL dans un fichier dédié "queries.php".
+    * Gestion des requêtes MySQL dans un fichier dédié `queries.php`.
     * Le paramétrage est améliorée pour prendre en charge le maximum de configurations possible.
 - changed : Refonte complète de la gestion des abonnements. (@energy01 & @BmdOnline)
     * Les abonnements autres que "base" ou "HC/HP" sont maintenant gérés : EJP et Tempo (Bleu Blanc Rouge).
@@ -127,23 +130,23 @@
     * Version avec onglets : chaque graphique est dans un onglet différent.
     * Version linéraire : tout apparait sur la même page.
 - added : Proposition de 3 thèmes CSS. (@BmdOnline)
-    * Version classique, en utilisant le thème "smoothness".
-    * Version claire, en utilisant le thème "ui-lightness".
-    * Version sombre, en utilisant le thème "ui-darkness".
-- changed : Epuration du CSS spécifique dans "teleinfo.css". (@BmdOnline)
+    * Version classique, en utilisant le thème `smoothness`.
+    * Version claire, en utilisant le thème `ui-lightness`.
+    * Version sombre, en utilisant le thème `ui-darkness`.
+- changed : Epuration du CSS spécifique dans `teleinfo.css`. (@BmdOnline)
 
 ### Graphiques
 - added : Rafraîchissement automatique de la gauge (option dans config.php). (@energy01 & @BmdOnline)
 - fixed : N'affique que l'abonnement actuel dans les légendes des graphiques. (@energy01)
-- fixed : N'affiche plus les 0 de consommation de type "BASE" en cas d'abonnement HP/HC. (@BmdOnline)
+- fixed : N'affiche plus les 0 de consommation de type "BASE" en cas d'abonnement "HP/HC". (@BmdOnline)
 - fixed : Correction du bug cumulant les années sur le graphique historique. (@BmdOnline)
 
 ### Moteur / PHP
-- added : Début de gestion des abonnements autres que "base" ou "HC/HP". (@energy01 & @BmdOnline)
+- added : Début de gestion des abonnements autres que "BASE" ou "HC/HP". (@energy01 & @BmdOnline)
 - added : Début de gestion d'un historique des tarifs EDF. (@energy01)
 - added : Ajout d'une bibliothèque d'applications utilisées pour collecter les éléments téléinformation. (@BmdOnline)
-- changed : Modification du nom du fichier principal "teleinfo.php" au lieu de "teleinfov4.php".
-- changed : Gestion des requêtes mysql dans un fichier dédié "config.php". (@energy01)
+- changed : Modification du nom du fichier principal `teleinfo.php` au lieu de `teleinfov4.php`.
+- changed : Gestion des requêtes mysql dans un fichier dédié `config.php`. (@energy01)
 - changed : Prise en charge de différents formats de base de données (date ou timestamp notamment). (@energy01 & @BmdOnline)
 
 ### Moteur / JavaScript

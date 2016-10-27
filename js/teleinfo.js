@@ -636,16 +636,18 @@ if ($.mobile) {
         $('.button_chart1').button();
         $('.button_chart2').button();
 
-        // Icones jQueryUI
-        $('#chart0_refresh').button("option", "icons", {primary: "ui-icon-refresh"});
-        $('#chart1_date_prec').button("option", "icons", {primary: "ui-icon-arrowthick-1-w"});
-        $('#chart1_date_select').button("option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
-        $('#chart1_date_suiv').button("option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
+        // Icones jQueryUI / https://jqueryui.com/upgrade-guide/1.12/#button
+        $('#chart0_refresh').button({icon: "ui-icon-refresh", iconPosition: "beginning"});
+        $('#chart1_date_prec').button({icon: "ui-icon-arrowthick-1-w", iconPosition: "beginning"});
+        $('#chart1_date_select').button({icon: "ui-icon-calendar", iconPosition: "beginning"})
+            .append('<span class="ui-icon ui-icon-triangle-1-s">');
+        $('#chart1_date_suiv').button({icon: "ui-icon-arrowthick-1-e", iconPosition: "end"});
 
-        $('#chart2_date_prec').button("option", "icons", {primary: "ui-icon-arrowthick-1-w"});
-        $('#chart2_date_now').button("option", "icons", {primary: "ui-icon-calendar"});
-        $('#chart2_date_select').button("option", "icons", {primary: "ui-icon-calendar", secondary: "ui-icon-triangle-1-s"});
-        $('#chart2_date_suiv').button("option", "icons", {secondary: "ui-icon-arrowthick-1-e"});
+        $('#chart2_date_prec').button({icon: "ui-icon-arrowthick-1-w", iconPosition: "beginning"});
+        $('#chart2_date_now').button({icon: "ui-icon-calendar", iconPosition: "beginning"});
+        $('#chart2_date_select').button({icon: "ui-icon-calendar", iconPosition: "beginning"})
+            .append('<span class="ui-icon ui-icon-triangle-1-s">');
+        $('#chart2_date_suiv').button({icon: "ui-icon-arrowthick-1-e", iconPosition: "end"});
 
         // Initialisation jQueryUI selectmenu
         $('.select_chart2').selectmenu({
