@@ -125,7 +125,10 @@ function instantly () {
         $val["W"] = floatval(str_replace(",", ".", $row["PAPP"]));
         $val["I"] = floatval(str_replace(",", ".", $row["IINST1"]));
         $series["W"] = "Watts";
-        $series["I"] = "Ampères";
+        // Double Gauge ?
+        if ($graphConf["doubleGauge"]) {
+            $series["I"] = "Ampères";
+	}
 
         $query = queryMaxPeriod ($timestampdebut2, $timestampfin, $optarif);
         $result=$mysqli->query($query);
