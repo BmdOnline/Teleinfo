@@ -2,6 +2,7 @@
 
 ## [dev]
 ### Interface
+- added : Possibilité de zoomer directement au clic dans le graphique "Aperçu 24h".
 - changed : Distinction du code `teleinfo.css` et `module_highcharts.css` spécifique aux graphiques.
 - changed : Nettoyage du CSS restant dans `teleinfo.css`.
 - changed : Remplacment du thème `smoothness` par le thème `base`.
@@ -13,6 +14,7 @@
 ### Moteur / JavaScript
 - added : Précision de la langue `lang=fr`dans les fichiers HTML.
 - added : Infobulles sur les listes de type `selectmenu` dans les fichiers HTML.
+- changed : N'effectue plus le rafraichissement des graphiques qui ne sont pas visibles.
 - changed : Ajustement des indentations dans les fichiers HTML.
 - changed : Distinction du code `teleinfo.js` et `module_highcharts.js` spécifique aux graphiques.
 - changed : Suppression des appels `unbind()` (déprécié), remplacés par `off()`.

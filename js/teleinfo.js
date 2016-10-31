@@ -39,14 +39,12 @@ var chart_elec0_delay = 60; // secondes
 function enable_timer(func, delay) {
     "use strict";
 
-    //console.log("enable timer");
     timerID = setInterval(func, delay);
 }
 
 function disable_timer() {
     "use strict";
 
-    //console.log("disable timer");
     clearInterval(timerID);
 }
 
@@ -288,78 +286,87 @@ function tooltip_chart2(thisSerieNum, thisPtX) {
 function refresh_chart0(date) {
     "use strict";
 
-    // Remise à zéro du chronomètre
-    start = new Date();
+    // Seulement si le graphique est visible
+    if ($('#chart0').is(":visible")) {
+        // Remise à zéro du chronomètre
+        start = new Date();
 
-    // Désactivation du rafraichissement automatique (le cas échéant)
-    disable_timer();
+        // Désactivation du rafraichissement automatique (le cas échéant)
+        disable_timer();
 
-    // Lancement de la requête instantly
-    var parameters = "";
-    $.getJSON('json.php?query=instantly' + parameters, function (data) {
-        // Création / Remplacement du graphique
-        if (chart_elec0) {
-            if (Array.isArray(chart_elec0)) {
-                // Chaque gauge est un graphique séparé
-                $.each(chart_elec0, function (ch0_key, ch0_val) {
-                    ch0_val.destroy();
-                });
-            } else {
-                // Chaque gauge est un élément du même graphique
-                chart_elec0.destroy();
+        // Lancement de la requête instantly
+        var parameters = "";
+        $.getJSON('json.php?query=instantly' + parameters, function (data) {
+            // Création / Remplacement du graphique
+            if (chart_elec0) {
+                if (Array.isArray(chart_elec0)) {
+                    // Chaque gauge est un graphique séparé
+                    $.each(chart_elec0, function (ch0_key, ch0_val) {
+                        ch0_val.destroy();
+                    });
+                } else {
+                    // Chaque gauge est un élément du même graphique
+                    chart_elec0.destroy();
+                }
             }
-        }
-        // Keep some data
-        chart0_data = data;
-        chart_elec0 = init_chart0(data);
-        init_chart0_navigation(data);
+            // Keep some data
+            chart0_data = data;
+            chart_elec0 = init_chart0(data);
+            init_chart0_navigation(data);
 
-        // Activation du rafraichissement automatique
-        chart_elec0_delay = data.refresh_delay;
-        if (data.refresh_auto) {
-            enable_timer(refresh_chart0, chart_elec0_delay * 1000);
-        }
-    });
+            // Activation du rafraichissement automatique
+            chart_elec0_delay = data.refresh_delay;
+            if (data.refresh_auto) {
+                enable_timer(refresh_chart0, chart_elec0_delay * 1000);
+            }
+        });
+    }
 }
 
 function refresh_chart1(date) {
     "use strict";
 
-    // Remise à zéro du chronomètre
-    start = new Date();
+    // Seulement si le graphique est visible
+    if ($('#chart1').is(":visible")) {
+        // Remise à zéro du chronomètre
+        start = new Date();
 
-    // Lancement de la requête daily
-    var parameters = (date ? "&date=" + date.getTime() / 1000 : "");
-    $.getJSON('json.php?query=daily' + parameters, function (data) {
-        // Création / Remplacement du graphique
-        if (chart_elec1) {
-            chart_elec1.destroy();
-        }
-        // Keep some data
-        chart1_data = data;
-        chart_elec1 = init_chart1(data);
-        init_chart1_navigation(data);
-    });
+        // Lancement de la requête daily
+        var parameters = (date ? "&date=" + date.getTime() / 1000 : "");
+        $.getJSON('json.php?query=daily' + parameters, function (data) {
+            // Création / Remplacement du graphique
+            if (chart_elec1) {
+                chart_elec1.destroy();
+            }
+            // Keep some data
+            chart1_data = data;
+            chart_elec1 = init_chart1(data);
+            init_chart1_navigation(data);
+        });
+    }
 }
 
 function refresh_chart2(duree, periode, date) {
     "use strict";
 
-    // Remise à zéro du chronomètre
-    start = new Date();
+    // Seulement si le graphique est visible
+    if ($('#chart2').is(":visible")) {
+        // Remise à zéro du chronomètre
+        start = new Date();
 
-    // Lancement de la requête historique
-    var parameters = (duree ? "&duree=" + duree : "") + (periode ? "&periode=" + periode : "") + (date ? "&date=" + date.getTime() / 1000 : "");
-    $.getJSON('json.php?query=history' + parameters, function (data) {
-        // Création / Remplacement du graphique
-        if (chart_elec2) {
-            chart_elec2.destroy();
-        }
-        // Keep some data
-        chart2_data = data;
-        chart_elec2 = init_chart2(data);
-        init_chart2_navigation(data);
-    });
+        // Lancement de la requête historique
+        var parameters = (duree ? "&duree=" + duree : "") + (periode ? "&periode=" + periode : "") + (date ? "&date=" + date.getTime() / 1000 : "");
+        $.getJSON('json.php?query=history' + parameters, function (data) {
+            // Création / Remplacement du graphique
+            if (chart_elec2) {
+                chart_elec2.destroy();
+            }
+            // Keep some data
+            chart2_data = data;
+            chart_elec2 = init_chart2(data);
+            init_chart2_navigation(data);
+        });
+    }
 }
 
 function process_chart0_button(object) {

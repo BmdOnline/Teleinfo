@@ -403,6 +403,7 @@ function init_chart1(data) {
             events: {
                 load: function () {chart_loaded('#' + this.renderTo.id, data.subtitle, chart_subtitle); }
             },
+            zoomType: 'x',
             ignoreHiddenSeries: false
         },
         title: {
