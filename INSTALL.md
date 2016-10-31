@@ -2,33 +2,34 @@
 * [Installation](#installation)
     * [Version actuelle] (#version-actuelle)
     * [Version dev] (#version-dev)
-    * [Anciennes versions] (#anciennes-versions)
+    * [Liste des versions] (#liste-des-versions)
 * [Configuration](#configuration)
-    * [Accès MySQL] (#accès-mysql)
-    * [Table téléinfo] (#table téléinfo)
-* [Paramètres](#paramètres)
+    * [AccÃ¨s MySQL] (#accÃ¨s-mysql)
+    * [Table tÃ©lÃ©info] (#table-tÃ©lÃ©info)
+    * [Librairie graphique] (#librairie-graphique)
+* [ParamÃ¨tres](#paramÃ¨tres)
     * [Puissance apparente - Puissance active] (#puissance-apparente---puissance-active)
-    * [Gauge instantanée] (#gauge-instantanée)
-        * [Donnée à afficher] (#donnée-à-afficher)
+    * [Gauge instantanÃ©e] (#gauge-instantanÃ©e)
+        * [DonnÃ©e Ã  afficher] (#donnÃ©e-Ã -afficher)
         * [Rafraichissement automatique] (#rafraichissement-automatique)
         * [Aspect des gauges] (#aspect-des-gauges)
-    * [Aperçu quotidien] (#Aperçu-quotidien)
+    * [AperÃ§u quotidien] (#aperÃ§u-quotidien)
     * [Historiques] (#historiques)
         * [Affichage 3D] (#affichage-3d)
         * [Type de graphique] (#type-de-graphique)
-        * [Période précédente] (#période-précédente)
+        * [PÃ©riode prÃ©cÃ©dente] (#pÃ©riode-prÃ©cÃ©dente)
     * [Couleur des graphiques] (#couleur-des-graphiques)
 * [Tarifs EDF] (#tarifs-edf)
 
 # Installation
 ## Version actuelle
-Deux possibilités :
-* Utiliser l'utilitaire `git` pour dupliquer le dépôt :
+Deux possibilitÃ©s :
+* Utiliser l'utilitaire `git` pour dupliquer le dÃ©pÃ´t :
 ```bash
 git clone git://github.com/BmdOnline/Teleinfo.git
 ```
 
-* Télécharger et décompressez l'archive zip à partir de l'interface `github` :
+* TÃ©lÃ©charger et dÃ©compressez l'archive zip Ã  partir de l'interface `github` :
 
 ![GitHub Download ZIP](screenshots/github/GitHub Download ZIP.png)
 
@@ -36,11 +37,11 @@ git clone git://github.com/BmdOnline/Teleinfo.git
     * https://github.com/BmdOnline/Teleinfo/archive/master.zip
     * https://github.com/BmdOnline/Teleinfo/archive/master.tar.gz
 
-Vous avez maintenant une copie locale du dépôt distant.
+Vous avez maintenant une copie locale du dÃ©pÃ´t distant.
 
 ## Version dev
-Deux possibilités :
-* Utiliser l'utilitaire `git` pour dupliquer le dépôt :
+Deux possibilitÃ©s :
+* Utiliser l'utilitaire `git` pour dupliquer le dÃ©pÃ´t :
 ```bash
 git clone -b dev git://github.com/BmdOnline/Teleinfo.git
 ```
@@ -68,12 +69,12 @@ git clone -b dev git://github.com/BmdOnline/Teleinfo.git
 | v1.0 | https://github.com/BmdOnline/Teleinfo/archive/v1.0.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v1.0.tar.gz |
 
 # Configuration
-## Accès MySQL
-Pour commencer, il est nécessaire de définir l'accès à la base MySQL et à la table Téléinfo.
+## AccÃ¨s MySQL
+Pour commencer, il est nÃ©cessaire de dÃ©finir l'accÃ¨s Ã  la base MySQL et Ã  la table TÃ©lÃ©info.
 Dans le fichier `config.php`, il faut adapter ces quelques lignes
 ```php
 /***********************/
-/*    Données MySQL    */
+/*    DonnÃ©es MySQL    */
 /***********************/
 $db_connect = array (
     "serveur" => "localhost",
@@ -84,12 +85,12 @@ $db_connect = array (
 );
 ```
 
-## Table téléinfo
-Selon le système utilisé, la table MySQL peut avoir des formats différents.
-Ce programme est fait pour s'adapter à différentes structures de données.
+## Table tÃ©lÃ©info
+Selon le systÃ¨me utilisÃ©, la table MySQL peut avoir des formats diffÃ©rents.
+Ce programme est fait pour s'adapter Ã  diffÃ©rentes structures de donnÃ©es.
 
-### Choix d'un modèle défini
-Quelques modèles type sont proposés :
+### Choix d'un modÃ¨le dÃ©fini
+Quelques modÃ¨les type sont proposÃ©s :
 
 | | Format 1 | Format 2 | Format 3 |
 | ------------- | ------------- | ------------- | ------------- |
@@ -104,53 +105,90 @@ Quelques modèles type sont proposés :
 | OPTARIF HC | HC.. (points) | HC.. (points) | HC.. (points) |
 | PTEC HC/HP | HC.. / HP.. (points) | HC / HP (sans points) | HC / HP (sans points) |
 | | | | |
-| Modèle | structure.date.php | structure.timestp.php | structure.ftimestp.php |
+| ModÃ¨le | structure.date.php | structure.timestp.php | structure.ftimestp.php |
 
 Dans le fichier `config.php`, il faut adapter ces quelques lignes
 ```php
 /************************/
-/*    Table TéléInfo    */
+/*    Table TÃ©lÃ©Info    */
 /************************/
-// Selon la configuration de la base de données téléinfo,
-//   choisir la structure à utiliser :
+// Selon la configuration de la base de donnÃ©es tÃ©lÃ©info,
+//   choisir la structure Ã  utiliser :
 // - structure.date.php
 // - structure.timestp.php
 // - structure.ftimestp.php
-// Il est également possible de se créer une structure personnalisée
+// Il est Ã©galement possible de se crÃ©er une structure personnalisÃ©e
 // - structure.custom.php (par exemple)
 include_once("structure.date.php");
 ```
 
-A partir de là, le programme est opérationnel.
+A partir de lÃ , le programme est opÃ©rationnel.
 
-### Table personnalisée
-Si aucun des modèles proposés ne convient, il est tout à fait possible d'en créer un personnalisé.
-Le plus simple est de partir d'un modèle existant et de le modifier.
+## Librairie graphique
+Il est possible de choisir la librairie qui affichera les graphiques.
+
+Les librairies proposÃ©es sont :
+* [Highcharts] (http://www.highcharts.com)
+* [JQPlot] (http://www.jqplot.com)
+
+| | HighCharts | JQPlot |
+| ------------- | ------------- | ------------- |
+| Licence | propriÃ©taire | MIT/GPLv2 |
+| 3D | oui | non |
+
+
+Le choix se fait dans le fichier `js/teleinfo.js` oÃ¹ il faut adapter ces quelques lignes.
+
+Pour utiliser HighCharts :
+```js
+jQuery(function ($) {
+    "use strict";
+
+    // Do something here
+    modChart = modHighCharts;
+    //modChart = modJQPlot;
+});
+```
+
+Pour utiliser JQPlot :
+```js
+jQuery(function ($) {
+    "use strict";
+
+    // Do something here
+    //modChart = modHighCharts;
+    modChart = modJQPlot;
+});
+```
+
+### Table personnalisÃ©e
+Si aucun des modÃ¨les proposÃ©s ne convient, il est tout Ã  fait possible d'en crÃ©er un personnalisÃ©.
+Le plus simple est de partir d'un modÃ¨le existant et de le modifier.
 
 #### Format de date MySQL
-Selon l'utilitaire collectant les données téléinformation, la base peut utiliser un format de date différent (date ou timestamp).
-Attention à la casse (majuscule / minuscule) !
+Selon l'utilitaire collectant les donnÃ©es tÃ©lÃ©information, la base peut utiliser un format de date diffÃ©rent (date ou timestamp).
+Attention Ã  la casse (majuscule / minuscule) !
 ```php
 $config_table = array (
     // Quelques informations sur la configuration
     "type_date" => "date", // "date" ou "timestamp" selon le type de stockage de la date
     // Nom des champs de la table.
-    //   Clé    = nom interne au programme : NE PAS MODIFIER
-    //   Valeur = nom du champ dans la table téléinfo
-    // Adapter les valeurs du tableau si le nom du champ est différent
+    //   ClÃ©    = nom interne au programme : NE PAS MODIFIER
+    //   Valeur = nom du champ dans la table tÃ©lÃ©info
+    // Adapter les valeurs du tableau si le nom du champ est diffÃ©rent
     "table" => array (
         "DATE"     => "DATE",    // => vaut soit "DATE", soit "TIMESTAMP"
         //...//
 ```
 
 #### Nom des champs Teleinfo
-Selon l'utilitaire collectant les données téléinformation, la base peut utiliser des noms différents.
-Attention à la casse (majuscule / minuscule) !
+Selon l'utilitaire collectant les donnÃ©es tÃ©lÃ©information, la base peut utiliser des noms diffÃ©rents.
+Attention Ã  la casse (majuscule / minuscule) !
 ```php
     // Nom des champs de la table.
-    //   Clé    = nom interne au programme : NE PAS MODIFIER
-    //   Valeur = nom du champ dans la table téléinfo
-    // Adapter les valeurs du tableau si le nom du champ est différent
+    //   ClÃ©    = nom interne au programme : NE PAS MODIFIER
+    //   Valeur = nom du champ dans la table tÃ©lÃ©info
+    // Adapter les valeurs du tableau si le nom du champ est diffÃ©rent
     "table" => array (
         "DATE"     => "DATE",    // => vaut soit "DATE", soit "TIMESTAMP"
         //...//
@@ -158,59 +196,59 @@ Attention à la casse (majuscule / minuscule) !
         //...//
 ```
 
-# Paramètres
+# ParamÃ¨tres
 ## Puissance apparente - Puissance active
-Dans le cas de faible consommation (<~180w), la puissance apparente (PAPP) de certains relevés téléinfo ne serait pas pertinente.
-Lors de relevés téléinfo avec une fréquence réduite, la pertinence de la puissance apparente peut se poser.
+Dans le cas de faible consommation (<~180w), la puissance apparente (PAPP) de certains relevÃ©s tÃ©lÃ©info ne serait pas pertinente.
+Lors de relevÃ©s tÃ©lÃ©info avec une frÃ©quence rÃ©duite, la pertinence de la puissance apparente peut se poser.
 
-Il est alors possible de recalculer la puissance active, en se basant sur l'index relevé.
-Ce résultat, bien qu'approximatif (impact du cos phi), peut s'avérer préférable à la puissance apparente.
+Il est alors possible de recalculer la puissance active, en se basant sur l'index relevÃ©.
+Ce rÃ©sultat, bien qu'approximatif (impact du cos phi), peut s'avÃ©rer prÃ©fÃ©rable Ã  la puissance apparente.
 
 L'option se situe dans le fichier `config.php` :
 ```php
 /*******************************/
-/*    Données EDF & Téléinfo   */
+/*    DonnÃ©es EDF & TÃ©lÃ©info   */
 /*******************************/
 //...//
-$config["recalculPuissance"]     = false; // true : calcule la puissance en se basant sur le relevé d'index plutôt que PAPP
+$config["recalculPuissance"]     = false; // true : calcule la puissance en se basant sur le relevÃ© d'index plutÃ´t que PAPP
 ```
 
-## Gauge instantanée
-### Donnée à afficher
+## Gauge instantanÃ©e
+### DonnÃ©e Ã  afficher
 Il est possible d'afficher une ou deux gauges.
-Dans le cas d'une seule gauge affichée, c'est la puissance qui est sélectionnée.
-Dans le cas de deux gauges, l'intensité s'affichera à côté.
+Dans le cas d'une seule gauge affichÃ©e, c'est la puissance qui est sÃ©lectionnÃ©e.
+Dans le cas de deux gauges, l'intensitÃ© s'affichera Ã  cÃ´tÃ©.
 
 L'option se situe dans le fichier `config.php` :
 ```php
 $config["graphiques"]["instantly"] = array(
     //...//
-    "doubleGauge"  => true,      // true : affiche intensité en plus de la puissance
+    "doubleGauge"  => true,      // true : affiche intensitÃ© en plus de la puissance
     //...//
 ```
 
-### Relevé de l'index du compteur
-Il est possible d'afficher l'index du compteur, pour faciliter le relevé EDF.
+### RelevÃ© de l'index du compteur
+Il est possible d'afficher l'index du compteur, pour faciliter le relevÃ© EDF.
 
 L'option se situe dans le fichier `config.php` :
 ```php
-    $config["afficheIndex"]          = true;  // true : affiche les index pour chaque période tarifaire (relevé de compteur EDF)
+    $config["afficheIndex"]          = true;  // true : affiche les index pour chaque pÃ©riode tarifaire (relevÃ© de compteur EDF)
 ```
 
 ### Rafraichissement automatique
-Il est possible d'activer ou désactiver le rafraichissement automatique des gauges.
+Il est possible d'activer ou dÃ©sactiver le rafraichissement automatique des gauges.
 
 L'option se situe dans le fichier `config.php` :
 ```php
 $config["graphiques"]["instantly"] = array(
     //...//
     "refreshAuto"  => true,      // active le rafraichissement automatique
-    "refreshDelay" => 120,       // relancé toutes les 120 secondes
+    "refreshDelay" => 120,       // relancÃ© toutes les 120 secondes
     //...//
 ```
 
 ### Aspect des gauges
-Il est possible de modifier les différents seuils des gauges, ainsi que les couleurs associées.
+Il est possible de modifier les diffÃ©rents seuils des gauges, ainsi que les couleurs associÃ©es.
 
 Les options se situent dans le fichier `config.php` :
 ```php
@@ -219,32 +257,32 @@ $config["graphiques"]["instantly"] = array(
     //...//
     "bands" => array(            // couleurs des bandes des gauges
         "W" => array(            // Puissance
-            300   => "#55BF3B",  // de 0 à 300
-            1000  => "#DDDF0D",  // de 300 à 1000
-            3000  => "#FFA500",  // de 1000 à 3000
-            10000 => "#DF5353"   // supérieur à 3000
+            300   => "#55BF3B",  // de 0 Ã  300
+            1000  => "#DDDF0D",  // de 300 Ã  1000
+            3000  => "#FFA500",  // de 1000 Ã  3000
+            10000 => "#DF5353"   // supÃ©rieur Ã  3000
         ),
-        "I" => array(            // Intensité
-            2   => "#55BF3B",    // de 0 à 2
-            5   => "#DDDF0D",    // de 2 à 5
-            13  => "#FFA500",    // de 5 à 13
-            100 => "#DF5353"     // supérieur à 20
+        "I" => array(            // IntensitÃ©
+            2   => "#55BF3B",    // de 0 Ã  2
+            5   => "#DDDF0D",    // de 2 Ã  5
+            13  => "#FFA500",    // de 5 Ã  13
+            100 => "#DF5353"     // supÃ©rieur Ã  20
         )
     )
     //...//
 ```
 
-## Aperçu quotidien
-Ce graphique ne propose aucun réglage spécifique.
+## AperÃ§u quotidien
+Ce graphique ne propose aucun rÃ©glage spÃ©cifique.
 
 ## Historiques
 ### Affichage 3D
-Il est possible de choisir un affichage 2D ou 3D des histogrammes.
-Cette option est actuellement expérimentale. En effet, elle est nouvelle dans HighCharts et semble avoir quelques défauts d'affichage.
+Il est possible de choisir un affichage 2D ou 3D des histogrammes (uniquemement avec HighCharts).
+Cette option semble avoir quelques dÃ©fauts d'affichage.
 
-Défaut constatés :
-* Les valeurs affichées sur les barres de l'histogramme sont parfois mal positionnées.
-* La courbe de période précédente s'affiche derrière l'histogramme au lieu de s'afficher devant.
+DÃ©faut constatÃ©s :
+* Les valeurs affichÃ©es sur les barres de l'histogramme sont parfois mal positionnÃ©es.
+* La courbe de pÃ©riode prÃ©cÃ©dente s'affiche derriÃ¨re l'histogramme au lieu de s'afficher devant.
 
 L'option se situe dans le fichier `config.php` :
 ```php
@@ -254,42 +292,42 @@ $config["graphiques"]["history"] = array(
 ```
 
 ### Type de graphique
-Il est possible de choisir le type de représentation des séries de données.
-Certaines combinaisons n'ont pas de sens ou sont mal gérées par HighCharts.
-A vous de tester…
+Il est possible de choisir le type de reprÃ©sentation des sÃ©ries de donnÃ©es.
+Certaines combinaisons n'ont pas de sens ou sont mal gÃ©rÃ©es par HighCharts.
+A vous de tester...
 
 Les options se situent dans le fichier `config.php` :
 ```php
 $config["graphiques"]["history"] = array(
     //...//
-    "typeSerie"  => "column",    // Type de graphique pour les séries de données (syntaxe HighCharts)
-    "typePrec"   => "spline",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)
+    "typeSerie"  => "column",    // Type de graphique pour les sÃ©ries de donnÃ©es (syntaxe HighCharts)
+    "typePrec"   => "spline",    // Type de graphique pour les pÃ©riodes prÃ©cÃ©dentes (syntaxe HighCharts)
     //...//
 ```
 
-### Période précédente
-Il sera possible de choisir entre un affichage simple ou détaillé des données de la période précédente.
+### PÃ©riode prÃ©cÃ©dente
+Il sera possible de choisir entre un affichage simple ou dÃ©taillÃ© des donnÃ©es de la pÃ©riode prÃ©cÃ©dente.
 
 Les options se situent dans le fichier `config.php` :
 ```php
 $config["graphiques"]["history"] = array(
     //...//
-    "detailPrec" => false,       // true : détaille les différentes périodes tarifaires pour les périodes précédentes
+    "detailPrec" => false,       // true : dÃ©taille les diffÃ©rentes pÃ©riodes tarifaires pour les pÃ©riodes prÃ©cÃ©dentes
     //...//
 ```
 
-Cette option n'est pas encore implémentée.
+Cette option n'est pas encore implÃ©mentÃ©e.
 
 ## Couleur des graphiques
-Chaque donnée affiché en graphique a une couleur paramétrable.
+Chaque donnÃ©e affichÃ© en graphique a une couleur paramÃ©trable.
 
 Pour changer les couleurs, il faut adapter le fichier `config.php` :
 ```php
-// couleurs de chacune des séries des graphiques
+// couleurs de chacune des sÃ©ries des graphiques
 $teleinfo["COULEURS"] = array(
-    "MIN"  => "green",   // Seuil de consommation minimale sur la période
-    "MAX"  => "red",     // Seuil de consommation maximale sur la période
-    "PREC" => "#DB843D", // Période précédente
+    "MIN"  => "green",   // Seuil de consommation minimale sur la pÃ©riode
+    "MAX"  => "red",     // Seuil de consommation maximale sur la pÃ©riode
+    "PREC" => "#DB843D", // PÃ©riode prÃ©cÃ©dente
     "BASE" => "#2f7ed8",
     "HP"   => "#c42525",
     "HC"   => "#2f7ed8",
@@ -301,13 +339,13 @@ $teleinfo["COULEURS"] = array(
     "HCJR" => "#c42525",
     "HN"   => "#2f7ed8",
     "HPM"  => "#c42525",
-    "I"    => "blue"     // Intensité
+    "I"    => "blue"     // IntensitÃ©
 );
 ```
 
 # Tarifs EDF
 Le fichier `tarifs.php` contient l'historique de tous les tarifs EDF pour chaque formule.
-Les données sont nationales et communes pour tout le monde, sauf certaines taxes locales.
-* Pour un calcul plus juste, il est nécessaire d'adapter la `TCFE`.
-* A chaque évolution tarifaire, il est nécessaire d'ajouter les nouveaux tarifs dans le fichier.
+Les donnÃ©es sont nationales et communes pour tout le monde, sauf certaines taxes locales.
+* Pour un calcul plus juste, il est nÃ©cessaire d'adapter la `TCFE`.
+* A chaque Ã©volution tarifaire, il est nÃ©cessaire d'ajouter les nouveaux tarifs dans le fichier.
 

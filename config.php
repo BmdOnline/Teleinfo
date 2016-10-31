@@ -95,7 +95,7 @@ $config["graphiques"]["daily"] = array(
 );
 
 $config["graphiques"]["history"] = array(
-    "show3D"     => true,       // true : affiche le graphique en 3D
+    "show3D"     => true,       // true : affiche le graphique en 3D (uniquement avec HighCharts)
     "typeSerie"  => "column",    // Type de graphique pour les séries de données (syntaxe HighCharts)
     "typePrec"   => "spline",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)
     //"typePrec"   => "column",    // Type de graphique pour les périodes précédentes (syntaxe HighCharts)

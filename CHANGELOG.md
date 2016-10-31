@@ -16,8 +16,10 @@
 - fixed : Affichage correct de l'historique lors des changements d'heures.
 
 ### Moteur / JavaScript
+- added : Graphiques basés sur JQPlot avec `module_jqplot.js` et `module_jqplot.css`.
 - added : Précision de la langue `lang=fr`dans les fichiers HTML.
 - added : Infobulles sur les listes de type `selectmenu` dans les fichiers HTML.
+- added : Isolation du code spécifique aux graphiques (module pattern).
 - changed : N'effectue plus le rafraichissement des graphiques qui ne sont pas visibles.
 - changed : Ajustement des indentations dans les fichiers HTML.
 - changed : Distinction du code `teleinfo.js` et `module_highcharts.js` spécifique aux graphiques.
@@ -32,6 +34,7 @@
 - changed : Mise à jour des captures d'écran
 
 ### Mise à jour des librairies
+- added : JQPlot 1.0.9
 - changed : RainTPL 3.1.0
 - changed : Mobile Detect 2.8.22
 - changed : Highcharts 5.0.0 & Highstock 5.0.0

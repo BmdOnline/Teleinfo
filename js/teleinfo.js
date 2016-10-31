@@ -17,14 +17,14 @@ require(['path/to/Chartjs'], function(Chart){
 })
 */
 
-
-// Fonctions externes
-var init_chart0;
-var init_chart1;
-var init_chart2;
+// Modules graphiques
+var modHighCharts;
+var modJQPlot;
 
 // Fonctions et variables
 var start = {}; // = new Date();
+
+var modChart;
 
 var chart_elec0;
 var chart_elec1;
@@ -52,6 +52,8 @@ jQuery(function ($) {
     "use strict";
 
     // Do something here
+    //modChart = modHighCharts;
+    modChart = modJQPlot;
 });
 
 function init_chart0_navigation(data) {
@@ -211,7 +213,9 @@ function tooltip_chart1(thisSerieNum, thisPtX) {
 
     tooltip = 'Le ' + tipDate + "<br />";
     $.each(chart1_data.series, function (serie_name, serie_title) {
-        tooltip += '<span style="color:' + chart1_data[serie_name + "_color"] + '"><b>&#9899;&nbsp;</b></span>' + chart1_data[serie_name + "_name"] + ' : <b>' + chart1_data[serie_name + "_data"][thisPtX][1] + '</b><br />';
+        if (chart1_data[serie_name + "_data"][thisPtX][1] !== null) {
+            tooltip += '<span style="color:' + chart1_data[serie_name + "_color"] + '"><b>&#9899;&nbsp;</b></span>' + chart1_data[serie_name + "_name"] + ' : <b>' + chart1_data[serie_name + "_data"][thisPtX][1] + '</b><br />';
+        }
     });
     tooltip += '<span style="color:' + chart1_data.PREC_color + '"><b>&#9899;&nbsp;</b></span>' + chart1_data.PREC_name + ' : <b>' + chart1_data.PREC_data[thisPtX][1] + '</b><br />';
 
@@ -311,7 +315,7 @@ function refresh_chart0(date) {
             }
             // Keep some data
             chart0_data = data;
-            chart_elec0 = init_chart0(data);
+            chart_elec0 = modChart.init_chart0(data);
             init_chart0_navigation(data);
 
             // Activation du rafraichissement automatique
@@ -340,7 +344,7 @@ function refresh_chart1(date) {
             }
             // Keep some data
             chart1_data = data;
-            chart_elec1 = init_chart1(data);
+            chart_elec1 = modChart.init_chart1(data);
             init_chart1_navigation(data);
         });
     }
@@ -363,7 +367,7 @@ function refresh_chart2(duree, periode, date) {
             }
             // Keep some data
             chart2_data = data;
-            chart_elec2 = init_chart2(data);
+            chart_elec2 = modChart.init_chart2(data);
             init_chart2_navigation(data);
         });
     }
