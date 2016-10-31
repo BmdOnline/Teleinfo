@@ -106,50 +106,55 @@ function instantly () {
     $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule de 24h.
 
     $query = queryInstantly();
-    $result=$mysqli->query($query);
-    if (!$result) {
+    $resultInst=$mysqli->query($query);
+    if (!$resultInst) {
         printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
         exit();
     }
-    $nbenreg = $result->num_rows;
+    $nbenreg = $resultInst->num_rows;
     if ($nbenreg > 0) {
-        $row = $result->fetch_array();
-        $optarif = $teleinfo["OPTARIF"][$row["OPTARIF"]];
+        $rowInst = $resultInst->fetch_array();
+        $optarif = $teleinfo["OPTARIF"][$rowInst["OPTARIF"]];
         //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
         $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
-        $ptec = $teleinfo["PTEC"][$row["PTEC"]];
+        $ptec = $teleinfo["PTEC"][$rowInst["PTEC"]];
         $ptecStr = $teleinfo["LIBELLES"]["PTEC"][$ptec];
-        $demain = $row["DEMAIN"];
-        $date_deb = $row["TIMESTAMP"];
-        $Isousc = floatval(str_replace(",", ".", $row["ISOUSC"]));
-        $val["W"] = floatval(str_replace(",", ".", $row["PAPP"]));
-        $val["I"] = floatval(str_replace(",", ".", $row["IINST1"]));
+        $demain = $rowInst["DEMAIN"];
+        $date_deb = $rowInst["TIMESTAMP"];
+
+        // Recalcul de la période
+        $timestampfin = $date_deb;
+        $timestampdebut2 = $date_deb - $periodesecondes;       // Recule de 24h.
+        $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule de 24h.
+
+        $Isousc = floatval(str_replace(",", ".", $rowInst["ISOUSC"]));
+        $val["W"] = floatval(str_replace(",", ".", $rowInst["PAPP"]));
         $series["W"] = "Watts";
-        $series["I"] = "Ampères";
 
         $query = queryMaxPeriod ($timestampdebut2, $timestampfin, $optarif);
-        $result=$mysqli->query($query);
-        if (!$result) {
+        $resultMax=$mysqli->query($query);
+        if (!$resultMax) {
             printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
             exit();
         }
-        $nbenreg = $result->num_rows;
+        $nbenreg = $resultMax->num_rows;
         if ($nbenreg > 0) {
-            $row = $result->fetch_array();
-            $max["W"] = max($val["W"], $row["PAPP"]);
-            $max["I"] = max($val["I"], $row["IINST1"]);
+            $rowMax = $resultMax->fetch_array();
+            $max["W"] = max($val["W"], $rowMax["PAPP"]);
+            $max["I"] = max($val["I"], $rowMax["IINST1"]);
 
             // Différents index
             if ($config["afficheIndex"]) {
                 foreach($teleinfo["PERIODES"][$optarif] as $field) {
                     $index[$field] = array (
                         "title" => $teleinfo["LIBELLES"]["PTEC"][$field],
-                        "value" => $row[$field],
+                        "value" => $rowMax[$field],
                     );
                 }
             }
         };
-        $result->free();
+        $resultMax->free();
+        $resultInst->free();
 
         //$datetext = strftime("%c",$date_deb);
         $datetext = date("d/m G:i", $date_deb);
@@ -172,10 +177,13 @@ function instantly () {
         }
         $subtitle .= "Puissance Max : <b>".intval($max["W"])." W</b><br />";
 
-
         // Double Gauge ?
+        // sauf si max("I")=0
         if (($graphConf["doubleGauge"]) && ($max["I"]!=0)) {
             // Ajoute la série Intensité
+            $val["I"] = floatval(str_replace(",", ".", $rowInst["IINST1"]));
+            $series["I"] = "Ampères";
+
             $seuils["I"] = array (
                 'min' => 0,
                 'max' => ceil($max["I"] / 5) * 5, // Arrondi à 5 "au dessus"
@@ -211,7 +219,7 @@ function instantly () {
 
         return $instantly;
     } else {
-        $result->free();
+        $resultInst->free();
         return null;
     }
 }

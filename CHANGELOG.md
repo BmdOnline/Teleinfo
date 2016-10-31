@@ -7,9 +7,12 @@
 - changed : Nettoyage du CSS restant dans `teleinfo.css`.
 - changed : Remplacment du thème `smoothness` par le thème `base`.
 - changed : Thème `base` utilisé en version mobile au lieu de `ui-darkness` (tooltip & datepicker clairs).
+- fixed : Calcul correct des seuils des gauges lorsqu'on est sur une date antérieure aux dernières 24h.
+- fixed : Affichage correct de la gauge d'intensité lorsqu'on est sur une date antérieure aux dernières 24h.
 
 ### Moteur / PHP
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
+- fixed : Double gauge ne bugge plus si Max(I) = 0. Dans ce cas, n'affiche pas la gauge I=0.
 
 ### Moteur / JavaScript
 - added : Précision de la langue `lang=fr`dans les fichiers HTML.
