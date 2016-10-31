@@ -13,6 +13,7 @@
 ### Moteur / PHP
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
 - fixed : Double gauge ne bugge plus si Max(I) = 0. Dans ce cas, n'affiche pas la gauge I=0.
+- fixed : Affichage correct de l'historique lors des changements d'heures.
 
 ### Moteur / JavaScript
 - added : Précision de la langue `lang=fr`dans les fichiers HTML.

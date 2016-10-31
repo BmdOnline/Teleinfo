@@ -454,10 +454,10 @@ function history() {
             $date = ($date)?min($date, $timestampheure):$timestampheure;
 
             // Périodes
-            $periodesecondes = $duree*24*3600;                               // Periode en secondes
+            $decalage = '-' . $duree . ' day';                              // Période, en texte
             $timestampfin = $date;                                           // Fin de la période
-            $timestampdebut2 = $timestampfin - $periodesecondes;             // Début de période active
-            $timestampdebut = $timestampdebut2 - $periodesecondes;           // Début de période précédente
+            $timestampdebut2 = strtotime($decalage, $timestampfin);          // Début de période active
+            $timestampdebut = strtotime($decalage, $timestampdebut2);        // Début de période précédente
 
             $xlabel = $duree . ($duree==1 ? " jour" : " jours");
             $dateformatsql = "%a %e";
@@ -477,9 +477,10 @@ function history() {
             }
 
             // Périodes
+            $decalage = '-' . $duree . ' week';                              // Période, en texte
             $timestampfin = $date;                                           // Fin de la période
-            $timestampdebut2 = strtotime(date("Y-m-d", $timestampfin) . " -".$duree." week");    // Début de période active
-            $timestampdebut = strtotime(date("Y-m-d", $timestampdebut2) . " -".$duree." week"); // Début de période précédente
+            $timestampdebut2 = strtotime($decalage, $timestampfin);          // Début de période active
+            $timestampdebut = strtotime($decalage, $timestampdebut2);        // Début de période précédente
 
             $xlabel = $duree . ($duree==1 ? " semaine" : " semaines");
             $dateformatsql = "sem %v (%x)";
@@ -498,9 +499,10 @@ function history() {
             }
 
             // Périodes
-            $timestampfin = $date;                                         // Fin de la période
-            $timestampdebut2 = mktime(0,0,0,date("m",$timestampfin)-$duree,1,date("Y",$timestampfin));      // Début de période active
-            $timestampdebut = mktime(0,0,0,date("m",$timestampdebut2)-$duree,1,date("Y",$timestampdebut2)); // Début de période précédente
+            $decalage = '-' . $duree . ' month';                             // Période, en texte
+            $timestampfin = $date;                                           // Fin de la période
+            $timestampdebut2 = strtotime($decalage, $timestampfin);          // Début de période active
+            $timestampdebut = strtotime($decalage, $timestampdebut2);        // Début de période précédente
 
             $xlabel = $duree . ($duree==1 ? " mois" : " mois"); // Prévision pour intl
             $dateformatsql = "%b (%Y)";
@@ -517,9 +519,13 @@ function history() {
             $date = mktime(0,0,0,1,1,date("Y", $date)+1);                          // Année suivante, 0h
 
             // Périodes
-            $timestampfin = $date;                                                 // Fin de la période
+            $decalage = '-' . $duree . ' year';                              // Période, en texte
+            $timestampfin = $date;                                           // Fin de la période
+            $timestampdebut2 = strtotime($decalage, $timestampfin);          // Début de période active
+            $timestampdebut = strtotime($decalage, $timestampdebut2);        // Début de période précédente
+            /*$timestampfin = $date;                                                 // Fin de la période
             $timestampdebut2 = mktime(0,0,0,1,1,date("Y",$timestampfin)-$duree);   // Début de période active
-            $timestampdebut = mktime(0,0,0,1,1,date("Y",$timestampdebut2)-$duree); // Début de période précédente
+            $timestampdebut = mktime(0,0,0,1,1,date("Y",$timestampdebut2)-$duree); // Début de période précédente*/
 
             $xlabel = $duree . ($duree==1 ? " an" : " ans");
             //$xlabel = "l'année ".(date("Y",$timestampdebut2)-$duree)." et ".(date("Y",$timestampfin)-$duree);
