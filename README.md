@@ -9,7 +9,7 @@ La présentation s'adapte automatiquement aux smartphones & tablettes.
 
 Il faut, au préalable, disposer d'une base de donnée MySQL contenant les relevés Téléinfo.
 
-Vous trouverez toute la documentation nécessaire à la collecte tééinfo à l'aide de votre moteur de recherche favori.
+Vous trouverez toute la documentation nécessaire à la collecte téléinfo à l'aide de votre moteur de recherche favori.
 Cet aspect technique ne sera pas évoqué et aucun support ne sera fourni ici.
 
 # Pré-requis

@@ -132,7 +132,11 @@ var modJQPlot = (function () {
         $.each(serieNames, function (serie_num, serie_name) {
             // Ajoute un "div" pour chacune des gauges
             if ($("#chart0_gauge" + serie_num).length === 0) {
-                $("#chart0").append('<div class="chart_gauge' + (serie_num % 2) + '" id="chart0_gauge' + serie_num + '"></div>');
+                if (Object.keys(serieNames).length === 1) {
+                    $("#chart0").append('<div class="chart_gauge" id="chart0_gauge' + serie_num + '"></div>');
+                } else {
+                    $("#chart0").append('<div class="chart_gauge' + (serie_num % 2) + '" id="chart0_gauge' + serie_num + '"></div>');
+                }
             }
 
             // Seuils des gauges

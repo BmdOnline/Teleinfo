@@ -11,9 +11,9 @@
 - fixed : Affichage correct de la gauge d'intensité lorsqu'on est sur une date antérieure aux dernières 24h.
 
 ### Moteur / PHP
-- changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data].
+- changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data]).
 - fixed : Double gauge ne bugge plus si Max(I) = 0. Dans ce cas, n'affiche pas la gauge I=0.
-- fixed : Affichage correct de l'historique lors des changements d'heures.
+- fixed : Affichage correct de l'historique lors des changements d'heures Hiver/Eté.
 
 ### Moteur / JavaScript
 - added : Graphiques basés sur JQPlot avec `module_jqplot.js` et `module_jqplot.css`.

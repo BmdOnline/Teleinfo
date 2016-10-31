@@ -196,6 +196,7 @@ voci une implémentation de l'image en mode "sprite"
 
 /* Résolutions jusqu'à 560px */
 @media (max-width: 560px) {
+    .chart_gauge,
     .chart_gauge0,
     .chart_gauge1 {
         float: none;
@@ -217,6 +218,11 @@ voci une implémentation de l'image en mode "sprite"
 
 /* Résolutions à partir de 560px et jusqu'à 900px */
 @media (min-width: 560px) and (max-width: 880px) {
+    .chart_gauge {
+        text-align: center;
+        width: 100%; /*250px;*/
+        height: 75%; /*220px;*/
+    }
     .chart_gauge0 {
         float: left;
         width: 50%; /*250px;*/
@@ -241,6 +247,11 @@ voci une implémentation de l'image en mode "sprite"
 
 /* Résolutions à partir de 900px */
 @media (min-width: 880px) {
+    .chart_gauge {
+        text-align: center;
+        width: 100%; /*250px;*/
+        height: 75%; /*220px;*/
+    }
     .chart_gauge0 {
         float: left;
         width: 50%; /*250px;*/
