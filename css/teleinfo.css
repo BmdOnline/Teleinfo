@@ -273,14 +273,3 @@ voci une implémentation de l'image en mode "sprite"
         width: 800px;
     }
 }
-
-/* Alignement des gauges (jqPlot & Chart.js) */
-
-
-/*@media ( max-width: 520px ) {
-    .chart_gauge0,
-    .chart_gauge1 {
-        float: none !important;
-        margin: 0 auto;
-    }
-}*/

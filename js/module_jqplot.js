@@ -2,6 +2,24 @@
 /*global window:false, $:false, jQuery:false, setInterval:false, clearInterval:false, setTimeout:false, clearTimeout:false, Chart:false*/
 /*jslint indent:4, todo:true, vars:true, unparam:true, newcap: true, nomen: true */
 
+/* Plugins utilisés :
+        jqplot.barRenderer.min.js
+        jqplot.meterGaugeRenderer.min.js
+        jqplot.cursor.min.js
+        jqplot.highlighter.min.js
+        jqplot.pointLabels.min.js
+        jqplot.canvasOverlay.min.js
+        jqplot.canvasTextRenderer.min.js
+        jqplot.categoryAxisRenderer.min.js
+        jqplot.canvasAxisLabelRenderer.min.js
+        jqplot.dateAxisRenderer.min.js
+        jqplot.enhancedLegendRenderer.min.js
+
+    Si activation de la gestion du "onresize"
+    Nécessite : http://benalman.com/projects/jquery-resize-plugin/
+
+*/
+
 // Fonctions et variables externes
 var start;
 var chart_elec0;
@@ -78,23 +96,29 @@ var modJQPlot = (function () {
             }*/
             chart_loaded(this.targetId === '#chart0_gauge0' ? '#chart0' : this.targetId, this.title.subtitle); //plot.getPlaceholder().selector)
 
-            /*var timer;
-            $(window).resize(function () {
-                // Wait 100ms before redrawingh charts
-                clearTimeout(timer);
-                timer = setTimeout(function () {
+            // Nécessite : http://benalman.com/projects/jquery-resize-plugin/
+            /*$('#chart0').on({
+                resize: function () {
                     if (($('#chart0').is(":visible")) && (chart_elec0 !== undefined)) {
                         $.each(chart_elec0, function (gauge_num, chart_gauge) {
                             chart_gauge.replot({resetAxes: true});
                         });
                     }
+                }
+            });
+            $('#chart1').on({
+                resize: function () {
                     if (($('#chart1').is(":visible")) && (chart_elec1 !== undefined)) {
                         chart_elec1.replot({resetAxes: true});
                     }
+                }
+            });
+            $('#chart2').on({
+                resize: function () {
                     if (($('#chart2').is(":visible")) && (chart_elec2 !== undefined)) {
                         chart_elec2.replot({resetAxes: true});
                     }
-                }, 100);
+                }
             });*/
         });
 
@@ -302,7 +326,7 @@ var modJQPlot = (function () {
                         color: data.MIN_color,
                         shadow: true,
                         showTooltip: true,
-                        tooltipLocation: 'ne',
+                        tooltipLocation: 'se',
                         tooltipFormatString: '<span style="color:' + data.MIN_color + '"><b>min. ' + data.seuils.min + 'w</span>'
                     }},
                     {dashedHorizontalLine: {
@@ -313,7 +337,7 @@ var modJQPlot = (function () {
                         color: data.MAX_color,
                         shadow: true,
                         showTooltip: true,
-                        tooltipLocation: 'se',
+                        tooltipLocation: 'ne',
                         tooltipFormatString: '<span style="color:' + data.MAX_color + '"><b>max. ' + data.seuils.max + 'w</span>'
                     }}
                 ]
@@ -390,6 +414,11 @@ var modJQPlot = (function () {
             title: {
                 text: data.title,
                 subtitle: data.subtitle  // Custom property used with postDrawHooks event
+            },
+            seriesDefaults: {
+                rendererOptions: {
+                    barMargin: 300 / data.categories.length,
+                },
             },
             axes: {
                 xaxis: {
