@@ -2,21 +2,6 @@
 /*global console:false, document:false, $:false, jQuery:false, setInterval:false, clearInterval:false, Option:false*/
 /*jslint indent:4, todo:true, vars:true, unparam:true */
 
-/*
-// Using CommonJS
-var Chart = require('src/chart.js')
-var myChart = new Chart({...})
-
-// ES6
-import Chart from 'src/chart.js'
-let myChart = new Chart({...})
-
-// Using requirejs
-require(['path/to/Chartjs'], function(Chart){
- var myChart = new Chart({...})
-})
-*/
-
 // Modules graphiques
 var modHighCharts;
 var modJQPlot;
@@ -225,7 +210,7 @@ function tooltip_chart1(thisSerieNum, thisPtX) {
 function tooltip_chart2(thisSerieNum, thisPtX) {
     "use strict";
 
-    var tooltip;
+    var tooltip = "";
     var tipDate;
     var tipName;
     var tipTotal;
@@ -243,47 +228,45 @@ function tooltip_chart2(thisSerieNum, thisPtX) {
         tipDetail = chart2_data;
     } else { // Période Précédente
         tipName = 'PREC';
-        tipDate = chart2_data.PREC_data[thisPtX][0];
-        tipTotal = chart2_data.PREC_data[thisPtX][1];
+        tipDate = chart2_data.PREC_data[thisPtX] === null ? null : chart2_data.PREC_data[thisPtX][0];
+        tipTotal = chart2_data.PREC_data[thisPtX] === null ? 0 : chart2_data.PREC_data[thisPtX][1];
         tipPrix = chart2_data.PREC_prix;
         tipDetail = chart2_data.PREC_detail;
     }
 
     // Date & Consommation
-    /*tooltip = '<span style="color:' + chart2_data[tipName + "_color"] + '"><b>Détails de la période' + tipPeriode + '</b></span><br />';
-    tooltip += '<span><b>' + chart2_data.optarif[Object.keys(chart2_data.optarif)[0]] + ' </b></span><br />';
-    tooltip += '<b>' + tipDate + ' </b> ~ <b> Total : ' + tipTotal + ' kWh</b><br />';*/
-    tooltip = tipDate + '<br />';
-    tooltip += '<span><b>' + chart2_data.optarif[Object.keys(chart2_data.optarif)[0]] + ' </b></span><br />';
-    tooltip += '<span style="color:' + chart2_data[tipName + "_color"] + '"><b>' + chart2_data[tipName + "_name"] + '</b></span><br />';
+    if (tipDate !== null) {
+        tooltip = tipDate + '<br />';
+        tooltip += '<span><b>' + chart2_data.optarif[Object.keys(chart2_data.optarif)[0]] + ' </b></span><br />';
+        tooltip += '<span style="color:' + chart2_data[tipName + "_color"] + '"><b>' + chart2_data[tipName + "_name"] + '</b></span><br />';
 
-    // Abonnement
-    tooltip += 'Abonnement : ' + tipPrix.ABONNEMENTS[thisPtX].toFixed(2) + ' &euro;<br />';
+        // Abonnement
+        tooltip += 'Abonnement : ' + tipPrix.ABONNEMENTS[thisPtX].toFixed(2) + ' &euro;<br />';
 
-    // Taxes
-    tooltip += 'Taxes :<br />';
-    $.each(tipPrix.TAXES, function (serie_name, serie_data) {
-        tooltip += serie_name + ' : ' + tipPrix.TAXES[serie_name][thisPtX].toFixed(2) + ' &euro;<br />';
-    });
+        // Taxes
+        tooltip += 'Taxes :<br />';
+        $.each(tipPrix.TAXES, function (serie_name, serie_data) {
+            tooltip += serie_name + ' : ' + tipPrix.TAXES[serie_name][thisPtX].toFixed(2) + ' &euro;<br />';
+        });
 
-    // Coût détaillé
-    tooltip += 'Consommé :<br />';
-    $.each(chart2_data.series, function (serie_name, serie_title) {
-        if (tipPrix.TARIFS[serie_name][thisPtX] !== 0) {
-            tooltip += '<span style="color:' + chart2_data[serie_name + "_color"] + '">';
-            if ((serie_name === tipName) && (Object.keys(chart2_data.series).length > 1)) {
-                tooltip += "<b>&#9758;&nbsp;</b>";
+        // Coût détaillé
+        tooltip += 'Consommé :<br />';
+        $.each(chart2_data.series, function (serie_name, serie_title) {
+            if (tipPrix.TARIFS[serie_name][thisPtX] !== 0) {
+                tooltip += '<span style="color:' + chart2_data[serie_name + "_color"] + '">';
+                if ((serie_name === tipName) && (Object.keys(chart2_data.series).length > 1)) {
+                    tooltip += "<b>&#9758;&nbsp;</b>";
+                }
+                tooltip += serie_name + ' : ' + tipPrix.TARIFS[serie_name][thisPtX].toFixed(2) + ' &euro;';
+                tooltip += ' (' + tipDetail[serie_name + "_data"][thisPtX].toFixed(1) + ' kWh)<br />';
+                tooltip += '</span>';
             }
-            tooltip += serie_name + ' : ' + tipPrix.TARIFS[serie_name][thisPtX].toFixed(2) + ' &euro;';
-            tooltip += ' (' + tipDetail[serie_name + "_data"][thisPtX] + ' kWh)<br />';
-            tooltip += '</span>';
-        }
-    });
+        });
 
-    // Coût total
-    tooltip += '<b>Total : ' + tipPrix.TOTAL[thisPtX].toFixed(2) + ' &euro;<b>';
-    tooltip += '<b> (' + tipTotal + ' kWh)</b><br />';
-
+        // Coût total
+        tooltip += '<b>Total : ' + tipPrix.TOTAL[thisPtX].toFixed(2) + ' &euro;<b>';
+        tooltip += '<b> (' + tipTotal.toFixed(1) + ' kWh)</b><br />';
+    }
     return tooltip;
 }
 
