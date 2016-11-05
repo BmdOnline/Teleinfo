@@ -42,8 +42,9 @@ Cet aspect technique ne sera pas évoqué et aucun support ne sera fourni ici.
     - A non-profit organization, or;
     - for testing and demonstration purposes.
     ```
-    * [JQPlot] (http://www.jqplot.com/) : Licence MIT & GPL v2.
+    * [JQPlot] (http://www.jqplot.com) : Licence MIT & GPL v2.
     ```
     jqPlot is an open source project dual licensed under the MIT and GPL version 2 licenses.
     You are free to choose the license that best suits your project.
     ```
+    * [Flot] (http://www.flotcharts.org) : Licence MIT.

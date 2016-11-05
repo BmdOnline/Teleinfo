@@ -17,6 +17,7 @@
 
 ### Moteur / JavaScript
 - added : Graphiques basés sur JQPlot avec `module_jqplot.js` et `module_jqplot.css`.
+- added : Graphiques basés sur Flot avec `module_flot.js` et `module_flot.css`.
 - added : Précision de la langue `lang=fr`dans les fichiers HTML.
 - added : Infobulles sur les listes de type `selectmenu` dans les fichiers HTML.
 - added : Isolation du code spécifique aux graphiques (module pattern).
@@ -35,6 +36,7 @@
 
 ### Mise à jour des librairies
 - added : JQPlot 1.0.9
+- added : Flot 0.9.0-alpha
 - changed : RainTPL 3.1.0
 - changed : Mobile Detect 2.8.22
 - changed : Highcharts 5.0.0 & Highstock 5.0.0

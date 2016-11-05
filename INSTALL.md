@@ -128,14 +128,12 @@ A partir de là, le programme est opérationnel.
 Il est possible de choisir la librairie qui affichera les graphiques.
 
 Les librairies proposées sont :
-* [Highcharts] (http://www.highcharts.com)
-* [JQPlot] (http://www.jqplot.com)
 
-| | HighCharts | JQPlot |
-| ------------- | ------------- | ------------- |
-| Licence | propriétaire | MIT/GPLv2 |
-| 3D | oui | non |
-
+| | Lien | Licence | 3D | Faiblesse |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| HighCharts | [:earth_africa:] (http://www.highcharts.com) | propriétaire | oui | Licence propriétaire |
+| JQPlot | [:earth_africa:] (http://www.jqplot.com) | MIT/GPLv2 | non | Redimensionnement mal géré |
+| Flot | [:earth_africa:] (http://www.flotcharts.org) | MIT | non | Légende sur plusieurs lignes n'ajuste pas le graphique |
 
 Le choix se fait dans le fichier `js/teleinfo.js` où il faut adapter ces quelques lignes.
 
@@ -147,6 +145,7 @@ jQuery(function ($) {
     // Do something here
     modChart = modHighCharts;
     //modChart = modJQPlot;
+    //modChart = modFlot;
 });
 ```
 
@@ -158,8 +157,25 @@ jQuery(function ($) {
     // Do something here
     //modChart = modHighCharts;
     modChart = modJQPlot;
+    //modChart = modFlot;
 });
 ```
+
+Pour utiliser Flot :
+```js
+jQuery(function ($) {
+    "use strict";
+
+    // Do something here
+    //modChart = modHighCharts;
+    //modChart = modJQPlot;
+    modChart = modFlot;
+});
+```
+
+Actuellement, toutes les librairies nécessaires sont chargés (dans le fichier HTML).
+
+Afin de consommer moins de ressources, il est possible de supprimer/commenter les chargements de librairies non utilisées.
 
 ### Table personnalisée
 Si aucun des modèles proposés ne convient, il est tout à fait possible d'en créer un personnalisé.

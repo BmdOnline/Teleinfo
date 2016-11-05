@@ -10,6 +10,8 @@
 
         <!-- JQuery 2.1.0 // Not compatible with old browsers -->
         <script type="text/javascript" src="./js/jquery/jquery-2.1.0.min.js"></script>
+        <!-- JQuery resize plugin (used with JQPlot, Flot) -->
+        <script type="text/javascript" src="./js/jquery/jquery.ba-resize.min.js"></script>
 
         <!-- JQuery UI -->
         <!-- JS minified with http://closure-compiler.appspot.com/home -->
@@ -18,13 +20,15 @@
         <script type="text/javascript" src="./js/jquery/jquery-ui-i18n-1.12.1.min.js"></script>
         <link rel="stylesheet" href="./css/jquery/ui-darkness/jquery-ui-1.12.1.min.css">
 
+        <!-- excanvas plugin (used with JQPlot, Flot) -->
+        <!--[if lte IE 8]><script type="text/javascript" src="./js/excanvas/excanvas.min.js"></script><![endif]-->
+
         <!-- HighCharts -->
         <script type="text/javascript" src="./js/highcharts/highstock.js"></script>
         <script type="text/javascript" src="./js/highcharts/highcharts-more.js"></script>
         <script type="text/javascript" src="./js/highcharts/highcharts-3d.js"></script><!-- -->
 
         <!-- JqPlot -->
-        <!--[if lt IE 9]><script type="text/javascript" src="./js/jqplot/excanvas.min.js"></script><![endif]-->
         <script type="text/javascript" src="./js/jqplot/jquery.jqplot.min.js"></script>
         <script type="text/javascript" src="./js/jqplot/plugins/jqplot.barRenderer.min.js"></script>
         <script type="text/javascript" src="./js/jqplot/plugins/jqplot.meterGaugeRenderer.min.js"></script>
@@ -39,6 +43,20 @@
         <script type="text/javascript" src="./js/jqplot/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
         <link rel="stylesheet" type="text/css" href="./js/jqplot/jquery.jqplot.min.css" /><!-- -->
 
+        <!-- Flot -->
+        <script type="text/javascript" src="./js/flot/jquery.colorhelpers.min.js"></script>
+        <script type="text/javascript" src="./js/flot/jquery.flot.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.stack.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.growraf.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.time.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.selection.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.valuelabels.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.tooltip.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.resize.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.curvedLines.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.dashes.min.js"></script>
+        <script type="text/javascript" src="./js/flot/plugins/jquery.flot.gauge.min.js"></script><!-- -->
+
         <link rel="shortcut icon" href="./favicon.ico">
 
         <link rel="stylesheet" href="./css/module_highcharts.css">
@@ -46,6 +64,9 @@
 
         <link rel="stylesheet" href="./css/module_jqplot.css">
         <script type='text/javascript' src="./js/module_jqplot.js"></script> <!-- -->
+
+        <link rel="stylesheet" href="./css/module_flot.css">
+        <script type='text/javascript' src="./js/module_flot.js"></script> <!-- -->
 
         <link rel="stylesheet" href="./css/teleinfo.css">
         <script type='text/javascript' src="./js/teleinfo.js"></script>

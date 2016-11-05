@@ -5,6 +5,7 @@
 // Modules graphiques
 var modHighCharts;
 var modJQPlot;
+var modFlot;
 
 // Fonctions et variables
 var start = {}; // = new Date();
@@ -38,7 +39,8 @@ jQuery(function ($) {
 
     // Do something here
     //modChart = modHighCharts;
-    modChart = modJQPlot;
+    //modChart = modJQPlot;
+    modChart = modFlot;
 });
 
 function init_chart0_navigation(data) {
