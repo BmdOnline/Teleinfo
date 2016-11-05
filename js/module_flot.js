@@ -70,8 +70,6 @@ var modFlot = (function () {
             show: true,
             hoverable: true,
             clickable: true,
-            minBorderMargin: 50,
-            maxBorderMargin: 50,
             margin: {
                 top: 50,
                 bottom: 30
@@ -353,7 +351,9 @@ var modFlot = (function () {
         var graphOptions = $.extend(true, {}, defOptions, {
             title: data.title,
             hooks: {
-                draw: [function (plot, canvascontext) {
+                //processOptions: [function (plot, options) {
+                bindEvents: [function (plot, eventHolder) {
+                    // Nothing to bind, just display loading time
                     chart_loaded(plot.getPlaceholder().selector, data.subtitle);
                 }]
             },
@@ -599,7 +599,9 @@ var modFlot = (function () {
         var graphOptions = $.extend(true, {}, defOptions, {
             title: data.title,
             hooks: {
-                draw: [function (plot, canvascontext) {
+                //processOptions: [function (plot, options) {
+                bindEvents: [function (plot, eventHolder) {
+                    // Nothing to bind, just display loading time
                     chart_loaded(plot.getPlaceholder().selector, data.subtitle);
                 }]
             },
@@ -721,7 +723,9 @@ var modFlot = (function () {
         var graphOptions = $.extend(true, {}, defOptions, {
             title: data.title,
             hooks: {
-                draw: [function (plot, canvascontext) {
+                //processOptions: [function (plot, options) {
+                bindEvents: [function (plot, eventHolder) {
+                    // Nothing to bind, just display loading time
                     chart_loaded(plot.getPlaceholder().selector, data.subtitle);
                 }]
             },
