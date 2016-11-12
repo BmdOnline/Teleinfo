@@ -201,8 +201,8 @@ voci une implémentation de l'image en mode "sprite"
     .chart_gauge1 {
         float: none;
         margin: 0 auto;
-        width: 100%; /*400px;*/
-        height: 40%; /*240px;*/
+        width: 100% !important; /*400px;*/
+        height: 40% !important; /*240px;*/
     }
     #chart0 {
         width: 100%;
@@ -225,13 +225,13 @@ voci une implémentation de l'image en mode "sprite"
     }
     .chart_gauge0 {
         float: left;
-        width: 50%; /*250px;*/
-        height: 75%; /*220px;*/
+        width: 50% !important; /*250px;*/
+        height: 75% !important; /*220px;*/
     }
     .chart_gauge1 {
         float: right;
-        width: 50%; /*250px;*/
-        height: 75%; /*220px;*/
+        width: 50% !important; /*250px;*/
+        height: 75% !important; /*220px;*/
     }
     #chart0 {
         width: 500px;
@@ -254,13 +254,13 @@ voci une implémentation de l'image en mode "sprite"
     }
     .chart_gauge0 {
         float: left;
-        width: 50%; /*250px;*/
-        height: 75%; /*220px;*/
+        width: 50% !important; /*250px;*/
+        height: 75% !important; /*220px;*/
     }
     .chart_gauge1 {
         float: right;
-        width: 50%; /*250px;*/
-        height: 75%; /*220px;*/
+        width: 50% !important; /*250px;*/
+        height: 75% !important; /*220px;*/
     }
     #chart0 {
         width: 500px;

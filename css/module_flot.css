@@ -5,9 +5,7 @@
 */
 
 /* Canvas */
-.chart,
-.flot-base {
-    width: 100%;
+.flot-chart {
     height: 500px;
 }
 

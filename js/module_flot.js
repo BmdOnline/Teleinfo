@@ -45,18 +45,21 @@ var modFlot = (function () {
     "use strict";
 
     var defCSS = {
+        chart: {
+            height: "500px" // $("<div class='flot-chart' />").css("height")
+        },
         gauge: {
-            backgroundcolor: $("<div class='flot-gauge' />").css("background-color"),
-            bordercolor: $("<div class='flot-gauge' />").css("border-top-color"),
+            backgroundColor: $("<div class='flot-gauge' />").css("background-color"),
+            borderColor: $("<div class='flot-gauge' />").css("border-top-color"),
             value: {
-                color: $("<div class='flot-gauge-value' />").css("color"),
-                fontsize: 16, // a specified number, or 'auto'
-                fontfamily: $("<div class='flot-gauge-value' />").css("font-family")
+                fontColor: $("<div class='flot-gauge-value' />").css("color"),
+                fontSize: 16, // a specified number, or 'auto'
+                fontFamily: $("<div class='flot-gauge-value' />").css("font-family")
             },
             threshold: {
-                color: $("<div class='flot-gauge-threshold' />").css("color"),
-                fontsize: 10, // a specified number, or 'auto'
-                fontfamily: $("<div class='flot-gauge-threshold' />").css("font-family")
+                fontColor: $("<div class='flot-gauge-threshold' />").css("color"),
+                fontSize: 10, // a specified number, or 'auto'
+                fontFamily: $("<div class='flot-gauge-threshold' />").css("font-family")
             }
         },
         label: {
@@ -389,10 +392,10 @@ var modFlot = (function () {
                         //startAngle: 1, // 0 - 2 factor of the radians
                         //endAngle: 2, // 0 - 2 factor of the radians
                         background: {
-                            color: defCSS.gauge.backgroundcolor
+                            color: defCSS.gauge.backgroundColor
                         },
                         border: {
-                            color: defCSS.gauge.bordercolor,
+                            color: defCSS.gauge.borderColor,
                             width: 2
                         },
                         shadow: {
@@ -411,10 +414,10 @@ var modFlot = (function () {
                             opacity: 0
                         },
                         font: {
-                            size: defCSS.gauge.value.fontsize,
-                            family: defCSS.gauge.value.fontfamily
+                            size: defCSS.gauge.value.fontSize,
+                            family: defCSS.gauge.value.fontFamily
                         },
-                        color: defCSS.gauge.value.color,
+                        color: defCSS.gauge.value.fontColor,
                         formatter: function (label, value) {
                             return parseInt(value, 0) + " " + label;
                         }
@@ -430,10 +433,10 @@ var modFlot = (function () {
                                 opacity: 0
                             },
                             font: {
-                                size: defCSS.gauge.threshold.fontsize,
-                                family: defCSS.gauge.threshold.fontfamily
+                                size: defCSS.gauge.threshold.fontSize,
+                                family: defCSS.gauge.threshold.fontFamily
                             },
-                            color: defCSS.gauge.threshold.color,
+                            color: defCSS.gauge.threshold.fontColor,
                             formatter: function (value) {
                                 return value.toLocaleString();
                             }
@@ -443,6 +446,9 @@ var modFlot = (function () {
             }
         });
 
+        if ($("#chart0").height() <= 0) {
+            $("#chart0").height(defCSS.chart.height);
+        }
         return $.plot("#chart0", graphSeries, graphOptions);
     }
 
@@ -633,6 +639,9 @@ var modFlot = (function () {
             }
         });
 
+        if ($("#chart1").height() <= 0) {
+            $("#chart1").height(defCSS.chart.height);
+        }
         return $.plot("#chart1", graphSeries, graphOptions);
     }
 
@@ -753,6 +762,9 @@ var modFlot = (function () {
             }]
         });
 
+        if ($("#chart2").height() <= 0) {
+            $("#chart2").height(defCSS.chart.height);
+        }
         return $.plot("#chart2", graphSeries, graphOptions);
     }
 
