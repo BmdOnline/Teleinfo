@@ -14,6 +14,7 @@
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data]).
 - fixed : Double gauge ne bugge plus si Max(I) = 0. Dans ce cas, n'affiche pas la gauge I=0.
 - fixed : Affichage correct de l'historique lors des changements d'heures Hiver/Eté.
+- fixed : Neutralisation des relevés téléinfo à zéro lors des calculs de l'historique (à l'aide de `NULLIF`).
 
 ### Moteur / JavaScript
 - added : Graphiques basés sur JQPlot avec `module_jqplot.js` et `module_jqplot.css`.
@@ -23,6 +24,7 @@
 - added : Isolation du code spécifique aux graphiques (module pattern).
 - changed : N'effectue plus le rafraichissement des graphiques qui ne sont pas visibles.
 - changed : Ajustement des indentations dans les fichiers HTML.
+- changed : Affichage des valeurs en respectant les paramètres d'internationalisation `toLocaleString()`.
 - changed : Distinction du code `teleinfo.js` et `module_highcharts.js` spécifique aux graphiques.
 - changed : Suppression des appels `unbind()` (déprécié), remplacés par `off()`.
 - changed : Suppression d'éléments liés aux styles dans `module_highcharts.js`. Utilisation de `module_highcharts.css`.
