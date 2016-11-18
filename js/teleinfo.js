@@ -187,7 +187,7 @@ function tooltip_chart0(thisSerieNum, thisPtX) {
     var tipName = chart0_data.series[Object.keys(chart0_data.series)[thisSerieNum]];
 
     tooltip = 'Le ' + tipDate + '<br />';
-    tooltip += '<b>' + chart0_data.data[Object.keys(chart0_data.series)[thisSerieNum]] + ' ' + tipName + '</b><br />';
+    tooltip += '<b>' + chart0_data.data[Object.keys(chart0_data.series)[thisSerieNum]].toLocaleString() + ' ' + tipName + '</b><br />';
 
     return tooltip;
 }
@@ -201,10 +201,10 @@ function tooltip_chart1(thisSerieNum, thisPtX) {
     tooltip = 'Le ' + tipDate + "<br />";
     $.each(chart1_data.series, function (serie_name, serie_title) {
         if (chart1_data[serie_name + "_data"][thisPtX][1] !== null) {
-            tooltip += '<span style="color:' + chart1_data[serie_name + "_color"] + '"><b>&#9899;&nbsp;</b></span>' + chart1_data[serie_name + "_name"] + ' : <b>' + chart1_data[serie_name + "_data"][thisPtX][1] + '</b><br />';
+            tooltip += '<span style="color:' + chart1_data[serie_name + "_color"] + '"><b>&#9899;&nbsp;</b></span>' + chart1_data[serie_name + "_name"] + ' : <b>' + chart1_data[serie_name + "_data"][thisPtX][1].toLocaleString() + '</b><br />';
         }
     });
-    tooltip += '<span style="color:' + chart1_data.PREC_color + '"><b>&#9899;&nbsp;</b></span>' + chart1_data.PREC_name + ' : <b>' + chart1_data.PREC_data[thisPtX][1] + '</b><br />';
+    tooltip += '<span style="color:' + chart1_data.PREC_color + '"><b>&#9899;&nbsp;</b></span>' + chart1_data.PREC_name + ' : <b>' + chart1_data.PREC_data[thisPtX][1].toLocaleString() + '</b><br />';
 
     return tooltip;
 }
