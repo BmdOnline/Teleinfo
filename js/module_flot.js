@@ -44,21 +44,44 @@ var tooltip_chart2;
 var modFlot = (function () {
     "use strict";
 
+    /*var defNoCSS = {
+        chart: {
+            height: "500px"
+        },
+        gauge: {
+            backgroundColor: '#FFFFFF',
+            borderColor: '#666666',
+            value: {
+                fontColor: '#666666',
+                fontSize: 16, // a specified number, or 'auto'
+                fontFamily: 'Verdana, Geneva, sans-serif'
+            },
+            threshold: {
+                fontColor: '#666666',
+                fontSize: 10, // a specified number, or 'auto'
+                fontFamily: 'Verdana, Geneva, sans-serif'
+            }
+        },
+        label: {
+            color: '#FFFFFF',
+            font: 'normal 11px Verdana, Geneva, sans-serif'
+        }
+    };
     var defCSS = {
         chart: {
-            height: "500px" // $("<div class='flot-chart' />").css("height")
+            height: $("<div class='flot-chart' />").css("height")
         },
         gauge: {
             backgroundColor: $("<div class='flot-gauge' />").css("background-color"),
             borderColor: $("<div class='flot-gauge' />").css("border-top-color"),
             value: {
                 fontColor: $("<div class='flot-gauge-value' />").css("color"),
-                fontSize: 16, // a specified number, or 'auto'
+                fontSize: parseInt($("<div class='flot-gauge-value' />").css("font-size")), // 16, // a specified number, or 'auto'
                 fontFamily: $("<div class='flot-gauge-value' />").css("font-family")
             },
             threshold: {
                 fontColor: $("<div class='flot-gauge-threshold' />").css("color"),
-                fontSize: 10, // a specified number, or 'auto'
+                fontSize: parseInt($("<div class='flot-gauge-threshold' />").css("font-size")), // 10, // a specified number, or 'auto'
                 fontFamily: $("<div class='flot-gauge-threshold' />").css("font-family")
             }
         },
@@ -66,85 +89,127 @@ var modFlot = (function () {
             color: $("<div class='flot-label' />").css("color"),
             font: $("<div class='flot-label' />").css("font-style") + ' '  + $("<div class='flot-label' />").css("font-size") + ' ' + $("<div class='flot-label' />").css("font-family")
         }
-    };
+    };*/
 
-    var defOptions = {
-        grid: {
-            show: true,
-            hoverable: true,
-            clickable: true,
-            margin: {
-                top: 50,
-                bottom: 30
-            },
-            borderWidth: 1
-        },
-        series: {
-            canvasRender: true,
-            hoverable: true,
-            grow: {
-                active: true,
-                duration: 1000,
-                growings: [{
-                    stepDirection: "up"
-                }]
-            },
-            labelPlacement: "above",
-            shadowsize: 5,
-            bars: {
-                show: false,
-                barWidth: 0.6,
-                align: "center"
-            },
-            lines: {
-                show: false
-            },
-            curvedLines: {
-                active: true
-            },
-            points: {
-                show: false,
-                fill: true
-            },
-            valueLabels: {
-                show: true,
-                decimals: 1,
-                align: 'center',
-                valign: 'below',
-                hideZero: true,
-                useBackground : false,
-                fontcolor: defCSS.label.color,
-                font: defCSS.label.font
-            }
-        },
-        yaxes: [{
-            show: true,
-            axisLabelUseCanvas: true,
-            min: 0
-        }],
-        legend: {
-            show: true,
-            hoverable: true,
-            clickable: true,
-            position: "sw",
-            noColumns: 3,
-            margin: [0, -56]
-        },
-        tooltip: {
-            show: true,
-            defaultTheme: false,
-            cssClass: 'flot-tooltip',
-            onHover: function (flotItem, tooltipEl) {
-                $(tooltipEl).css({
-                    "border-color": flotItem.series.color
-                });
-            }
-        }
-    };
+    var defCSS;
+    var defOptions;
 
     jQuery(function ($) {
         // Do something here
 
+        // Create dummy containers
+        $('<div id="flot-css"></div>').css({
+            position: "absolute",
+            display: "none"
+        }).appendTo("body");
+        $("<div class='flot-chart' />").appendTo("#flot-css");
+        $("<div class='flot-gauge' />").appendTo("#flot-css");
+        $("<div class='flot-gauge-value' />").appendTo("#flot-css");
+        $("<div class='flot-gauge-threshold' />").appendTo("#flot-css");
+        $("<div class='flot-label' />").appendTo("#flot-css");
+
+        // Get CSS properties
+        defCSS = {
+            chart: {
+                height: $(".flot-chart").css("height")
+            },
+            gauge: {
+                backgroundColor: $(".flot-gauge").css("background-color"),
+                borderColor: $(".flot-gauge").css("border-top-color"),
+                value: {
+                    fontColor: $(".flot-gauge-value").css("color"),
+                    fontSize: parseInt($(".flot-gauge-value").css("font-size")), // 16, // a specified number, or 'auto'
+                    fontFamily: $(".flot-gauge-value").css("font-family")
+                },
+                threshold: {
+                    fontColor: $(".flot-gauge-threshold").css("color"),
+                    fontSize: parseInt($(".flot-gauge-threshold").css("font-size")), // 10, // a specified number, or 'auto'
+                    fontFamily: $(".flot-gauge-threshold").css("font-family")
+                }
+            },
+            label: {
+                color: $(".flot-label").css("color"),
+                font: $(".flot-label").css("font-style") + ' '  + $(".flot-label").css("font-size") + ' ' + $(".flot-label").css("font-family")
+            }
+        };
+
+        // Delete dummy containers
+        $('#flot-css').remove();
+
+        // Set default properties, using defCSS when required
+        defOptions = {
+            grid: {
+                show: true,
+                hoverable: true,
+                clickable: true,
+                margin: {
+                    top: 50,
+                    bottom: 30
+                },
+                borderWidth: 1
+            },
+            series: {
+                canvasRender: true,
+                hoverable: true,
+                grow: {
+                    active: true,
+                    duration: 1000,
+                    growings: [{
+                        stepDirection: "up"
+                    }]
+                },
+                labelPlacement: "above",
+                shadowsize: 5,
+                bars: {
+                    show: false,
+                    barWidth: 0.6,
+                    align: "center"
+                },
+                lines: {
+                    show: false
+                },
+                curvedLines: {
+                    active: true
+                },
+                points: {
+                    show: false,
+                    fill: true
+                },
+                valueLabels: {
+                    show: true,
+                    decimals: 1,
+                    align: 'center',
+                    valign: 'below',
+                    hideZero: true,
+                    useBackground : false,
+                    fontcolor: defCSS.label.color,
+                    font: defCSS.label.font
+                }
+            },
+            yaxes: [{
+                show: true,
+                axisLabelUseCanvas: true,
+                min: 0
+            }],
+            legend: {
+                show: true,
+                hoverable: true,
+                clickable: true,
+                position: "sw",
+                noColumns: 3,
+                margin: [0, -56]
+            },
+            tooltip: {
+                show: true,
+                defaultTheme: false,
+                cssClass: 'flot-tooltip',
+                onHover: function (flotItem, tooltipEl) {
+                    $(tooltipEl).css({
+                        "border-color": flotItem.series.color
+                    });
+                }
+            }
+        };
     });
 
     // Plugin de gestion de titres

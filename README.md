@@ -48,3 +48,12 @@ Cet aspect technique ne sera pas évoqué et aucun support ne sera fourni ici.
     You are free to choose the license that best suits your project.
     ```
     * [Flot] (http://www.flotcharts.org) : Licence MIT.
+    ```
+    Copyright (c) 2007-2014 IOLA and Ole Laursen
+    It was started by Ole Laursen, sponsored by IOLA, an agile little Danish web-development house with a keen eye for Python/Django and jQuery.
+    It is currently being maintained by David Schnur.
+    ```
+    * [Chart.js] (http://www.chartjs.org) : Licence MIT.
+    ```
+    Chart.js is open source and available under the MIT license.
+    ```

@@ -168,7 +168,11 @@ voci une implémentation de l'image en mode "sprite"
 
 /* Chrono du graphique */
 .chart_chrono {
-    font: bold italic 12px Verdana, sans-serif !important;
+    /*font: bold italic 12px Verdana, sans-serif !important;*/
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif !important;
     text-align: center;
     margin-bottom: 10px;
 }

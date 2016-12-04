@@ -8,19 +8,30 @@
 /* Titre */
 .highcharts-title {
     fill: #333333 !important;
-    font: bold 16px Verdana, sans-serif !important;
+    /*font: bold 16px Verdana, sans-serif !important;*/
+    font-size: 16px;
+    font-style: normal;
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif !important;
 }
 
 /* Sous-Titre */
 .highcharts-subtitle {
     fill: #666666 !important;
-    font: bold italic 12px Verdana, sans-serif !important;
+    /*font: bold italic 12px Verdana, sans-serif !important;*/
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif !important;
 }
 
 /* Légendes */
 .highcharts-legend-item > text {
     fill: #000000 !important;
-    font: normal 12px Verdana, sans-serif !important;
+    /*font: normal 12px Verdana, sans-serif !important;*/
+    font-size: 12px;
+    font-style: normal;
+    font-family: Verdana, Geneva, sans-serif !important;
 }
 
 .highcharts-legend-item > text:hover {
@@ -74,7 +85,12 @@
 /*.highcharts-gauge-series text {*/
 .highcharts-gauge-series > .highcharts-data-label > text {
     fill: #666666 !important;
-    font: bold 11px Verdana, sans-serif !important;
+    /*font: bold 11px Verdana, sans-serif !important;*/
+    font-size: 11px;
+    font-style: normal;
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif !important;
+
 }
 
 /*** Spécifique pour les Histogrammes ***/
@@ -83,7 +99,11 @@
 /*.highcharts-column-series text {*/
 .highcharts-column-series > .highcharts-data-label > text {
     fill: #FFFFFF !important;
-    font: normal 11px Verdana, sans-serif !important;
+    /*font: normal 11px Verdana, sans-serif !important;*/
+    font-size: 11px;
+    font-style: normal;
+    font-family: Verdana, Geneva, sans-serif !important;
+
 }
 
 /* Couleur de fond des bandes alternées (sauf chart0 : gauge)*/

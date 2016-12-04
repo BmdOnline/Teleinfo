@@ -13,7 +13,11 @@
 .flot-title {
     margin-top: 10px;
     color: #333333;
-    font: bold 16px Verdana, sans-serif;
+    /*font: bold 16px Verdana, sans-serif;*/
+    font-size: 16px;
+    font-style: normal;
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif;
     text-align: center;
 }
 
@@ -27,7 +31,10 @@
 }
 
 .legend > table {
-    font: normal 12px Verdana, sans-serif !important;
+    /*font: normal 12px Verdana, sans-serif !important;*/
+    font-size: 12px;
+    font-style: normal;
+    font-family: Verdana, Geneva, sans-serif !important;
     bottom: 10px !important;
 }
 
@@ -43,7 +50,10 @@
 /* Label */
 .flot-label {
     color: #FFFFFF;
-    font: normal 11px Verdana, sans-serif;
+    /*font: normal 11px Verdana, sans-serif;*/
+    font-size: 11px;
+    font-style: normal;
+    font-family: Verdana, Geneva, sans-serif;
 }
 
 /*** Spécifique pour les Gauges ***/
@@ -55,12 +65,14 @@
 }
 
 .flot-gauge-value {
-    font-family: Verdana, sans-serif;
+    font-size: 16px;
+    font-family: Verdana, Geneva, sans-serif;
     color: #666666;
 }
 
 .flot-gauge-threshold {
-    font-family: Verdana, sans-serif;
+    font-size: 10px;
+    font-family: Verdana, Geneva, sans-serif;
     color: #666666;
 }
 

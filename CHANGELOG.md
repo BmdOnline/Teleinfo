@@ -17,6 +17,7 @@
 - fixed : Neutralisation des relevés téléinfo à zéro lors des calculs de l'historique (à l'aide de `NULLIF`).
 
 ### Moteur / JavaScript
+- added : Graphiques basés sur Chart.js avec `module_chartjs.js` et `module_chartjs.css`.
 - added : Graphiques basés sur JQPlot avec `module_jqplot.js` et `module_jqplot.css`.
 - added : Graphiques basés sur Flot avec `module_flot.js` et `module_flot.css`.
 - added : Précision de la langue `lang=fr`dans les fichiers HTML.
