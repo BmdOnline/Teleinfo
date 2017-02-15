@@ -1,7 +1,7 @@
 /*!
  * chartjs-plugin-zoom
  * http://chartjs.org/
- * Version: 0.4.0
+ * Version: 0.4.5
  *
  * Copyright 2016 Evert Timberg
  * Released under the MIT license
@@ -298,7 +298,10 @@ var zoomPlugin = {
 
 	},
 	beforeInit: function(chartInstance) {
-		var node = chartInstance.chart.ctx.canvas;
+		chartInstance.zoom = {};
+
+		var node = chartInstance.zoom.node = chartInstance.chart.ctx.canvas;
+
 		var options = chartInstance.options;
 		var panThreshold = helpers.getValueOrDefault(options.pan ? options.pan.threshold : undefined, zoomNS.defaults.pan.threshold);
 
@@ -306,24 +309,26 @@ var zoomPlugin = {
 			// Only want to zoom horizontal axis
 			options.zoom.mode = 'x';
 
-			node.addEventListener('mousedown', function(event){
-				chartInstance._dragZoomStart = event;
-			});
+			chartInstance.zoom._mouseDownHandler = function(event) {
+				chartInstance.zoom._dragZoomStart = event;
+			};
+			node.addEventListener('mousedown', chartInstance.zoom._mouseDownHandler);
 
-			node.addEventListener('mousemove', function(event){
-				if (chartInstance._dragZoomStart) {
-					chartInstance._dragZoomEnd = event;
+			chartInstance.zoom._mouseMoveHandler = function(event){
+				if (chartInstance.zoom._dragZoomStart) {
+					chartInstance.zoom._dragZoomEnd = event;
 					chartInstance.update(0);
 				}
 
 				chartInstance.update(0);
-			});
+			};
+			node.addEventListener('mousemove', chartInstance.zoom._mouseMoveHandler);
 
-			node.addEventListener('mouseup', function(event){
-				if (chartInstance._dragZoomStart) {
+			chartInstance.zoom._mouseUpHandler = function(event){
+				if (chartInstance.zoom._dragZoomStart) {
 					var chartArea = chartInstance.chartArea;
 					var yAxis = getYAxis(chartInstance);
-					var beginPoint = chartInstance._dragZoomStart;
+					var beginPoint = chartInstance.zoom._dragZoomStart;
 					var offsetX = beginPoint.target.getBoundingClientRect().left;
 					var startX = Math.min(beginPoint.x, event.x) - offsetX;
 					var endX = Math.max(beginPoint.x, event.x) - offsetX;
@@ -338,33 +343,32 @@ var zoomPlugin = {
 						});
 					}
 
-					chartInstance._dragZoomStart = null;
-					chartInstance._dragZoomEnd = null;
+					chartInstance.zoom._dragZoomStart = null;
+					chartInstance.zoom._dragZoomEnd = null;
 				}
-			});
-		}
-		else {
-			var wheelHandler = function(e) {
-				var rect = e.target.getBoundingClientRect();
-				var offsetX = e.clientX - rect.left;
-				var offsetY = e.clientY - rect.top;
+			};
+			node.addEventListener('mouseup', chartInstance.zoom._mouseUpHandler);
+		} else {
+			chartInstance.zoom._wheelHandler = function(event) {
+				var rect = event.target.getBoundingClientRect();
+				var offsetX = event.clientX - rect.left;
+				var offsetY = event.clientY - rect.top;
 
 				var center = {
 					x : offsetX,
 					y : offsetY
 				};
 
-				if (e.deltaY < 0) {
+				if (event.deltaY < 0) {
 					doZoom(chartInstance, 1.1, center);
 				} else {
 					doZoom(chartInstance, 0.909, center);
 				}
 				// Prevent the event from triggering the default behavior (eg. Content scrolling).
-				e.preventDefault();
+				event.preventDefault();
 			};
-			chartInstance._wheelHandler = wheelHandler;
 
-			node.addEventListener('wheel', wheelHandler);
+			node.addEventListener('wheel', chartInstance.zoom._wheelHandler);
 		}
 
 		if (Hammer) {
@@ -394,9 +398,10 @@ var zoomPlugin = {
 				zoomNS.zoomCumulativeDelta = 0;
 			});
 
-			var currentDeltaX = null, currentDeltaY = null;
+			var currentDeltaX = null, currentDeltaY = null, panning = false;
 			var handlePan = function handlePan(e) {
 				if (currentDeltaX !== null && currentDeltaY !== null) {
+					panning = true;
 					var deltaX = e.deltaX - currentDeltaX;
 					var deltaY = e.deltaY - currentDeltaY;
 					currentDeltaX = e.deltaX;
@@ -415,7 +420,17 @@ var zoomPlugin = {
 				currentDeltaX = null;
 				currentDeltaY = null;
 				zoomNS.panCumulativeDelta = 0;
+				setTimeout(function() { panning = false; }, 500);
 			});
+
+			chartInstance.zoom._ghostClickHandler = function(e) {
+				if (panning) {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+				}
+			};
+			node.addEventListener('click', chartInstance.zoom._ghostClickHandler);
+
 			chartInstance._mc = mc;
 		}
 	},
@@ -426,10 +441,10 @@ var zoomPlugin = {
 		ctx.save();
 		ctx.beginPath();
 
-		if (chartInstance._dragZoomEnd) {
+		if (chartInstance.zoom._dragZoomEnd) {
 			var yAxis = getYAxis(chartInstance);
-			var beginPoint = chartInstance._dragZoomStart;
-			var endPoint = chartInstance._dragZoomEnd;
+			var beginPoint = chartInstance.zoom._dragZoomStart;
+			var endPoint = chartInstance.zoom._dragZoomEnd;
 			var offsetX = beginPoint.target.getBoundingClientRect().left;
 			var startX = Math.min(beginPoint.x, endPoint.x) - offsetX;
 			var endX = Math.max(beginPoint.x, endPoint.x) - offsetX;
@@ -450,21 +465,38 @@ var zoomPlugin = {
 	},
 
 	destroy: function(chartInstance) {
-		var node = chartInstance.chart.ctx.canvas;
-		node.removeEventListener('wheel', chartInstance._wheelHandler);
+		if (chartInstance.zoom) {
+			var options = chartInstance.options;
+			var node = chartInstance.zoom.node;
 
-		var mc = chartInstance._mc;
-		if (mc) {
-			mc.remove('pinchstart');
-			mc.remove('pinch');
-			mc.remove('pinchend');
-			mc.remove('panstart');
-			mc.remove('pan');
-			mc.remove('panend');
+			if (options.zoom && options.zoom.drag) {
+				node.removeEventListener('mousedown', chartInstance.zoom._mouseDownHandler);
+				node.removeEventListener('mousemove', chartInstance.zoom._mouseMoveHandler);
+				node.removeEventListener('mouseup', chartInstance.zoom._mouseUpHandler);
+			} else {
+				node.removeEventListener('wheel', chartInstance.zoom._wheelHandler);
+			}
+
+			if (Hammer) {
+				node.removeEventListener('click', chartInstance.zoom._ghostClickHandler);
+			}
+
+			delete chartInstance.zoom;
+
+			var mc = chartInstance._mc;
+			if (mc) {
+				mc.remove('pinchstart');
+				mc.remove('pinch');
+				mc.remove('pinchend');
+				mc.remove('panstart');
+				mc.remove('pan');
+				mc.remove('panend');
+			}
 		}
 	}
 };
 
+module.exports = zoomPlugin;
 Chart.pluginService.register(zoomPlugin);
 
 },{"chart.js":1,"hammerjs":1}]},{},[2]);

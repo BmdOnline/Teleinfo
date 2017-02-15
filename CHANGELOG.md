@@ -38,6 +38,7 @@
 - changed : Mise à jour des captures d'écran
 
 ### Mise à jour des librairies
+- added : ChartJS 2.5.0
 - added : JQPlot 1.0.9
 - added : Flot 0.9.0-alpha
 - changed : RainTPL 3.1.0
