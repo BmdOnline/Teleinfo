@@ -12,6 +12,7 @@
 
 ### Moteur / PHP
 - changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data]).
+- changed : Optimisation des requêtes SQL utilisant un type DATETIME (WHERE n'utilise plus de conversion de type de donnée).
 - fixed : Double gauge ne bugge plus si Max(I) = 0. Dans ce cas, n'affiche pas la gauge I=0.
 - fixed : Affichage correct de l'historique lors des changements d'heures Hiver/Eté.
 - fixed : Neutralisation des relevés téléinfo à zéro lors des calculs de l'historique (à l'aide de `NULLIF`).
