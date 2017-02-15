@@ -403,8 +403,8 @@ var modChartJS = (function () {
         $('#chart-css').remove();
 
         Chart.pluginService.register(chartLoadedPlugin);
-        Chart.pluginService.register(doughnutCenterValuePlugin);
-        Chart.pluginService.register(barLabelPlugin());
+        //Chart.pluginService.register(doughnutCenterValuePlugin); // Appel local dans les graphiques chart0
+        //Chart.pluginService.register(barLabelPlugin()); // Appel local dans le graphique chart2
 
         $.extend(true, Chart.defaults.global, defOptions);
     });
@@ -581,8 +581,9 @@ var modChartJS = (function () {
                                 $(".chartjs-tooltip").hide();
                             }
                         }
-                    }
-                }
+                    },
+                },
+                plugins: [doughnutCenterValuePlugin]
             });
 
             chart0_gauges.push(
@@ -687,7 +688,7 @@ var modChartJS = (function () {
                 },*/
                 zoom: {
                     enabled: true,
-                    //drag: true,
+                    drag: true,
                     mode: 'x'
                 },
                 scales: {
@@ -769,7 +770,15 @@ var modChartJS = (function () {
                         scaleID: 'y-axis-1',
                         value: data.seuils.min,
                         borderColor: data.MIN_color,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        label: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0,0,0,0)',
+                            fontColor: data.MIN_color,
+                            position: "right",
+                            yAdjust: -10,
+                            content: data.seuils.min
+                        }
                     }, {
                         type: 'line', // Max
                         borderDash: [5, 5],
@@ -777,7 +786,15 @@ var modChartJS = (function () {
                         scaleID: 'y-axis-1',
                         value: data.seuils.max,
                         borderColor: data.MAX_color,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        label: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0,0,0,0)',
+                            fontColor: data.MAX_color,
+                            position: "right",
+                            yAdjust: 10,
+                            content: data.seuils.max
+                        }
                     }]
                 }
             }
@@ -921,7 +938,8 @@ var modChartJS = (function () {
                         }
                     }
                 }
-            }
+            },
+            plugins: [barLabelPlugin()]
         });
 
         if ($('#chart2_canvas').length === 0) {
