@@ -318,6 +318,9 @@ var modFlot = (function () {
                 plot.getPlaceholder().on('click', '.legendColorBox, .legendLabel', function (event) {
                     legendClick(event, plot);
                 });
+                $(".legend").on('click', '.legendColorBox, .legendLabel', function (event) {
+                    legendClick(event, plot);
+                });
             }
 
             function shutdown(plot) {
@@ -518,6 +521,10 @@ var modFlot = (function () {
     }
 
     function init_chart1(data) {
+        if ($('#chart1-legend').length === 0) {
+            $("#chart1").after("<div id='chart1-legend' class='legend' />");
+        }
+
         $('#chart1').on({
             plotselected: function (event, ranges) {
                 // Gestion du zoom
@@ -699,6 +706,9 @@ var modFlot = (function () {
             yaxes: [{
                 axisLabel: "Watt"
             }],
+            legend: {
+                container:$("#chart1-legend")
+            },
             selection: {
                 mode: "x"
             }
@@ -711,6 +721,10 @@ var modFlot = (function () {
     }
 
     function init_chart2(data) {
+        if ($('#chart2-legend').length === 0) {
+            $("#chart2").after("<div id='chart2-legend' class='legend' />");
+        }
+
         // Préparation des séries de données
         var graphSeries = [];
 
@@ -824,7 +838,10 @@ var modFlot = (function () {
             }],
             yaxes: [{
                 axisLabel: "kWh"
-            }]
+            }],
+            legend: {
+                container:$("#chart2-legend")
+            }
         });
 
         if ($("#chart2").height() <= 0) {
