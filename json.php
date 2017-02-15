@@ -114,9 +114,7 @@ function instantly () {
     $nbenreg = $resultInst->num_rows;
     if ($nbenreg > 0) {
         $rowInst = $resultInst->fetch_array();
-        $optarif = $teleinfo["OPTARIF"][$rowInst["OPTARIF"]];
-        //$optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$teleinfo["OPTARIF"][$optarif]];
-        $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
+        $optarif = $teleinfo["OPTARIF"][$rowInst["OPTARIF"]];        $optarifStr = $teleinfo["LIBELLES"]["OPTARIF"][$optarif];
         $ptec = $teleinfo["PTEC"][$rowInst["PTEC"]];
         $ptecStr = $teleinfo["LIBELLES"]["PTEC"][$ptec];
         $demain = $rowInst["DEMAIN"];
@@ -138,11 +136,20 @@ function instantly () {
             exit();
         }
         $nbenreg = $resultMax->num_rows;
+        $haveI = false;
         if ($nbenreg > 0) {
             $rowMax = $resultMax->fetch_array();
             $max["W"] = max($val["W"], $rowMax["PAPP"]);
-            $max["I"] = max($val["I"], $rowMax["IINST1"]);
-
+            // Intensités IINST1... IINST3
+            if ($graphConf["intensity"]) {
+                $numPhase = 1;
+                while (isset($rowMax["IINST" . $numPhase])) {
+                    $val["I" . $numPhase] = floatval(str_replace(",", ".", $rowInst["IINST" . $numPhase]));
+                    $max["I" . $numPhase] = max($val["I" . $numPhase], $rowMax["IINST" . $numPhase]);
+                    $haveI = $haveI || ($max["I" . $numPhase]!=0);
+                    $numPhase++;
+                }
+            }
             // Différents index
             if ($config["afficheIndex"]) {
                 foreach($teleinfo["PERIODES"][$optarif] as $field) {
@@ -156,7 +163,6 @@ function instantly () {
         $resultMax->free();
         $resultInst->free();
 
-        //$datetext = strftime("%c",$date_deb);
         $datetext = date("d/m G:i", $date_deb);
 
         $seuils["W"] = array (
@@ -177,26 +183,33 @@ function instantly () {
         }
         $subtitle .= "Puissance Max : <b>".intval($max["W"])." W</b><br />";
 
-        // Double Gauge ?
-        // sauf si max("I")=0
-        if (($graphConf["doubleGauge"]) && ($max["I"]!=0)) {
-            // Ajoute la série Intensité
-            $val["I"] = floatval(str_replace(",", ".", $rowInst["IINST1"]));
-            $series["I"] = "Ampères";
+        // Affiche l'intensité ?
+        if (($graphConf["intensity"]) && $haveI) {
+            // Intensités IINST1... IINST3
+            $subtitle .= "Intensité Max : <b>";
+            $numPhase = 1;
+            while (isset($rowMax["IINST" . $numPhase])) {
+                $val["I" . $numPhase] = floatval(str_replace(",", ".", $rowInst["IINST" . $numPhase]));
+                $series["I" . $numPhase] = "Ampères";
 
-            $seuils["I"] = array (
-                'min' => 0,
-                'max' => ceil($max["I"] / 5) * 5, // Arrondi à 5 "au dessus"
-            );
-            $bands["I"] = $graphConf["bands"]["I"];
+                $seuils["I" . $numPhase] = array (
+                    'min' => 0,
+                    'max' => ceil($max["I" . $numPhase] / 5) * 5, // Arrondi à 5 "au dessus"
+                );
+                $bands["I" . $numPhase] = $graphConf["bands"]["I"];
 
-            $subtitle .= "Intensité Max : <b>".intval($max["I"])." A</b><br />";
+                $subtitle .= intval($max["I" . $numPhase])." A / ";
+                $numPhase++;
+            }
+            // Supprime les 3 derniers caractères : " / "
+            $subtitle = substr($subtitle, 0, -3);
+
+            $subtitle .= "</b><br />";
         }
 
         // Différents index
         if ($config["afficheIndex"]) {
             foreach($teleinfo["PERIODES"][$optarif] as $field) {
-                //$subtitle .= "Index " . $index[$field]["title"] . " : " . $index[$field]["value"] . "<br />";
                 $subtitle .= "Index " . $field . " : <b>" . $index[$field]["value"]/1000 . " KWh</b><br />"; // Le compteur affiche la valeur / 1000
             }
         }
@@ -275,6 +288,7 @@ function daily () {
         // Initialisation des courbes qui seront affichées
         foreach($teleinfo["PERIODES"][$optarif] as $ptec) {
             $courbe_titre[$ptec]=$teleinfo["LIBELLES"]["PTEC"][$ptec];
+            $courbe_color[$ptec]=$teleinfo["COULEURS"][$ptec];
             $courbe_min[$ptec]=5000;
             $courbe_max[$ptec]=0;
             $courbe_mindate[$ptec]=null;
@@ -282,14 +296,25 @@ function daily () {
             $array[$ptec]=array();
         }
 
-        // Ajout des courbes intensité et PREC
-        $courbe_titre["I"]="Intensité";
-        $courbe_min["I"]=5000;
-        $courbe_max["I"]=0;
-        $courbe_mindate["I"]=null;
-        $courbe_maxdate["I"]=null;
-        $array["I"] = array();
+        // Intensités IINST1... IINST3
+        if ($graphConf["intensity"]) {
+            $numPhase = 1;
+            while (isset($row["IINST" . $numPhase])) {
+                // Ajout des courbes intensités
+                $courbe_titre["I" . $numPhase]="Intensité " . $numPhase;
+                $courbe_color["I" . $numPhase]=$teleinfo["COULEURS"]["I" . $numPhase] ? $teleinfo["COULEURS"]["I" . $numPhase] : $teleinfo["COULEURS"]["I"];
+                $courbe_min["I" . $numPhase]=5000;
+                $courbe_max["I" . $numPhase]=0;
+                $courbe_mindate["I" . $numPhase]=null;
+                $courbe_maxdate["I" . $numPhase]=null;
+                $array["I" . $numPhase] = array();
+                $numPhase++;
+            }
+        }
+
+        // Ajout de la courbe PREC
         $courbe_titre["PREC"]="Période précédente";
+        $courbe_color["PREC"]=$teleinfo["COULEURS"]["PREC"];
         $courbe_min["PREC"]=5000;
         $courbe_max["PREC"]=0;
         $courbe_mindate["PTEC"]=null;
@@ -374,12 +399,17 @@ function daily () {
                 // Highstock permet un navigateur chronologique
                 $navigator[] = array($ts, $val);
 
-                // Intensité
-                $val = floatval(str_replace(",", ".", $row["IINST1"]));
-                $array["I"][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
-                if ($courbe_max["I"] < $val) {$courbe_max["I"] = $val; $courbe_maxdate["I"] = $ts;};
-                if ($courbe_min["I"] > $val) {$courbe_min["I"] = $val; $courbe_mindate["I"] = $ts;};
-
+                // Intensités IINST1... IINST3
+                if ($graphConf["intensity"]) {
+                    $numPhase = 1;
+                    while (isset($row["IINST" . $numPhase])) {
+                        $val = floatval(str_replace(",", ".", $row["IINST" . $numPhase]));
+                        $array["I" . $numPhase][] = array($ts, $val); // php recommande cette syntaxe plutôt que array_push
+                        if ($courbe_max["I" . $numPhase] < $val) {$courbe_max["I" . $numPhase] = $val; $courbe_maxdate["I" . $numPhase] = $ts;};
+                        if ($courbe_min["I" . $numPhase] > $val) {$courbe_min["I" . $numPhase] = $val; $courbe_mindate["I" . $numPhase] = $ts;};
+                        $numPhase++;
+                    }
+                }
             }
             $prevts = $ts;
             $prevptec = $curptec;
@@ -388,8 +418,8 @@ function daily () {
 
         $date_fin = $ts/1000;
 
-        $plotlines_max = max(array_diff_key($courbe_max, array("I"=>null, "PREC"=>null)));
-        $plotlines_min = min(array_diff_key($courbe_min, array("I"=>null, "PREC"=>null)));
+        $plotlines_max = max(array_diff_key($courbe_max, array("I1"=>null, "I2"=>null, "I3"=>null, "PREC"=>null)));
+        $plotlines_min = min(array_diff_key($courbe_min, array("I1"=>null, "I2"=>null, "I3"=>null, "PREC"=>null)));
 
         $date_deb_UTC=$date_deb*1000;
         $datetext = date("d/m G:i", $date_deb) . " au " . date("d/m G:i", $date_fin);
@@ -418,7 +448,7 @@ function daily () {
         // Ajoute les séries
         foreach(array_keys($array) as $ptec) {
             $daily[$ptec."_name"] = $courbe_titre[$ptec]." [".$courbe_min[$ptec]." ~ ".$courbe_max[$ptec]."]";
-            $daily[$ptec."_color"] = $teleinfo["COULEURS"][$ptec];
+            $daily[$ptec."_color"] = $courbe_color[$ptec]; // $teleinfo["COULEURS"][$ptec];
             $daily[$ptec."_data"] = $array[$ptec];
         }
 

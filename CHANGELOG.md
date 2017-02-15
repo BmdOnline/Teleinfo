@@ -2,6 +2,8 @@
 
 ## [dev]
 ### Interface
+- added : Prise en compte des compteurs triphasés : les 3 intensités sont affichées.
+- added : Affichage (optionnel) de l'intensité dans le graphique "Aperçu 24h".
 - added : Possibilité de zoomer directement au clic dans le graphique "Aperçu 24h".
 - changed : Distinction du code `teleinfo.css` et `module_highcharts.css` spécifique aux graphiques.
 - changed : Nettoyage du CSS restant dans `teleinfo.css`.
@@ -11,9 +13,13 @@
 - fixed : Affichage correct de la gauge d'intensité lorsqu'on est sur une date antérieure aux dernières 24h.
 
 ### Moteur / PHP
-- changed : Modification de la structure retournée par la requête JSON History (PREC_data_detail vs PREC_detail[data]).
-- changed : Optimisation des requêtes SQL utilisant un type DATETIME (WHERE n'utilise plus de conversion de type de donnée).
-- fixed : Double gauge ne bugge plus si Max(I) = 0. Dans ce cas, n'affiche pas la gauge I=0.
+- added : Ajout d'un fichier type pour les compteurs triphasés (`structure.timestp_triphase.php`).
+- added : Possibilité de choisir si l'on veut avoir l'affichage de l'intensité dans le graphique "Aperçu 24h" (paramètre `intensity`).
+- changed : Modification du paramètre `doubleGauge` qui devient `intensity`.
+- changed : Suppression du paramètre `nbPhasesCompteur` qui est inutile.
+- changed : Modification de la structure retournée par la requête JSON History (`PREC_data_detail` vs `PREC_detail[data]`).
+- changed : Optimisation des requêtes SQL utilisant un type `DATETIME` (`WHERE` n'utilise plus de conversion de type de donnée).
+- fixed : Double gauge ne bugge plus si `Max(I) = 0`. Dans ce cas, n'affiche pas la gauge `I=0`.
 - fixed : Affichage correct de l'historique lors des changements d'heures Hiver/Eté.
 - fixed : Neutralisation des relevés téléinfo à zéro lors des calculs de l'historique (à l'aide de `NULLIF`).
 

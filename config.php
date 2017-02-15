@@ -12,7 +12,6 @@ $config["notemplate"]["mobile"]  = "tpl/teleinfo.tabs.mobile.html";
 /*******************************/
 /*    Données EDF & Téléinfo   */
 /*******************************/
-$config["nbPhasesCompteur"]      = 1;     // 1 pour monophasé ou 3 pour triphasé (option inutile actuellement)
 $config["recalculPuissance"]     = false; // true : calcule la puissance en se basant sur le relevé d'index plutôt que PAPP
 $config["afficheIndex"]          = true;  // true : affiche les index pour chaque période tarifaire (relevé de compteur EDF)
 
@@ -35,10 +34,10 @@ $db_connect = array (
 // - structure.date.php
 // - structure.timestp.php
 // - structure.ftimestp.php
+// - structure.timestp_triphase.php
 // Il est également possible de se créer une structure personnalisée
 // - structure.custom.php (par exemple)
 include_once("structure.date.php");
-//include_once("structure.timestp.php");
 
 
 /***************************/
@@ -74,7 +73,7 @@ $teleinfo["LIBELLES"] = array(
 $config["graphiques"]["instantly"] = array(
     "refreshAuto"  => true,      // active le rafraichissement automatique
     "refreshDelay" => 120,       // relancé toutes les 120 secondes
-    "doubleGauge"  => true,      // true : affiche intensité en plus de la puissance
+    "intensity"    => true,      // true : affiche intensité en plus de la puissance
     "bands" => array(            // couleurs des bandes des gauges
         "W" => array(            // Puissance
             300   => "#55BF3B",  // de 0 à 300
@@ -92,6 +91,7 @@ $config["graphiques"]["instantly"] = array(
 );
 
 $config["graphiques"]["daily"] = array(
+    "intensity"    => false,      // true : affiche intensité en plus de la puissance
 );
 
 $config["graphiques"]["history"] = array(
@@ -118,7 +118,10 @@ $teleinfo["COULEURS"] = array(
     "HCJR" => "#c42525",
     "HN"   => "#2f7ed8",
     "HPM"  => "#c42525",
-    "I"    => "blue"     // Intensité
+    "I"    => "#0000FF",  // Intensité
+    "I1"   => "#C8C8FF",  // Intensité Phase 1
+    "I2"   => "#7F7FFF",  // Intensité Phase 2
+    "I3"   => "#0000FF"   // Intensité Phase 3
 );
 
 ?>

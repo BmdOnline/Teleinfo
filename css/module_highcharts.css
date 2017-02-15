@@ -5,6 +5,11 @@
    http://www.highcharts.com/docs/chart-design-and-style/design-and-style
 */
 
+/* Hauteur des graphiques */
+.chart:not(#chart0) {
+    height: 500px !important;
+}
+
 /* Titre */
 .highcharts-title {
     fill: #333333 !important;

@@ -42,6 +42,7 @@ var modJQPlot = (function () {
         animateReplot: true,
         seriesDefaults: {
             renderer: $.jqplot.BarRenderer,
+            disableStack: true,
             rendererOptions: {
                 smooth: true,
                 barMargin: 40,
@@ -252,15 +253,28 @@ var modJQPlot = (function () {
             });
         });
 
-        // Intensité
-        /*graphSeries.push({
-            name: data.I_name,
-            data: data.I_data,
-            type: 'spline',
-            width: 1,
-            shape: 'squarepin',
-            yAxis: 1,
-        });*/
+        // Intensités IINST1... IINST3
+        $.each(["I1", "I2", "I3"], function (serie_num, serie_name) {
+            if (data[serie_name + "_data"] !== undefined) {
+                graphData.push(
+                    data[serie_name + "_data"]
+                    //data[serie_name + "_data"].map(function (val, i) { return val[1] === null ? [val[0], 0] : val; })
+                );
+                console.log(data[serie_name + "_name"]);
+                console.log(data[serie_name + "_color"]);
+                graphSeries.push({
+                    label: data[serie_name + "_name"],
+                    //color: data.PREC_color,
+                    color: data[serie_name + "_color"],
+                    fill: false,
+                    renderer: $.jqplot.LineRenderer,
+                    disableStack: false,
+                    yaxis: 'y2axis',
+                    show: (data[serie_name + "_data"].reduce(function (a, b) { return a + b[1]; }, 0) !== 0),
+                    showLabel: (data[serie_name + "_data"].reduce(function (a, b) { return a + b[1]; }, 0) !== 0)
+                });
+            }
+        });
 
         // Période précédente
         graphData.push(
@@ -313,6 +327,17 @@ var modJQPlot = (function () {
                     tickInterval: 1500,
                     //pad: 1,
                     labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                },
+                y2axis: {
+                    label: "Ampères",
+                    min: 0,
+                    //numberTicks: 5,
+                    tickInterval: 5,
+                    tickOptions:{
+                        showGridline: false
+                    },
+                    //pad: 1,
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer
                 }
             },
             canvasOverlay: {
@@ -354,6 +379,7 @@ var modJQPlot = (function () {
                     return tooltip_chart1(seriesIndex, pointIndex);
                 }
             },
+            stackSeries: true,
             series: graphSeries
         });
 
@@ -403,7 +429,6 @@ var modJQPlot = (function () {
             color: data.PREC_color,
             fill: false,
             renderer: (data.PREC_type === 'column') ? ($.jqplot.BarRenderer) : ($.jqplot.LineRenderer),
-            disableStack: true, // 'previous',
             xaxis: 'x2axis',
             showMarker: true
             //show: (data.PREC_data.reduce(function (a, b) { return a + b; }, 0) !== 0),

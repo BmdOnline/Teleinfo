@@ -100,7 +100,13 @@ function queryMaxPeriod ($timestampdebut, $timestampfin, $optarif = null) {
     global $db_connect, $config_table, $date_sql;
     global $teleinfo;
 
-    $mesures = array ("PAPP", "IINST1");
+    $mesures = array ("PAPP");
+    // Intensités IINST1... IINST3
+    $numPhase = 1;
+    while (isset($config_table["table"]["IINST" . $numPhase])) {
+        $mesures[] = "IINST" . $numPhase;
+        $numPhase++;
+    }
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $date_sql["TIMESTAMP"][$tDate]);
@@ -156,7 +162,13 @@ function queryMaxPeriod ($timestampdebut, $timestampfin, $optarif = null) {
 function queryMaxDate () {
     global $db_connect, $config_table, $date_sql;
 
-    $mesures = array ("PAPP", "IINST1");
+    $mesures = array ("PAPP");
+    // Intensités IINST1... IINST3
+    $numPhase = 1;
+    while (isset($config_table["table"]["IINST" . $numPhase])) {
+        $mesures[] = "IINST" . $numPhase;
+        $numPhase++;
+    }
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $date_sql["TIMESTAMP"][$tDate]);
@@ -181,7 +193,14 @@ function queryMaxDate () {
 function queryInstantly () {
     global $db_connect, $config_table, $date_sql;
 
-    $mesures = array ("PAPP", "IINST1", "ISOUSC", "OPTARIF", "PTEC", "DEMAIN");
+    $mesures = array ("PAPP");
+    // Intensités IINST1... IINST3
+    $numPhase = 1;
+    while (isset($config_table["table"]["IINST" . $numPhase])) {
+        $mesures[] = "IINST" . $numPhase;
+        $numPhase++;
+    }
+    $mesures = array_merge($mesures, array("ISOUSC", "OPTARIF", "PTEC", "DEMAIN"));
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $date_sql["TIMESTAMP"][$tDate]);
@@ -215,7 +234,14 @@ function queryDaily ($timestampdebut, $timestampfin, $optarif = null) {
     global $db_connect, $config_table, $date_sql;
     global $teleinfo;
 
-    $mesures = array ("OPTARIF", "PTEC", "IINST1", "PAPP");
+    $mesures = array ("PAPP");
+    // Intensités IINST1... IINST3
+    $numPhase = 1;
+    while (isset($config_table["table"]["IINST" . $numPhase])) {
+        $mesures[] = "IINST" . $numPhase;
+        $numPhase++;
+    }
+    $mesures = array_merge($mesures, array("OPTARIF", "PTEC"));
 
     $tDate = strtoupper($config_table["type_date"]);
     $timestamp = str_replace ("%field%", $config_table["table"]["DATE"], $date_sql["TIMESTAMP"][$tDate]);

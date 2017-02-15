@@ -393,7 +393,6 @@ var modFlot = (function () {
         var plotBands = [];
         var graphSeries = [];
 
-        // Période courante
         $.each(serieNames, function (serie_num, serie_name) {
             // Seuils des gauges
             plotBands = []; // RAZ
@@ -585,15 +584,35 @@ var modFlot = (function () {
             });
         });
 
-        // Intensité
-        /*graphSeries.push({
-            name : data.I_name,
-            data: data.I_data,
-            type: 'spline',
-            width : 1,
-            shape: 'squarepin',
-            yAxis: 1,
-        });*/
+        // Intensités IINST1... IINST3
+        $.each(["I1", "I2", "I3"], function (serie_num, serie_name) {
+            if (data[serie_name + "_data"] !== undefined) {
+                graphSeries.push({
+                    label : data[serie_name + "_name"],
+                    data : data[serie_name + "_data"],
+                    color : data[serie_name + "_color"],
+                    type: 'spline', // Special : keep type for serie toggling
+                    bars: {
+                        show: false
+                    },
+                    lines: {
+                        show: true,
+                        lineWidth: 2
+                    },
+                    points: {
+                        show: false
+                    },
+                    stack: true,
+                    xaxis: 1,
+                    yaxis: 2,
+                    valueLabels: {
+                        show: false
+                    },
+                    show: (data[serie_name + "_data"].reduce(function (a, b) { return a + b; }, 0) !== 0),
+                    showInLegend: (data[serie_name + "_data"].reduce(function (a, b) { return a + b[1]; }, 0) !== 0)
+                });
+            }
+        });
 
         // Période précédente
         graphSeries.push({
@@ -705,6 +724,9 @@ var modFlot = (function () {
             }],
             yaxes: [{
                 axisLabel: "Watt"
+            }, {
+                axisLabel: "Ampères",
+                position: "right",
             }],
             legend: {
                 container:$("#chart1-legend")

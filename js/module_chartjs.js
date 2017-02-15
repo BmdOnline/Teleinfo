@@ -445,20 +445,12 @@ var modChartJS = (function () {
         var bandPrevValue;
         var bandMinColor;
         var gradient = [];
-        /*data.data['W'] = 5000;
-        data.data['I'] = 21;
-        data.seuils['W'].max = 5000;
-        data.seuils['I'].max = 25;*/
-
-        /*data.data['W'] = 1131;
-        data.data['I'] = 5;
-        data.seuils['W'].max = 5000;
-        data.seuils['I'].max = 25;*/
 
         $.each(serieNames, function (serie_num, serie_name) {
+
             // Ajoute un "canvas" pour chacune des gauges
             if ($('#chart0_canvas' + serie_num).length === 0) {
-                $('#chart0').append('<canvas class="chart_gauge' + (serie_num % 2) + '" id="chart0_canvas' + serie_num + '"></canvas>');
+                $('#chart0').append('<canvas class="chart_gauge' + (serie_num % 2) + ' chartjs-canvas" id="chart0_canvas' + serie_num + '"></canvas>');
             }
 
             // Seuils des gauges
@@ -530,6 +522,8 @@ var modChartJS = (function () {
                     }]
                 },
                 options: {
+                    //maintainAspectRatio: false,
+                    //aspectRatio: 1,
                     /*title: { // Remplacé par un DIV centré
                         text: serie_num === 0 ? data.title : '',
                         //fontSize: 36,
@@ -551,6 +545,20 @@ var modChartJS = (function () {
                             fontStyle: defCSS.gauge.value.fontStyle,
                             fontSize: defCSS.gauge.value.fontSize
                         }
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: false,
+                            position: 'bottom',
+                            id: 'x-axis-1',
+                            stacked: false
+                        }],
+                        yAxes: [{
+                            display: false,
+                            position: 'left',
+                            id: 'y-axis-1',
+                            stacked: false
+                        }]
                     },
                     tooltips: {
                         callbacks: {
@@ -585,6 +593,16 @@ var modChartJS = (function () {
                 },
                 plugins: [doughnutCenterValuePlugin]
             });
+
+            /*console.log('chart0_canvas' + serie_num + ' w:' + $('#chart0_canvas' + serie_num).css("width") + ' h:' + $('#chart0_canvas' + serie_num).css("height"));
+            var cvHeight = "250";
+            //console.log($('#chart1').css("height"));
+            //$('#chart0_canvas' + serie_num).attr('height', $('#chart1').css("height"));
+
+            $('#chart0').css('height', "800px");
+            //$('#chart0_canvas' + serie_num).attr('width', $('#chart0_canvas' + serie_num).css("width"));
+            //$('#chart0_canvas' + serie_num).attr('height', $('#chart0_canvas' + serie_num).css("width"));
+            console.log('chart0_canvas' + serie_num + ' w:' + $('#chart0_canvas' + serie_num).css("width") + ' h:' + $('#chart0_canvas' + serie_num).css("height"));*/
 
             chart0_gauges.push(
                 new Chart($('#chart0_canvas' + serie_num), graphOptions)
@@ -643,15 +661,28 @@ var modChartJS = (function () {
             });
         });
 
-        // Intensité
-        /*graphSeries.push({
-            name : data.I_name,
-            data: data.I_data,
-            type: 'spline',
-            width : 1,
-            shape: 'squarepin',
-            yAxis: 1,
-        });*/
+        // Intensités IINST1... IINST3
+        var dataI = [];
+        $.each(["I1", "I2", "I3"], function (serie_num, serie_name) {
+            if (data[serie_name + "_data"] !== undefined) {
+                dataI[serie_num] = data[serie_name + "_data"].map(function (a) { return a === null ? {x: null, y: null} : {x: a[0], y: a[1]}; }, 0);
+                graphSeries.push({
+                    label: data[serie_name + "_name"],
+                    data: dataI[serie_num],
+                    type: 'line',
+                    lineTension: 0,
+                    pointRadius: 0,
+                    backgroundColor: 'transparent',
+                    borderColor: data[serie_name + "_color"],
+                    borderWidth: 2,
+                    xAxisID: 'x-axis-1',
+                    yAxisID: 'y-axis-2',
+                    showLabels: false, // Custom property
+                    hidden: !(data[serie_name + "_data"].reduce(function (a, b) { return a + b; }, 0) !== 0)
+                    //showInLegend: (data[serie_name + "_data"].reduce(function (a, b) { return a + b; }, 0) !== 0)
+                });
+            }
+        });
 
         // Période précédente
         var dataPREC = data.PREC_data.map(function (a) { return a === null ? {x: null, y: null} : {x: a[0], y: a[1]}; }, 0);
@@ -678,6 +709,7 @@ var modChartJS = (function () {
                 datasets: graphSeries
             },
             options: {
+                maintainAspectRatio: false,
                 title: {
                     text: data.title
                 },
@@ -724,6 +756,19 @@ var modChartJS = (function () {
                         scaleLabel: {
                             display: true,
                             labelString: 'Watt'
+                        }
+                    }, {
+                        display: dataI.length > 0,
+                        position: 'right',
+                        stacked: true,
+                        id: 'y-axis-2',
+                        ticks: {
+                            beginAtZero: true
+                            //max: yMax
+                        },
+                        scaleLabel: {
+                            display: dataI.length > 0,
+                            labelString: 'Ampères'
                         }
                     }]
                 },
@@ -801,7 +846,11 @@ var modChartJS = (function () {
         });
 
         if ($('#chart1_canvas').length === 0) {
-            $('#chart1').append('<canvas id="chart1_canvas"></canvas>');
+            $('<canvas id="chart1_canvas" class="chartjs-canvas">').appendTo("#chart1");
+
+            if ($('#chart1').css("height") > 0) {
+                $('#chart1_canvas').attr('height', $('#chart1').css("height"));
+            }
         }
 
         return new Chart($('#chart1_canvas'), graphOptions);
@@ -869,6 +918,7 @@ var modChartJS = (function () {
                 datasets: graphSeries
             },
             options: {
+                maintainAspectRatio: false,
                 valueLabels: {
                     show: true,
                     decimals: 1,
@@ -943,7 +993,11 @@ var modChartJS = (function () {
         });
 
         if ($('#chart2_canvas').length === 0) {
-            $('#chart2').append('<canvas id="chart2_canvas"></canvas>');
+            $('<canvas id="chart2_canvas" class="chartjs-canvas">').appendTo("#chart2");
+
+            if ($('#chart2').css("height") > 0) {
+                $('#chart2_canvas').attr('height', $('#chart2').css("height"));
+            }
         }
 
         return new Chart($('#chart2_canvas'), graphOptions);

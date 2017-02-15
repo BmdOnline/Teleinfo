@@ -55,11 +55,11 @@ var modHighCharts = (function () {
                 depth: 50,
                 grouping: false,
                 groupZPadding: 20 // Spacing between columns on the z-axis
-            }
-            /*spline: {
+            },
+            spline: {
                 stacking: true, // 'normal',
-                depth: 50,
-            }*/
+                //depth: 50,
+            }
         },
         xAxis: {
             dateTimeLabelFormats: {
@@ -78,10 +78,11 @@ var modHighCharts = (function () {
             }
         },
         yAxis: {
-            lineWidth: 2,
+            lineWidth: 1,
             showLastLabel: true,
             min: 0,
             maxPadding: 0.1,
+            endOnTick: false,
             alternateGridColor: 'transparent', // Défini en CSS .highcharts-plot-band.
             minorGridLineWidth: 0,
             labels: {
@@ -195,13 +196,13 @@ var modHighCharts = (function () {
                     gPos + '%',
                     '50%'
                 ];
-                paneSize = Math.min($("#chart0").width() / 2 * 0.8, $("#chart0").height() * 0.75);
+                paneSize = Math.min($("#chart0").width() / nbPanes * 0.8, $("#chart0").height() * 0.75);
             } else {
                 centerPos = [ // Vertical
                     '50%',
                     gPos + '%'
                 ];
-                paneSize = Math.min($("#chart0").width() * 0.8, $("#chart0").height() / 2 * 0.75);
+                paneSize = Math.min($("#chart0").width() * 0.8, $("#chart0").height() / nbPanes * 0.75);
             }
 
             paneInfos.push({
@@ -361,15 +362,27 @@ var modHighCharts = (function () {
             });
         });
 
-        // Intensité
-        /*graphSeries.push({
-            name: data.I_name,
-            data: data.I_data,
-            type: 'spline',
-            width: 1,
-            shape: 'squarepin',
-            yAxis: 1,
-        });*/
+        // Intensités IINST1... IINST3
+        $.each(["I3", "I2", "I1"], function (serie_num, serie_name) {
+            if (data[serie_name + "_data"] !== undefined) {
+                graphSeries.push({
+                    name: data[serie_name + "_name"],
+                    data: data[serie_name + "_data"],
+                    color: data[serie_name + "_color"],
+                    id: serie_name,
+                    type: 'spline',
+                    threshold: null,
+                    tooltip: {
+                        yDecimals: 0,
+                        valueDecimals: 0
+                    },
+                    yAxis: 1,
+                    stack: 1,
+                    visible: (data[serie_name + "_data"].reduce(function (a, b) { return a + b[1]; }, 0) !== 0),
+                    showInLegend: (data[serie_name + "_data"].reduce(function (a, b) { return a + b[1]; }, 0) !== 0)
+                });
+            }
+        });
 
         // Période précédente
         graphSeries.push({
@@ -392,6 +405,7 @@ var modHighCharts = (function () {
             chart: {
                 renderTo: 'chart1',
                 ignoreHiddenSeries: false,
+                alignTicks: false,
                 zoomType: 'x', // Si on veut activer le dblclick : http://www.highcharts.com/plugin-registry/single/15/Custom-Events
                 events: {
                     load: function () {chart_loaded('#' + this.renderTo.id, data.subtitle, chart_subtitle); }
@@ -441,23 +455,18 @@ var modHighCharts = (function () {
                         text: 'max. ' + data.seuils.max + 'w'
                     }
                 }]
-            /*}, { // Secondary yAxis
+            }, { // Secondary yAxis
                 opposite: true,
                 gridLineWidth: 0,
+                showEmpty: false,
                 title: {
-                    text: 'A',
-                    style: {
-                        color: '#4572A7'
-                    }
+                    text: 'Ampères',
                 },
                 labels: {
                     formatter: function () {
                         return this.value; // + ' A';
                     },
-                    style: {
-                        color: '#4572A7'
-                    }
-                }*/
+                }
             }],
             tooltip: {
                 crosshairs: true,
@@ -470,6 +479,7 @@ var modHighCharts = (function () {
             },
             series: graphSeries,
             navigator: {
+                enabled: false,
                 series: {
                     name: 'navigator',
                     type: 'areaspline',
@@ -478,7 +488,8 @@ var modHighCharts = (function () {
             }
         };
 
-        return new Highcharts.StockChart(graphOptions);
+        // setOptions pose pb avec StockChart. Donc fusion des options ici
+        return new Highcharts.StockChart(Highcharts.merge(defOptions, graphOptions));
     }
 
     function init_chart2(data) {

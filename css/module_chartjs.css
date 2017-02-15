@@ -4,6 +4,11 @@
 /* http://www.chartjs.org/docs/
 */
 
+/* Hauteur des graphiques */
+.chartjs-canvas:not(.chart_gauge0):not(.chart_gauge1) {
+    height: 500px !important;
+}
+
 /* Titre */
 .chartjs-title {
     width: 100% !important;
