@@ -131,11 +131,26 @@ Les librairies proposées sont :
 
 | | Lien | Licence | 3D | Faiblesse |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Chart.js | [:earth_africa:] (http://www.chartjs.org/) | MIT | non | Redimensionnement moins ergonomique |
 | HighCharts | [:earth_africa:] (http://www.highcharts.com) | propriétaire | oui | Licence propriétaire |
 | JQPlot | [:earth_africa:] (http://www.jqplot.com) | MIT/GPLv2 | non | Redimensionnement mal géré |
 | Flot | [:earth_africa:] (http://www.flotcharts.org) | MIT | non | Légende sur plusieurs lignes n'ajuste pas le graphique |
 
 Le choix se fait dans le fichier `js/teleinfo.js` où il faut adapter ces quelques lignes.
+
+Pour utiliser Chart.js :
+```js
+jQuery(function ($) {
+    "use strict";
+
+    // Do something here
+    modChart = modChartJS;
+    //modChart = modHighCharts;
+    //modChart = modJQPlot;
+    //modChart = modFlot;
+});
+```
+
 
 Pour utiliser HighCharts :
 ```js
@@ -143,6 +158,7 @@ jQuery(function ($) {
     "use strict";
 
     // Do something here
+    //modChart = modChartJS;
     modChart = modHighCharts;
     //modChart = modJQPlot;
     //modChart = modFlot;
@@ -155,6 +171,7 @@ jQuery(function ($) {
     "use strict";
 
     // Do something here
+    //modChart = modChartJS;
     //modChart = modHighCharts;
     modChart = modJQPlot;
     //modChart = modFlot;
@@ -167,6 +184,7 @@ jQuery(function ($) {
     "use strict";
 
     // Do something here
+    //modChart = modChartJS;
     //modChart = modHighCharts;
     //modChart = modJQPlot;
     modChart = modFlot;

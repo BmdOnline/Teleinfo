@@ -39,10 +39,10 @@ jQuery(function ($) {
     "use strict";
 
     // Do something here
+    modChart = modChartJS;
     //modChart = modHighCharts;
     //modChart = modJQPlot;
     //modChart = modFlot;
-    modChart = modChartJS;
 });
 
 function init_chart0_navigation(data) {
