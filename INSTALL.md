@@ -31,7 +31,7 @@ git clone git://github.com/BmdOnline/Teleinfo.git
 
 * Télécharger et décompressez l'archive zip à partir de l'interface `github` :
 
-![GitHub Download ZIP](screenshots/github/GitHub Download ZIP.png)
+![GitHub Download ZIP](../screenshots/github/GitHub Download ZIP.png)
 
 * Lien direct de l'archive :
     * https://github.com/BmdOnline/Teleinfo/archive/master.zip

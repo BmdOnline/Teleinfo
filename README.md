@@ -21,7 +21,7 @@ Cet aspect technique ne sera pas évoqué et aucun support ne sera fourni ici.
 # Sommaire
 * [Installation](INSTALL.md) : Installation, configuration et paramétrage du programme.
 * [Personnalisation](THEMES.md) : Personnalisation de l'interface via l'utilisation de templates et thèmes.
-* [Copies d'écran](SCREENSHOTS.md) : Quelques copies d'écran illustrant les fonctions et différents thèmes du programme.
+* [Copies d'écran](../screenshots/README.md) : Quelques copies d'écran illustrant les fonctions et différents thèmes du programme.
 * [Changements] (CHANGELOG.md) : Historique des versions.
 * [Licence] (LICENSE.md) : Ce programme est placé sous licence GPL v3.
 * Librairies PHP
