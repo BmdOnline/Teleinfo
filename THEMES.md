@@ -2,26 +2,26 @@
 * [Templates] (#templates)
     * [Gestion par fichiers HTML] (#gestion-par-fichiers-html)
     * [Gestion par templates] (#gestion-par-templates)
-* [Thèmes] (#thèmes)
+* [ThÃ¨mes] (#thÃ¨mes)
 
 # Templates
 Il est possible de choisir entre plusieurs mises en page des graphiques.
-Deux choix sont proposés :
+Deux choix sont proposÃ©s :
 * Sous forme d'onglets
-* Sous forme linéraire
+* Sous forme linÃ©raire
 
-Chacune des 2 mises en page est prévue en version "desktop" et en version "mobile".
+Chacune des 2 mises en page est prÃ©vue en version "desktop" et en version "mobile".
 
-L'application est également capable de générer les pages à partir de templates complexes grace à la librairie `RainTPL`.
-Par défaut, cette option est désativée : l'affichage utilise des fichiers HTML préparés.
+L'application est Ã©galement capable de gÃ©nÃ©rer les pages Ã  partir de templates complexes grace Ã  la librairie `RainTPL`.
+Par dÃ©faut, cette option est dÃ©sativÃ©e : l'affichage utilise des fichiers HTML prÃ©parÃ©s.
 
 ## Gestion par fichiers HTML
-Des fichiers sont proposés pour chacun des modes d'affichage.
+Des fichiers sont proposÃ©s pour chacun des modes d'affichage.
 
-Pour changer de modèle, il faut adapter le fichier `config.php` :
+Pour changer de modÃ¨le, il faut adapter le fichier `config.php` :
 ```php
 /*********************************/
-/*    Paramètres du programme    */
+/*    ParamÃ¨tres du programme    */
 /*********************************/
 $config["useTemplate"]           = false; // utilise les templates pour afficher les page HTML (utilise RainTPL)
 //...//
@@ -37,12 +37,12 @@ $config["notemplate"]["mobile"]  = "tpl/teleinfo.tabs.mobile.html";
     - `tpl/teleinfo.tabs.mobile.html`
 
 ## Gestion par templates
-Le moteur de template utilisé est `RainTPL`. Il est possible de modifier les pages en utilisant la syntaxe adéquate.
+Le moteur de template utilisÃ© est `RainTPL`. Il est possible de modifier les pages en utilisant la syntaxe adÃ©quate.
 
-Pour changer de modèle, il faut adapter le fichier `config.php` :
+Pour changer de modÃ¨le, il faut adapter le fichier `config.php` :
 ```php
 /*********************************/
-/*    Paramètres du programme    */
+/*    ParamÃ¨tres du programme    */
 /*********************************/
 $config["useTemplate"]           = true; // utilise les templates pour afficher les page HTML (utilise RainTPL)
 $config["template"]["tpl_dir"]   = "tpl/files/"; // Attention au / final
@@ -51,7 +51,7 @@ $config["template"]["mobile"]    = "teleinfo.mobile";
 //...//
 ```
 
-Il faut également remplacer le contenu du répertoire `tpl/files`…
+Il faut Ã©galement remplacer le contenu du rÃ©pertoire `tpl/files`â€¦
 * Pour la vesion desktop, depuis :
     - `tpl/files/desktop - lineaire`
     - `tpl/files/desktop - onglets`
@@ -62,14 +62,14 @@ Il faut également remplacer le contenu du répertoire `tpl/files`…
     - `tpl/files/commun`
 
 Important :
-A chaque changement de template, ne pas oublier de vider le contenu du répertoire `cache`.
+A chaque changement de template, ne pas oublier de vider le contenu du rÃ©pertoire `cache`.
 
 Remarque :
 Pour le bon fonctionnement du programme, il faut choisir un template desktop ET un template mobile.
-Par défaut, le programme est réglé sur les templates avec onglets.
+Par dÃ©faut, le programme est rÃ©glÃ© sur les templates avec onglets.
 
-# Thèmes
-Actuellement, 3 thèmes sont proposés (classique, clair & sombre).
+# ThÃ¨mes
+Actuellement, 3 thÃ¨mes sont proposÃ©s (classique, clair & sombre).
 Pour en changer, il faut modifier le fichier...
 * En mode HTML, sans template
     * Pour la vesion desktop, les fichiers :
@@ -97,7 +97,7 @@ Pour en changer, il faut modifier le fichier...
 ```
 
 Remarque :
-Par défaut, le programme est réglé sur le thème _sombre_.
+Par dÃ©faut, le programme est rÃ©glÃ© sur le thÃ¨me _sombre_.
 
 * En utilisant `RainTPL`, ne pas oublier le `#` en fin d'URL.
 ```php
