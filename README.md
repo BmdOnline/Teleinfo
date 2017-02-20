@@ -1,6 +1,6 @@
 # Graphique Conso Electrique Téléinfo EDF avec Highcharts
 
-![Animation](screenshots/teleinfo/animation_small.gif)
+![Animation](../screenshots/teleinfo/animation_small.gif)
 
 # Présentation
 Ceci est une application WEB permettant de visualiser sous forme de graphique les relevés EDF fournis par l'interface téléinfo.
