@@ -4,8 +4,8 @@
     error_reporting(E_ERROR);
 
     include_once("config.php");
-    require "lib/Mobile_Detect.php";
-    require "lib/Rain/autoload.php";
+    require "vendor/Mobile_Detect.php";
+    require "vendor/Rain/autoload.php";
     use Rain\Tpl;
 
     // Detect if Mobile or Computer is used
