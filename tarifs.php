@@ -3,17 +3,10 @@
     // - http://rvq.fr/php/edf.php
     //
     // EDF est réévalué tous les étés
-    //   http://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000028106828&fastPos=1&fastReqId=549291714&categorieLien=id&oldAction=rechTexte
-    // - 15/08/2009 http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000020972070
-    //              http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000020974110
-    //              http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000020987380
-    //              http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000027172789
-    // - 15/08/2010 http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000022697956
-    //              http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000022850981
-    // - 01/07/2011 http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000024278704
-    // - 23/07/2012 http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000026209179
-    // - 01/08/2013 http://www.legifrance.gouv.fr/jo_pdf.do?cidTexte=JORFTEXT000027778284
-    // - 01/01/2014 http://particuliers.edf.com/fichiers/fckeditor/Particuliers/Offres/CGV_CRE/CRE_TB.pdf
+    // Liste des arrêtés publiés au bulletin officiel
+    //   https://www.legifrance.gouv.fr : rechercher "arrêté relatif aux tarifs réglementés de vente de l électricité"
+    // Note EDF
+    //   http://particuliers.edf.com/fichiers/fckeditor/Particuliers/Offres/CGV_CRE/CRE_TB.pdf
     //
     // Explication des taxes perçues :
     // - http://particuliers.edf.com/gestion-de-mon-contrat/ma-facture/consulter-et-comprendre-ma-facture/detail-des-taxes-et-contributions-201733.html

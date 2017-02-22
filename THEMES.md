@@ -79,21 +79,21 @@ Pour en changer, il faut modifier le fichier...
         - `tpl/teleinfo.single.mobile.html`
         - `tpl/teleinfo.tabs.mobile.html`
 * En mode template, le fichier :
-    `tpl/files/inc.lib.html`
+    `tpl/files/vendor.lib.html`
 
 * Pour le mode _classique_
 ```php
-<link rel="stylesheet" href="./css/smoothness/jquery-ui-1.11.0-pre.min.css">
+<link rel="stylesheet" href="./vendor/css/base/jquery-ui-1.12.1.min.css">
 ```
 
 * Pour le mode _clair_
 ```php
-<link rel="stylesheet" href="./css/ui-lightness/jquery-ui-1.11.0-pre.min.css">
+<link rel="stylesheet" href="./vendor/css/ui-lightness/jquery-ui-1.12.1.min.css">
 ```
 
 * Pour le mode _sombre_
 ```php
-<link rel="stylesheet" href="./css/ui-darkness/jquery-ui-1.11.0-pre.min.css">
+<link rel="stylesheet" href="./vendor/css/ui-darkness/jquery-ui-1.12.1.min.css">
 ```
 
 Remarque :
@@ -101,5 +101,5 @@ Par défaut, le programme est réglé sur le thème _sombre_.
 
 * En utilisant `RainTPL`, ne pas oublier le `#` en fin d'URL.
 ```php
-<link rel="stylesheet" href="./css/ui-darkness/jquery-ui-1.11.0-pre.min.css#">
+<link rel="stylesheet" href="./vendor/css/ui-darkness/jquery-ui-1.12.1.min.css#">
 ```

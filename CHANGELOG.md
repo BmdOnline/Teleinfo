@@ -1,6 +1,8 @@
 # Changements
 
 ## [dev]
+
+## [4.6] - 2017-02-22
 ### Interface
 - added : Prise en compte des compteurs triphasés : les 3 intensités sont affichées.
 - added : Affichage (optionnel) de l'intensité dans le graphique "Aperçu 24h".
@@ -228,7 +230,8 @@ Voir [Graphique Conso Electrique Téléinfo EDF avec Highcharts](http://penhard.
     - Actuellement, le graphique est détruit et recréé. Il faudrait envisager de remplacer les données sans détruire le graphique.
 - [ ] Fiabiliser les passages aux heures hiver/été.
 
-[dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.5.1...dev
+[dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.6...dev
+[4.6]: https://github.com/BmdOnline/Teleinfo/compare/v4.5.1...v4.6
 [4.5.1]: https://github.com/BmdOnline/Teleinfo/compare/v4.5...v4.5.1
 [4.5]: https://github.com/BmdOnline/Teleinfo/compare/v4.4dev...v4.5
 [4.4dev]: https://github.com/BmdOnline/Teleinfo/compare/v4.3...v4.4dev

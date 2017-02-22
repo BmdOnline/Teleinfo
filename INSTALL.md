@@ -57,6 +57,7 @@ git clone -b dev git://github.com/BmdOnline/Teleinfo.git
 | dev | https://github.com/BmdOnline/Teleinfo/archive/dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/dev.tar.gz |
 | stable | https://github.com/BmdOnline/Teleinfo/archive/master.zip <br> https://github.com/BmdOnline/Teleinfo/archive/master.tar.gz |
 | | |
+| v4.6 | https://github.com/BmdOnline/Teleinfo/archive/v4.5.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.6.tar.gz |
 | v4.5.1 | https://github.com/BmdOnline/Teleinfo/archive/v4.5.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.5.1.tar.gz |
 | v4.5 | https://github.com/BmdOnline/Teleinfo/archive/v4.5.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.5.tar.gz |
 | v4.4dev | https://github.com/BmdOnline/Teleinfo/archive/v4.4dev.zip <br> https://github.com/BmdOnline/Teleinfo/archive/v4.4dev.tar.gz |
@@ -382,4 +383,4 @@ Le fichier `tarifs.php` contient l'historique de tous les tarifs EDF pour chaque
 Les données sont nationales et communes pour tout le monde, sauf certaines taxes locales.
 * Pour un calcul plus juste, il est nécessaire d'adapter la `TCFE`.
 * A chaque évolution tarifaire, il est nécessaire d'ajouter les nouveaux tarifs dans le fichier.
-
+* Les arrêtés publiés au journal officiel se trouvent ici : [Facturation EDF](../ressources/Facturation EDF).
