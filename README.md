@@ -26,7 +26,7 @@ Cet aspect technique ne sera pas évoqué et aucun support ne sera fourni ici.
 | | Pré-requis | Versions testées |
 | ----------- | ------- | ------- |
 | Serveur Web| ![Apache](https://img.shields.io/badge/apache-%3E%3D%202.2-green.svg) | 2.2, 2.4.23 |
-| | ![Nginx](https://img.shields.io/badge/nginx-unknown-lightgrey.svg) | serveurs type Nginx… non testés |
+| | ![Nginx](https://img.shields.io/badge/nginx-OK-green.svg) | 1.10.3 |
 | PHP | [![PHP](https://img.shields.io/badge/php-%3E%3D%205.4-green.svg)](https://php.net/) | 5.4, 5.5, 5.6, 7.0.4 |
 | Base de donnée | ![MySQL](https://img.shields.io/badge/mysql-%3E%3D%205.0-green.svg) | 5.0, 5.5, 5.7.1 |
 | | ![MariaDB](https://img.shields.io/badge/mariadb-%3E%3D%205.5-green.svg) | 5.5, 10.1.16 |
