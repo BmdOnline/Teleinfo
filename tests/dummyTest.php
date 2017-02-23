@@ -1,8 +1,6 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
-class dummyTest extends TestCase {
+class dummyTest extends PHPUnit_Framework_TestCase {
      public function testOnePlusOne() {
          $this->assertEquals(1+1, 2);
      }
