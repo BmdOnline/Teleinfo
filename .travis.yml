@@ -6,3 +6,5 @@ php:
   - '7.0'
   - '7.1'
   - nightly
+
+script: phpunit tests/dummyTest.php
