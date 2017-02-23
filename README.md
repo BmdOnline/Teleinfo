@@ -3,6 +3,9 @@
 [![Licence](https://img.shields.io/github/license/BmdOnline/Teleinfo.svg)](LICENSE.md)
 [![Release](https://img.shields.io/github/release/BmdOnline/Teleinfo.svg)](https://github.com/BmdOnline/Teleinfo/archive/master.zip)
 
+[![Build Status](https://img.shields.io/travis/BmdOnline/Teleinfo/master.svg?label=master)](https://travis-ci.org/BmdOnline/Teleinfo)
+[![Build Status](https://img.shields.io/travis/BmdOnline/Teleinfo/dev.svg?label=dev)](https://travis-ci.org/BmdOnline/Teleinfo)
+
 ![Animation](../screenshots/teleinfo/animation_small.gif)
 
 # Présentation
