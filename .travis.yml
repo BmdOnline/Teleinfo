@@ -12,7 +12,7 @@ php:
   - master
 
 before_script:
-  - composer install -n
+  - composer install -n -d tests
   - env
   - vendor/bin/phpunit --version
 
