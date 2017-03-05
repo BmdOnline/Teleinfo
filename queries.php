@@ -119,8 +119,8 @@ class queries
         }
 
         $tDate = strtoupper($config_table["type_date"]);
-        $timestamp = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
-        $date = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
+        $timestamp = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
+        $date = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
 
         // Select
         $query = "SELECT ";
@@ -145,9 +145,9 @@ class queries
         // From
         $query .= "FROM " . $db_connect['table'] . " ";
         // Where
-        $datetimedebut = queries::dateConv($timestampdebut, "TIMESTAMP", $tDate);
-        $datetimefin = queries::dateConv($timestampfin, "TIMESTAMP", $tDate);
-        //$datefield = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
+        $datetimedebut = self::dateConv($timestampdebut, "TIMESTAMP", $tDate);
+        $datetimefin = self::dateConv($timestampfin, "TIMESTAMP", $tDate);
+        //$datefield = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
         $datefield = $config_table["table"]["DATE"];
 
         $query .= str_replace(
@@ -181,7 +181,7 @@ class queries
         }
 
         $tDate = strtoupper($config_table["type_date"]);
-        $timestamp = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
+        $timestamp = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
 
         // Select
         $query = "SELECT ";
@@ -213,7 +213,7 @@ class queries
         $mesures = array_merge($mesures, array("ISOUSC", "OPTARIF", "PTEC", "DEMAIN"));
 
         $tDate = strtoupper($config_table["type_date"]);
-        $timestamp = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
+        $timestamp = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
 
         // Select Timestamp
         $query = "SELECT " . $timestamp . " AS TIMESTAMP, ";
@@ -254,7 +254,7 @@ class queries
         $mesures = array_merge($mesures, array("OPTARIF", "PTEC"));
 
         $tDate = strtoupper($config_table["type_date"]);
-        $timestamp = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
+        $timestamp = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
 
         // Select Timestamp
         $query = "SELECT " . $timestamp . " AS TIMESTAMP, ";
@@ -273,9 +273,9 @@ class queries
         // From
         $query .= "FROM " . $db_connect['table'] . " ";
         // Where
-        $datetimedebut = queries::dateConv($timestampdebut, "TIMESTAMP", $tDate);
-        $datetimefin = queries::dateConv($timestampfin, "TIMESTAMP", $tDate);
-        //$datefield = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
+        $datetimedebut = self::dateConv($timestampdebut, "TIMESTAMP", $tDate);
+        $datetimefin = self::dateConv($timestampfin, "TIMESTAMP", $tDate);
+        //$datefield = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
         $datefield = $config_table["table"]["DATE"];
 
         $query .= str_replace(
@@ -306,8 +306,8 @@ class queries
         $mesures = array ("OPTARIF", "PTEC");
 
         $tDate = strtoupper($config_table["type_date"]);
-        $timestamp = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
-        $date = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
+        $timestamp = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "TIMESTAMP");
+        $date = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
 
         // Select Timestamp
         $query = "SELECT " . $timestamp . " AS TIMESTAMP, ";
@@ -332,9 +332,9 @@ class queries
         // From
         $query .= "FROM " . $db_connect['table'] . " ";
         // Where
-        $datetimedebut = queries::dateConv($timestampdebut, "TIMESTAMP", $tDate);
-        $datetimefin = queries::dateConv($timestampfin, "TIMESTAMP", $tDate);
-        //$datefield = queries::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
+        $datetimedebut = self::dateConv($timestampdebut, "TIMESTAMP", $tDate);
+        $datetimefin = self::dateConv($timestampfin, "TIMESTAMP", $tDate);
+        //$datefield = self::dateConvSQL($config_table["table"]["DATE"], $tDate, "DATE");
         $datefield = $config_table["table"]["DATE"];
 
         $query .= str_replace(
