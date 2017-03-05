@@ -18,7 +18,7 @@ function getOPTARIF($full = false) {
     //   true  :  retourne un tableau avec optarif & isousc
     //   false :  retourne optarif
 
-    $query = queryOPTARIF();
+    $query = queries::queryOPTARIF();
 
     $result=$mysqli->query($query);
     if (!$result) {
@@ -53,7 +53,7 @@ function getOPTARIF($full = false) {
 // Pas utilisé actuellement car ralentit les traitements
 // Le gain ne compense pas la perte de temps.
 function getMaxDate() {
-    $query = queryMaxDate();
+    $query = queries::queryMaxDate();
     global $mysqli;
 
     $result=$mysqli->query($query);
@@ -105,7 +105,7 @@ function instantly () {
     $timestampdebut2 = $date - $periodesecondes;           // Recule de 24h.
     $timestampdebut = $timestampdebut2 - $periodesecondes; // Recule de 24h.
 
-    $query = queryInstantly();
+    $query = queries::queryInstantly();
     $resultInst=$mysqli->query($query);
     if (!$resultInst) {
         printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
@@ -129,7 +129,7 @@ function instantly () {
         $val["W"] = floatval(str_replace(",", ".", $rowInst["PAPP"]));
         $series["W"] = "Watts";
 
-        $query = queryMaxPeriod ($timestampdebut2, $timestampfin, $optarif);
+        $query = queries::queryMaxPeriod ($timestampdebut2, $timestampfin, $optarif);
         $resultMax=$mysqli->query($query);
         if (!$resultMax) {
             printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
@@ -267,7 +267,7 @@ function daily () {
         $optarif = null;
     }
 
-    $query = queryDaily($timestampdebut, $timestampfin, $optarif);
+    $query = queries::queryDaily($timestampdebut, $timestampfin, $optarif);
     $result=$mysqli->query($query);
     if (!$result) {
         printf("<b>Erreur</b> dans la requête <b>" . $query . "</b> : "  . $mysqli->error . " !<br>");
@@ -553,12 +553,8 @@ function history() {
             $timestampfin = $date;                                           // Fin de la période
             $timestampdebut2 = strtotime($decalage, $timestampfin);          // Début de période active
             $timestampdebut = strtotime($decalage, $timestampdebut2);        // Début de période précédente
-            /*$timestampfin = $date;                                                 // Fin de la période
-            $timestampdebut2 = mktime(0,0,0,1,1,date("Y",$timestampfin)-$duree);   // Début de période active
-            $timestampdebut = mktime(0,0,0,1,1,date("Y",$timestampdebut2)-$duree); // Début de période précédente*/
 
             $xlabel = $duree . ($duree==1 ? " an" : " ans");
-            //$xlabel = "l'année ".(date("Y",$timestampdebut2)-$duree)." et ".(date("Y",$timestampfin)-$duree);
             $dateformatsql = "%b %Y";
             $divabonnement = 12;
             break;
@@ -571,7 +567,7 @@ function history() {
     $optarif = $tab_optarif["OPTARIF"];
     $isousc = $tab_optarif["ISOUSC"];
 
-    $query = queryHistory($timestampdebut, $timestampfin, $dateformatsql, $optarif);
+    $query = queries::queryHistory($timestampdebut, $timestampfin, $dateformatsql, $optarif);
 
     $result=$mysqli->query($query);
     if (!$result) {
